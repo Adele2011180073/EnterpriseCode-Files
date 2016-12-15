@@ -7,6 +7,8 @@
 //
 
 #import "AppDelegate.h"
+#import "HZHomeViewController.h"
+#import "HZLoginViewController.h"
 
 @interface AppDelegate ()
 
@@ -17,6 +19,16 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    HZLoginViewController *home=[[HZLoginViewController alloc]init];
+    UINavigationController *nav=[[UINavigationController alloc]initWithRootViewController:home];
+    [nav.navigationController.navigationBar setBarTintColor:[UIColor whiteColor]];
+       [nav.navigationController.navigationBar setTitleTextAttributes:
+     
+     @{NSFontAttributeName:[UIFont boldSystemFontOfSize:18],
+       
+       NSForegroundColorAttributeName:[UIColor blackColor]}];
+    nav.navigationItem.leftItemsSupplementBackButton = YES;
+    self.window.rootViewController=nav;
     return YES;
 }
 
