@@ -194,8 +194,9 @@
     return cell;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-//    NSDictionary *dic=[dataList objectAtIndex:indexPath.row];
+    NSDictionary *dic=[dataList objectAtIndex:indexPath.row];
     HAYuYueDetailViewController *details=[[HAYuYueDetailViewController alloc]init];
+    details.reservationId=[dic objectForKey:@"id"];
 //    NSLog(@"%@",dic);
     [self.navigationController pushViewController:details animated:YES];
 }

@@ -186,7 +186,6 @@
                     //设定时间格式,这里可以设置成自己需要的格式
                     
                     [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-                    
                     NSString*currentDateStr = [dateFormatter stringFromDate:detaildate];
                     if (indexPath.row==1) {
                         imageText.textColor=blueCyan;

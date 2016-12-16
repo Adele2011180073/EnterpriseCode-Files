@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface HZJinDuViewController : UIViewController
-
+@property(nonatomic,strong)NSMutableArray *dataList;
 @end

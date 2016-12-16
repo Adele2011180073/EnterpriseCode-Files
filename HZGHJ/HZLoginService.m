@@ -296,7 +296,7 @@
 
 }
 //上报提交
-+(void)ShangBaoCommitWithToken:(NSString *)token ProjectId:(NSString*)projectId processId:(NSString *)processId details:(NSString*)details picture:(NSData *)imageData  andBlock:(ReturnData)ShangBaoBlock{
++(void)ShangBaoCommitWithToken:(NSString *)token ProjectId:(NSString*)projectId processId:(NSString *)processId details:(NSString*)details picture:(NSMutableArray *)imageData  andBlock:(ReturnData)ShangBaoBlock{
     AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
     NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kProjectProcessUploadURL];
     session.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"text/html",@"application/json", @"text/json", nil];
@@ -308,7 +308,13 @@
     [parameters setObject:processId forKey:@"processId"];
     [parameters setObject:details forKey:@"details"];
     
-    [session POST:serviceURLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [session POST:serviceURLString parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+        for (int i=0; i<imageData.count; i++) {
+            UIImage *object=[imageData objectAtIndex:i];
+            NSData *imageData=UIImageJPEGRepresentation(object, 0.1);
+            [formData appendPartWithFileData:imageData name:[NSString stringWithFormat:@"image%d",i+1] fileName:[NSString stringWithFormat:@"image%d.png",i+1] mimeType:@"png/jpeg/jpg"];
+        }
+    } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
         NSString *str=[[NSString alloc]initWithData:responseObject encoding:NSUTF8StringEncoding];
         NSLog(@"成功  %@",str);
@@ -318,6 +324,49 @@
         ShangBaoBlock(nil,error);
     }];
 
+}
+/*进度查询         */
+//进度查询列表
++(void)JinDuGetWithToken:(NSString *)token pageIndex:(int)pageindex andBlock:(ReturnData)JinDuBlock{
+    AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
+    NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kProjectPaceURL];
+    session.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"text/html",@"application/json", @"text/json", nil];
+    session.responseSerializer = [AFHTTPResponseSerializer serializer];
+    session.requestSerializer.timeoutInterval=10.f;
+    NSMutableDictionary *parameters=[NSMutableDictionary dictionary];
+    [parameters setObject:token forKey:@"token"];
+    [parameters setObject:[NSString stringWithFormat:@"%d",pageindex] forKey:@"pageindex"];
+    [parameters setObject:@"10" forKey:@"pagesize"];
+    [session POST:serviceURLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
+        NSString *str=[[NSString alloc]initWithData:responseObject encoding:NSUTF8StringEncoding];
+        NSLog(@"成功  %@",str);
+        JinDuBlock(dic,nil);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"失败%@",error);
+        JinDuBlock(nil,error);
+    }];
+    
+}
+//进度查询详情
++(void)JinDuDetailWithPublicid:(NSString*)publicid  andBlock:(ReturnData)JinDuBlock{
+    AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
+    NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kProjectPaceDetailURL];
+    session.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"text/html",@"application/json", @"text/json", nil];
+    session.responseSerializer = [AFHTTPResponseSerializer serializer];
+    session.requestSerializer.timeoutInterval=10.f;
+    NSMutableDictionary *parameters=[NSMutableDictionary dictionary];
+    [parameters setObject:publicid forKey:@"projectid"];
+    [session POST:serviceURLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSString *str=[[NSString alloc]initWithData:responseObject encoding:NSUTF8StringEncoding];
+        NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
+        NSLog(@"成功  %@  %@",str,dic);
+        JinDuBlock(dic,nil);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"失败%@",error);
+        JinDuBlock(nil,error);
+    }];
+    
 }
 
 //公示
@@ -331,7 +380,7 @@
     NSMutableDictionary *parameters=[NSMutableDictionary dictionary];
     [parameters setObject:token forKey:@"token"];
     [parameters setObject:[NSString stringWithFormat:@"%d",1] forKey:@"pageindex"];
-    [parameters setObject:@"5" forKey:@"pagesize"];
+    [parameters setObject:@"10" forKey:@"pagesize"];
     [session POST:serviceURLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
         NSString *str=[[NSString alloc]initWithData:responseObject encoding:NSUTF8StringEncoding];
@@ -347,7 +396,7 @@
 //已公示详情
 +(void)GongShiDetailWithPublicid:(NSString*)publicid  andBlock:(ReturnData)GongShiBlock{
     AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
-    NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kMessageDetailURL];
+    NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kPublicUploadURL];
     session.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"text/html",@"application/json", @"text/json", nil];
     session.responseSerializer = [AFHTTPResponseSerializer serializer];
     session.requestSerializer.timeoutInterval=10.f;
@@ -364,6 +413,7 @@
     }];
 
 }
+
 //公示记录列表
 +(void)GongShiLstWithToken:(NSString *)token pageIndex:(int)pageindex ProjectName:(NSString*)projectname andBlock:(ReturnData)GongShiBlock{
     AFHTTPSessionManager *session = [AFHTTPSessionManager manager];

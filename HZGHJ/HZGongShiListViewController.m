@@ -31,22 +31,23 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
     self.title=@"公示记录";
+    self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStyleBordered target:nil action:nil];
     
-    textField=[[UITextField alloc]initWithFrame:CGRectMake(10, 5, Width-120, 40)];
+    textField=[[UITextField alloc]initWithFrame:CGRectMake(10, 5, Width-110, 40)];
     textField.backgroundColor=[UIColor whiteColor];
     textField.placeholder=@"请输入项目名称进行查询";
     textField.layer.borderWidth=1;
     textField.clearsOnBeginEditing=YES;
     textField.layer.cornerRadius=5;
-    textField.layer.borderColor=[UIColor lightGrayColor].CGColor;
+    textField.layer.borderColor=blueCyan.CGColor;
     [self.view addSubview:textField];
     
-    UIButton *search=[[UIButton alloc]initWithFrame:CGRectMake(Width-80, 5, 60, 40)];
+    UIButton *search=[[UIButton alloc]initWithFrame:CGRectMake(Width-80, 5, 70, 40)];
     search.backgroundColor=[UIColor whiteColor];
     [search setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [search setTitle:@"搜索" forState:UIControlStateNormal];
     search.layer.cornerRadius=5;
-    search.layer.borderColor=[UIColor lightGrayColor].CGColor;
+    search.layer.borderColor=blueCyan.CGColor;
     search.layer.borderWidth=1;
     [search addTarget:self action:@selector(search:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:search];
@@ -55,7 +56,7 @@
     dataList=[[NSMutableArray alloc]init];
     tableview=[[UITableView alloc]initWithFrame:CGRectMake(0, 55, Width, Height-44-55)];
     [tableview registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
-    tableview.rowHeight=110;
+    tableview.rowHeight=120;
     tableview.delegate=self;
     tableview.separatorColor=[UIColor clearColor];
     tableview.dataSource=self;
@@ -75,8 +76,15 @@
     [tableview.pullToRefreshView setTitle:@"不要命的加载中..." forState:SVPullToRefreshStateLoading];
 }
 - (void)search:(UIButton *)sender {
-    pageIndex=0;
-    [self getDataSource];
+    for (int i=0; i<dataList.count; i++) {
+        NSDictionary *dic=[dataList objectAtIndex:i];
+       NSString*projectName=[NSString stringWithFormat:@"%@",[dic objectForKey:@"projectname"]];
+        if ([projectName rangeOfString:textField.text].location !=NSNotFound ) {
+            dataList=[[NSMutableArray alloc]init];
+            [dataList addObject:dic];
+        }
+    }
+    [tableview reloadData];
 }
 -(void)getDataSource{
     MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -179,7 +187,11 @@
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     HZGongShiDetailViewController *detail=[[HZGongShiDetailViewController alloc]init];
-//    detail.returnDic=[dataList objectAtIndex:indexPath.row];
+     NSDictionary *dic=[dataList objectAtIndex:indexPath.row];
+    detail.type=[[dic objectForKey:@"type"]integerValue];
+    detail.publicid=[dic objectForKey:@"id"];
+    detail.listDic=dic;
+    detail.isGongShi=YES;
     [self.navigationController pushViewController:detail animated:YES];
 }
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{

@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface HZProjectViewController : UIViewController
-
+@property(nonatomic,strong)UILabel *placehoderLabel;
+@property(nonatomic,strong)UILabel *numLabel;
+@property(nonatomic,strong)NSMutableArray *imageArray;
 @end

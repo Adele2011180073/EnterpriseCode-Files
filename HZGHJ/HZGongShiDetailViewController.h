@@ -10,5 +10,7 @@
 
 @interface HZGongShiDetailViewController : UIViewController
 @property(nonatomic,strong)NSString*publicid;
+@property(nonatomic,strong)NSDictionary*listDic;
 @property(nonatomic,assign)NSInteger type;
+@property(nonatomic,assign)BOOL isGongShi;
 @end

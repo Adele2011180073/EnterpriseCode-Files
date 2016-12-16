@@ -32,7 +32,14 @@ typedef void (^ReturnData)(NSDictionary *returnDic, NSError *error);
 //项目上报
 +(void)ShangBaoGetWithToken:(NSString *)token  andBlock:(ReturnData)ShangBaoBlock;
 //上报提交
-+(void)ShangBaoCommitWithToken:(NSString *)token ProjectId:(NSString*)projectId processId:(NSString *)processId details:(NSString*)details picture:(NSData *)imageData  andBlock:(ReturnData)ShangBaoBlock;
++(void)ShangBaoCommitWithToken:(NSString *)token ProjectId:(NSString*)projectId processId:(NSString *)processId details:(NSString*)details picture:(NSMutableArray *)imageData  andBlock:(ReturnData)ShangBaoBlock;
+
+/*进度查询         */
+//进度查询列表
++(void)JinDuGetWithToken:(NSString *)token pageIndex:(int)pageindex andBlock:(ReturnData)JinDuBlock;
+//进度查询详情
++(void)JinDuDetailWithPublicid:(NSString*)publicid  andBlock:(ReturnData)JinDuBlock;
+
 
 //公示
 //需公示方案列表

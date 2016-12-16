@@ -58,6 +58,8 @@
 		1F340CC11DF808F9003937DF /* bg_top@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F340CBE1DF808F9003937DF /* bg_top@2x.png */; };
 		1F340CC21DF808F9003937DF /* bg_top@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F340CBF1DF808F9003937DF /* bg_top@3x.png */; };
 		1F340CC51DF8144C003937DF /* HZLoginService.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F340CC41DF8144C003937DF /* HZLoginService.m */; };
+		1F34A6231E029367003462B8 /* HZJingDuDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F34A6221E029367003462B8 /* HZJingDuDetailViewController.m */; };
+		1F34A6261E02CACA003462B8 /* GongShiListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F34A6251E02CACA003462B8 /* GongShiListCell.m */; };
 		1F3CCE3F1E012F0D0032981B /* HZGongShiDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F3CCE3E1E012F0D0032981B /* HZGongShiDetailViewController.m */; };
 		1F717A251DFF9BDC00833463 /* HZPictureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F717A241DFF9BDC00833463 /* HZPictureViewController.m */; };
 		1F717A291DFFA58A00833463 /* HZNoticeDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F717A271DFFA58A00833463 /* HZNoticeDetailViewController.m */; };
@@ -72,6 +74,12 @@
 		1F8B89271DF6A02500087C6B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F8B89251DF6A02500087C6B /* LaunchScreen.storyboard */; };
 		1F8B89401DF6CB0100087C6B /* HZHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8B893E1DF6CB0100087C6B /* HZHomeViewController.m */; };
 		1F8B89411DF6CB0100087C6B /* HZHomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F8B893F1DF6CB0100087C6B /* HZHomeViewController.xib */; };
+		1FA9260D1E038F1E004F6ED5 /* icon_jj.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA926071E038F1E004F6ED5 /* icon_jj.png */; };
+		1FA9260E1E038F1E004F6ED5 /* icon_jj@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA926081E038F1E004F6ED5 /* icon_jj@2x.png */; };
+		1FA9260F1E038F1E004F6ED5 /* icon_jj@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA926091E038F1E004F6ED5 /* icon_jj@3x.png */; };
+		1FA926101E038F1E004F6ED5 /* icon_yj.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA9260A1E038F1E004F6ED5 /* icon_yj.png */; };
+		1FA926111E038F1E004F6ED5 /* icon_yj@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA9260B1E038F1E004F6ED5 /* icon_yj@2x.png */; };
+		1FA926121E038F1E004F6ED5 /* icon_yj@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA9260C1E038F1E004F6ED5 /* icon_yj@3x.png */; };
 		1FCDBFFE1DFA5091005E5587 /* BottomMenuItems1.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1FCDBFFD1DFA5091005E5587 /* BottomMenuItems1.plist */; };
 		1FCDC0021DFA5C1D005E5587 /* HZYuYueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FCDC0001DFA5C1D005E5587 /* HZYuYueViewController.m */; };
 		1FCDC0031DFA5C1D005E5587 /* HZYuYueViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FCDC0011DFA5C1D005E5587 /* HZYuYueViewController.xib */; };
@@ -90,6 +98,8 @@
 		1FCDC0251DFA5CB7005E5587 /* HZPersonalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FCDC0231DFA5CB7005E5587 /* HZPersonalViewController.m */; };
 		1FCDC0261DFA5CB7005E5587 /* HZPersonalViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FCDC0241DFA5CB7005E5587 /* HZPersonalViewController.xib */; };
 		1FECFD251E02369400872544 /* HZNewsDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FECFD241E02369400872544 /* HZNewsDetailViewController.m */; };
+		1FECFD281E02524000872544 /* add_photo.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FECFD261E02524000872544 /* add_photo.png */; };
+		1FECFD291E02524000872544 /* addBtn_photo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FECFD271E02524000872544 /* addBtn_photo@2x.png */; };
 		1FF89EA21DFE3685007A4597 /* CollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF89EA01DFE3685007A4597 /* CollectionViewCell.m */; };
 		1FF89EA31DFE3685007A4597 /* CollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FF89EA11DFE3685007A4597 /* CollectionViewCell.xib */; };
 		1FF89EA71DFE4EB2007A4597 /* HZIYuYueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF89EA61DFE4EB2007A4597 /* HZIYuYueViewController.m */; };
@@ -164,6 +174,10 @@
 		1F340CBF1DF808F9003937DF /* bg_top@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg_top@3x.png"; sourceTree = "<group>"; };
 		1F340CC31DF8144C003937DF /* HZLoginService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZLoginService.h; sourceTree = "<group>"; };
 		1F340CC41DF8144C003937DF /* HZLoginService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZLoginService.m; sourceTree = "<group>"; };
+		1F34A6211E029367003462B8 /* HZJingDuDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZJingDuDetailViewController.h; sourceTree = "<group>"; };
+		1F34A6221E029367003462B8 /* HZJingDuDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZJingDuDetailViewController.m; sourceTree = "<group>"; };
+		1F34A6241E02CACA003462B8 /* GongShiListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GongShiListCell.h; sourceTree = "<group>"; };
+		1F34A6251E02CACA003462B8 /* GongShiListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GongShiListCell.m; sourceTree = "<group>"; };
 		1F3CCE3D1E012F0D0032981B /* HZGongShiDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZGongShiDetailViewController.h; sourceTree = "<group>"; };
 		1F3CCE3E1E012F0D0032981B /* HZGongShiDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZGongShiDetailViewController.m; sourceTree = "<group>"; };
 		1F717A231DFF9BDC00833463 /* HZPictureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZPictureViewController.h; sourceTree = "<group>"; };
@@ -188,6 +202,12 @@
 		1F8B893D1DF6CB0100087C6B /* HZHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZHomeViewController.h; sourceTree = "<group>"; };
 		1F8B893E1DF6CB0100087C6B /* HZHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZHomeViewController.m; sourceTree = "<group>"; };
 		1F8B893F1DF6CB0100087C6B /* HZHomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HZHomeViewController.xib; sourceTree = "<group>"; };
+		1FA926071E038F1E004F6ED5 /* icon_jj.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_jj.png; sourceTree = "<group>"; };
+		1FA926081E038F1E004F6ED5 /* icon_jj@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_jj@2x.png"; sourceTree = "<group>"; };
+		1FA926091E038F1E004F6ED5 /* icon_jj@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_jj@3x.png"; sourceTree = "<group>"; };
+		1FA9260A1E038F1E004F6ED5 /* icon_yj.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_yj.png; sourceTree = "<group>"; };
+		1FA9260B1E038F1E004F6ED5 /* icon_yj@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_yj@2x.png"; sourceTree = "<group>"; };
+		1FA9260C1E038F1E004F6ED5 /* icon_yj@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_yj@3x.png"; sourceTree = "<group>"; };
 		1FCDBFFD1DFA5091005E5587 /* BottomMenuItems1.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BottomMenuItems1.plist; sourceTree = "<group>"; };
 		1FCDBFFF1DFA5C1D005E5587 /* HZYuYueViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZYuYueViewController.h; sourceTree = "<group>"; };
 		1FCDC0001DFA5C1D005E5587 /* HZYuYueViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZYuYueViewController.m; sourceTree = "<group>"; };
@@ -215,6 +235,8 @@
 		1FCDC0241DFA5CB7005E5587 /* HZPersonalViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HZPersonalViewController.xib; sourceTree = "<group>"; };
 		1FECFD231E02369400872544 /* HZNewsDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZNewsDetailViewController.h; sourceTree = "<group>"; };
 		1FECFD241E02369400872544 /* HZNewsDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZNewsDetailViewController.m; sourceTree = "<group>"; };
+		1FECFD261E02524000872544 /* add_photo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add_photo.png; sourceTree = "<group>"; };
+		1FECFD271E02524000872544 /* addBtn_photo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "addBtn_photo@2x.png"; sourceTree = "<group>"; };
 		1FF89E9F1DFE3685007A4597 /* CollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionViewCell.h; sourceTree = "<group>"; };
 		1FF89EA01DFE3685007A4597 /* CollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionViewCell.m; sourceTree = "<group>"; };
 		1FF89EA11DFE3685007A4597 /* CollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CollectionViewCell.xib; sourceTree = "<group>"; };
@@ -300,6 +322,8 @@
 				1FCDC0041DFA5C2D005E5587 /* HZJinDuViewController.h */,
 				1FCDC0051DFA5C2D005E5587 /* HZJinDuViewController.m */,
 				1FCDC0061DFA5C2D005E5587 /* HZJinDuViewController.xib */,
+				1F34A6211E029367003462B8 /* HZJingDuDetailViewController.h */,
+				1F34A6221E029367003462B8 /* HZJingDuDetailViewController.m */,
 				1FCDC0091DFA5C3F005E5587 /* HZShangBaoViewController.h */,
 				1FCDC00A1DFA5C3F005E5587 /* HZShangBaoViewController.m */,
 				1FCDC00B1DFA5C3F005E5587 /* HZShangBaoViewController.xib */,
@@ -312,6 +336,8 @@
 				1F3CCE3E1E012F0D0032981B /* HZGongShiDetailViewController.m */,
 				1F717A2E1E00153A00833463 /* HZGongShiListViewController.h */,
 				1F717A2F1E00153A00833463 /* HZGongShiListViewController.m */,
+				1F34A6241E02CACA003462B8 /* GongShiListCell.h */,
+				1F34A6251E02CACA003462B8 /* GongShiListCell.m */,
 				1FCDC0131DFA5C60005E5587 /* HZBanShiViewController.h */,
 				1FCDC0141DFA5C60005E5587 /* HZBanShiViewController.m */,
 				1FCDC0151DFA5C60005E5587 /* HZBanShiViewController.xib */,
@@ -360,6 +386,8 @@
 				1F340C631DF80746003937DF /* checkbox_fill.png */,
 				1F340C641DF80746003937DF /* checkbox_fill@2x.png */,
 				1F340C651DF80746003937DF /* checkbox_fill@3x.png */,
+				1FECFD261E02524000872544 /* add_photo.png */,
+				1FECFD271E02524000872544 /* addBtn_photo@2x.png */,
 				1F340CBD1DF808F9003937DF /* bg_top.png */,
 				1F340CBE1DF808F9003937DF /* bg_top@2x.png */,
 				1F340CBF1DF808F9003937DF /* bg_top@3x.png */,
@@ -393,6 +421,12 @@
 				1F340C811DF80746003937DF /* icon_zaixianyuyue.png */,
 				1F340C821DF80746003937DF /* icon_zaixianyuyue@2x.png */,
 				1F340C831DF80746003937DF /* icon_zaixianyuyue@3x.png */,
+				1FA926071E038F1E004F6ED5 /* icon_jj.png */,
+				1FA926081E038F1E004F6ED5 /* icon_jj@2x.png */,
+				1FA926091E038F1E004F6ED5 /* icon_jj@3x.png */,
+				1FA9260A1E038F1E004F6ED5 /* icon_yj.png */,
+				1FA9260B1E038F1E004F6ED5 /* icon_yj@2x.png */,
+				1FA9260C1E038F1E004F6ED5 /* icon_yj@3x.png */,
 				1F340C841DF80746003937DF /* icon.png */,
 				1F340C851DF80746003937DF /* icon@2x.png */,
 				1F340C861DF80746003937DF /* icon@3x.png */,
@@ -518,6 +552,7 @@
 				1F340C9B1DF80746003937DF /* icon_banshizhinan@3x.png in Resources */,
 				1FCDC0031DFA5C1D005E5587 /* HZYuYueViewController.xib in Resources */,
 				1F340CB31DF80746003937DF /* icon_zaixianyuyue@3x.png in Resources */,
+				1FECFD281E02524000872544 /* add_photo.png in Resources */,
 				1F8B89241DF6A02500087C6B /* Assets.xcassets in Resources */,
 				1FCDC0171DFA5C60005E5587 /* HZBanShiViewController.xib in Resources */,
 				1F340C971DF80746003937DF /* checkbox@2x.png in Resources */,
@@ -528,11 +563,14 @@
 				1FCDC0261DFA5CB7005E5587 /* HZPersonalViewController.xib in Resources */,
 				1FF89EBD1DFE9B1F007A4597 /* demo.css in Resources */,
 				1FF89EBE1DFE9B1F007A4597 /* demo.html in Resources */,
+				1FA926101E038F1E004F6ED5 /* icon_yj.png in Resources */,
 				1F340CC21DF808F9003937DF /* bg_top@3x.png in Resources */,
+				1FECFD291E02524000872544 /* addBtn_photo@2x.png in Resources */,
 				1F340CBA1DF80746003937DF /* user.png in Resources */,
 				1F340C991DF80746003937DF /* icon_banshizhinan.png in Resources */,
 				1F340CA81DF80746003937DF /* icon_quit.png in Resources */,
 				1FCDC01C1DFA5C73005E5587 /* HZNoticeViewController.xib in Resources */,
+				1FA9260E1E038F1E004F6ED5 /* icon_jj@2x.png in Resources */,
 				1F340CC11DF808F9003937DF /* bg_top@2x.png in Resources */,
 				1F340CC01DF808F9003937DF /* bg_top.png in Resources */,
 				1FF89EC11DFE9B1F007A4597 /* iconfont.svg in Resources */,
@@ -549,11 +587,13 @@
 				1F340CAE1DF80746003937DF /* icon_xiaoxitongzhi.png in Resources */,
 				1F340C941DF80746003937DF /* checkbox_fill@2x.png in Resources */,
 				1F340CBC1DF80746003937DF /* user@3x.png in Resources */,
+				1FA926111E038F1E004F6ED5 /* icon_yj@2x.png in Resources */,
 				1F340CB81DF80746003937DF /* password@2x.png in Resources */,
 				1F340CA61DF80746003937DF /* icon_jinduchaxun@2x.png in Resources */,
 				1F340CB21DF80746003937DF /* icon_zaixianyuyue@2x.png in Resources */,
 				1FCDC00D1DFA5C3F005E5587 /* HZShangBaoViewController.xib in Resources */,
 				1F340CA31DF80746003937DF /* icon_guochengshangbao@2x.png in Resources */,
+				1FA926121E038F1E004F6ED5 /* icon_yj@3x.png in Resources */,
 				1F340C981DF80746003937DF /* checkbox@3x.png in Resources */,
 				1F340CAC1DF80746003937DF /* icon_xiaoxigonggao@2x.png in Resources */,
 				1F340C8D1DF80746003937DF /* .DS_Store in Resources */,
@@ -563,6 +603,7 @@
 				1F340C9F1DF80746003937DF /* icon_gongshidengji.png in Resources */,
 				1F340CA01DF80746003937DF /* icon_gongshidengji@2x.png in Resources */,
 				1FF89EB21DFE8709007A4597 /* title_bgg.png in Resources */,
+				1FA9260D1E038F1E004F6ED5 /* icon_jj.png in Resources */,
 				1FCDC0121DFA5C52005E5587 /* HZGongShiViewController.xib in Resources */,
 				1F340C9E1DF80746003937DF /* icon_gerenzhongxin@3x.png in Resources */,
 				1F340C951DF80746003937DF /* checkbox_fill@3x.png in Resources */,
@@ -570,6 +611,7 @@
 				1F340C9C1DF80746003937DF /* icon_gerenzhongxin.png in Resources */,
 				1F8B89411DF6CB0100087C6B /* HZHomeViewController.xib in Resources */,
 				1F340CAA1DF80746003937DF /* icon_quit@3x.png in Resources */,
+				1FA9260F1E038F1E004F6ED5 /* icon_jj@3x.png in Resources */,
 				1F340CBB1DF80746003937DF /* user@2x.png in Resources */,
 				1FF89EC21DFE9B1F007A4597 /* iconfont.ttf in Resources */,
 				1F340CB01DF80746003937DF /* icon_xiaoxitongzhi@3x.png in Resources */,
@@ -644,6 +686,7 @@
 				1FF89EC61DFEACF3007A4597 /* HZChangePwViewController.m in Sources */,
 				1FCDC0021DFA5C1D005E5587 /* HZYuYueViewController.m in Sources */,
 				1FCDC00C1DFA5C3F005E5587 /* HZShangBaoViewController.m in Sources */,
+				1F34A6231E029367003462B8 /* HZJingDuDetailViewController.m in Sources */,
 				1F8B89191DF6A02500087C6B /* main.m in Sources */,
 				1F717A291DFFA58A00833463 /* HZNoticeDetailViewController.m in Sources */,
 				1FF89EA21DFE3685007A4597 /* CollectionViewCell.m in Sources */,
@@ -655,6 +698,7 @@
 				1FCDC0071DFA5C2D005E5587 /* HZJinDuViewController.m in Sources */,
 				1FCDC0251DFA5CB7005E5587 /* HZPersonalViewController.m in Sources */,
 				1FF89EAF1DFE6E80007A4597 /* HZYuYueDetailCell.m in Sources */,
+				1F34A6261E02CACA003462B8 /* GongShiListCell.m in Sources */,
 				1F8B89401DF6CB0100087C6B /* HZHomeViewController.m in Sources */,
 				1FCDC0111DFA5C52005E5587 /* HZGongShiViewController.m in Sources */,
 				1F717A2D1E0009EE00833463 /* HZProjectViewController.m in Sources */,

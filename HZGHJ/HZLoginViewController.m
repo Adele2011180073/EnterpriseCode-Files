@@ -29,6 +29,7 @@
      self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor], NSForegroundColorAttributeName, nil];
     NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
     if ([def boolForKey:@"remember"]==YES) {
+        isRemember=YES;
         NSString *username=[def objectForKey:@"username"];
         NSString *passwd=[def objectForKey:@"passwd"];
         self.userText.userInteractionEnabled=NO;
@@ -84,7 +85,6 @@
             NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
             [def setObject:[returnDic objectForKey:@"token"] forKey:@"token"];
             [ def setObject:[[returnDic objectForKey:@"obj"]objectForKey:@"userid"] forKey:@"userid"];
-            [def setObject:_passwdText.text forKey:@"passwd"];
                 [def setObject:[[[returnDic objectForKey:@"obj"]objectForKey:@"dbAConstructionunit"]objectForKey:@"name"]  forKey:@"department"];
                 NSData *data =    [NSJSONSerialization dataWithJSONObject:returnDic options:NSJSONWritingPrettyPrinted error:nil];
                 [def setObject:data forKey:@"info"];

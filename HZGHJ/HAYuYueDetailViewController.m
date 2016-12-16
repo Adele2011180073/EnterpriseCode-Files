@@ -21,19 +21,20 @@
 @end
 
 @implementation HAYuYueDetailViewController
-
+@synthesize dataList;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
     self.title=@"预约详情";
     
+    dataList=[[NSMutableArray alloc]init];
+    returnData=[[NSDictionary alloc]init];
     tableview=[[UITableView alloc]initWithFrame:CGRectMake(0, 0, Width, Height-44-0)];
     [tableview registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
-    tableview.rowHeight=160;
-    tableview.backgroundColor=[UIColor whiteColor];
+    tableview.rowHeight=40;
     tableview.delegate=self;
-    tableview.separatorColor=[UIColor clearColor];
+    tableview.separatorColor=littleGray;
     tableview.dataSource=self;
     [self.view addSubview:tableview];
     
@@ -48,11 +49,13 @@
     [HZLoginService YuYueWithToken:token ReservationId:self.reservationId andBlock:^(NSDictionary *returnDic, NSError *error) {
       [hud hideAnimated:YES];
             if ([[returnDic objectForKey:@"code"]integerValue]==0) {
-//                NSArray *array=[returnDic objectForKey:@"reservationlist"];
             NSData *data =    [NSJSONSerialization dataWithJSONObject:returnDic options:NSJSONWritingPrettyPrinted error:nil];
                 NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-//                [tableview reloadData];
-                NSLog(@"预约列表    %@  %@",str,returnDic);
+                NSLog(@"预约列表详情      %@",str);
+                returnData=[returnDic objectForKey:@"list"];
+                NSArray *array=[[returnDic objectForKey:@"list"]objectForKey:@"runTaskResult"];
+                [dataList arrayByAddingObjectsFromArray:array];
+                [tableview reloadData];
                 
             }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
                 UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
@@ -66,97 +69,141 @@
 
         }];
 }
--(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return 5;
-}
--(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
-    return 10;
-}
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     NSInteger height;
-    if (indexPath.section==5&&indexPath.row==4) {
-        height= 60;
-    }else if (indexPath.section==0&&indexPath.row==0) {
-        height= 40;
+    if (indexPath.section==0&&indexPath.row==0) {
+        height=60;
     }else{
-       height= Height/16;
+        height=40;
     }
     return height;
 }
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return dataList.count;
+}
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-     NSInteger number;
-    if (section==0) {
-        number=3;
-    }else if (section==1){
-        number=7;
-    }else if (section==1){
-        number=3;
+    NSInteger number;
+    switch (section) {
+        case 0:
+            number=3;
+            break;
+        case 1:
+            number=7;
+            break;
+        default:
+            number=0;
+            break;
     }
-    else if (section==1){
+    NSDictionary *dic=[dataList objectAtIndex:section];
+    if ([[dic objectForKey:@"whereuser"]integerValue]==1) {
         number=3;
+    }else if ([[dic objectForKey:@"whereuser"]integerValue]==2) {
+        number=5;
     }
-    else if (section==1){
-        number=4;
-    }
-
     return number;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    return 10;
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     if (!cell) {
         cell=[[UITableViewCell alloc]init];
     }
+    cell.selectionStyle=UITableViewCellSelectionStyleNone;
     cell.backgroundColor=[UIColor whiteColor];
-    UIView* bgView=[[UIView alloc]initWithFrame:CGRectMake(10, 5, Width-20, 150)];
-    bgView.backgroundColor=[UIColor colorWithRed:247/255.0 green:247/255.0 blue:247/255.0 alpha:1];
-    bgView.layer.borderWidth=1;
-    bgView.layer.cornerRadius=5;
-    bgView.layer.borderColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1].CGColor;
+    UIView* bgView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, Width, cell.frame.size.height)];
     [cell.contentView addSubview:bgView];
-    UILabel*titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, 0, Width-40, 45)];
-    titleLabel.textColor=[UIColor blackColor];
-    titleLabel.numberOfLines=2;
-    titleLabel.textAlignment=NSTextAlignmentLeft;
-    titleLabel.font=[UIFont systemFontOfSize:17];
-    [bgView addSubview:titleLabel];
-    UILabel*subTitle=[[UILabel alloc]initWithFrame:CGRectMake(10, 45, Width-40, 20)];
-    subTitle.textColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1];
-    subTitle.textAlignment=NSTextAlignmentLeft;
-    subTitle.font=[UIFont systemFontOfSize:15];
-    [bgView addSubview:subTitle];
-    UILabel*nameTitle=[[UILabel alloc]initWithFrame:CGRectMake(10, 65, Width-40, 17)];
-    titleLabel.textColor=[UIColor blackColor];
-    nameTitle.textAlignment=NSTextAlignmentLeft;
-    nameTitle.font=[UIFont systemFontOfSize:15];
-    [bgView addSubview:nameTitle];
-    UILabel* phoneLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, 82, Width-40, 17)];
-    titleLabel.textColor=[UIColor blackColor];
-    phoneLabel.textAlignment=NSTextAlignmentLeft;
-    phoneLabel.font=[UIFont systemFontOfSize:15];
-    [bgView addSubview:phoneLabel];
-    UILabel*timeTitle=[[UILabel alloc]initWithFrame:CGRectMake(10, 99, Width-40, 17)];
-    timeTitle.textColor=[UIColor blackColor];
-    timeTitle.textAlignment=NSTextAlignmentLeft;
-    timeTitle.font=[UIFont systemFontOfSize:15];
-    [bgView addSubview:timeTitle];
-    UILabel*statusLabel=[[UILabel alloc]initWithFrame:CGRectMake(110, 116, 80, 20)];
-    statusLabel.textAlignment=NSTextAlignmentLeft;
-    statusLabel.font=[UIFont systemFontOfSize:15];
-    statusLabel.textColor=[UIColor blueColor];
-    [bgView addSubview:statusLabel];
-    UILabel*subLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, 116, 100, 20)];
-    subLabel.text=@"预约状态";
-    subLabel.textAlignment=NSTextAlignmentLeft;
-    subLabel.font=[UIFont systemFontOfSize:15];
-    [bgView addSubview:subLabel];
+    UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(0, 5, 120, 20)];
+    label.textAlignment=NSTextAlignmentRight;
+    label.numberOfLines=2;
+    label.textColor=blueCyan;
+    label.font=[UIFont systemFontOfSize:15];
+    [bgView addSubview:label];
     
-//    NSDictionary *dic=[dataList objectAtIndex:indexPath.row];
-//    titleLabel.text=[NSString stringWithFormat:@"预约项目  %@",[dic objectForKey:@"projectName"]];
-//    subTitle.text=[NSString stringWithFormat:@"办理事项  %@",[dic objectForKey:@"nodeName"]];
-//    nameTitle.text=[NSString stringWithFormat:@"预约人  %@",[dic objectForKey:@"username"]];
-//    phoneLabel.text=[NSString stringWithFormat:@"电话  %@",[dic objectForKey:@"userphone"]];
-//    timeTitle.text=[NSString stringWithFormat:@"预约时间  %@",[dic objectForKey:@"timeofappointment"]];
-//    statusLabel.text=[NSString stringWithFormat:@"%@",[dic objectForKey:@"status"]];
+    UILabel *line=[[UILabel alloc]initWithFrame:CGRectMake(125, 10, 1, 20)];
+    line.backgroundColor=[UIColor colorWithRed:227/255.0 green:227/255.0 blue:227/255.0 alpha:1.0];
+    [bgView addSubview:line];
+    
+    UILabel *text=[[UILabel alloc]initWithFrame:CGRectMake(130, 10, Width -140, Height/20)];
+    text.textAlignment=NSTextAlignmentLeft;
+    text.font=[UIFont systemFontOfSize:15];
+    [bgView addSubview:text];
+
+
+    if (indexPath.section==0) {
+        NSArray *subArray=@[@"预约项目",@"预约事项",@"预约前提条件"];
+        NSString *str1=[returnData objectForKey:@"projectName"];
+        NSString *str2=[returnData objectForKey:@"nodeName"];
+        NSString *str3=[returnData objectForKey:@"status"];
+        if (str1==NULL||str1==nil)  str1=@"";
+        if (str2==NULL||str2==nil)  str2=@"";
+        if (str3==NULL||str3==nil)  str3=@"";
+        NSArray *textArray=@[str1,str2,str3];
+        label.text=[labelArray objectAtIndex:indexPath.row];
+        text.text=[textArray objectAtIndex:indexPath.row];
+    }else if (indexPath.section==1){
+        NSArray *subArray=@[@"预约人",@"联系电话",@"单位联系人",@"联系电话",@"设计院联系人",@"联系电话",@"预约时间"];
+        NSDictionary *unitUserInfo=[returnData objectForKey:@"unitUserInfo"];
+        NSString *str1=[returnData objectForKey:@"username"];
+        NSString *str2=[returnData objectForKey:@"adminPhone"];
+        NSString *str3=[unitUserInfo objectForKey:@"username"];
+        NSString *str4=[unitUserInfo objectForKey:@"phone"];
+        NSString *str5=[returnData objectForKey:@"designInstitutename"];
+        NSString *str6=[returnData objectForKey:@"designInstitutephone"];
+        NSString*str=[returnData objectForKey:@"designInstitutephone"];//时间戳
+        NSDate*detaildate=[NSDate dateWithTimeIntervalSince1970:[str integerValue]/1000];
+        //实例化一个NSDateFormatter对象
+        NSDateFormatter*dateFormatter = [[NSDateFormatter alloc]init];
+        //设定时间格式,这里可以设置成自己需要的格式
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        NSString*currentDateStr = [dateFormatter stringFromDate:detaildate];
+
+        NSString *str7=currentDateStr;
+        if (str1==NULL||str1==nil)  str1=@"";
+        if (str2==NULL||str2==nil)  str2=@"";
+        if (str3==NULL||str3==nil)  str3=@"";
+        if (str4==NULL||str4==nil)  str4=@"";
+        if (str5==NULL||str5==nil)  str5=@"";
+        if (str6==NULL||str6==nil)  str6=@"";
+         if (str7==NULL||str7==nil)  str7=@"";
+        
+        NSArray *textArray=@[str1,str2,str3,str4,str5,str6,str7];
+        label.text=[labelArray objectAtIndex:indexPath.row];
+        text.text=[textArray objectAtIndex:indexPath.row];
+    }else{
+        NSDictionary *dic=[dataList objectAtIndex:indexPath.section];
+        if ([[dic objectForKey:@"whereuser"]integerValue]==1) {
+            NSArray *subArray=@[@"预约时间",@"预约人",@"预约状态"];
+            NSString *str1=[returnData objectForKey:@"projectName"];
+            NSString *str2=[returnData objectForKey:@"nodeName"];
+            NSString *str3=[returnData objectForKey:@"status"];
+            if (str1==NULL||str1==nil)  str1=@"";
+            if (str2==NULL||str2==nil)  str2=@"";
+            if (str3==NULL||str3==nil)  str3=@"";
+            NSArray *textArray=@[str1,str2,str3];
+            label.text=[labelArray objectAtIndex:indexPath.row];
+            text.text=[textArray objectAtIndex:indexPath.row];
+        }else if ([[dic objectForKey:@"whereuser"]integerValue]==2) {
+            
+        }
+        NSArray *subArray=@[@"预约人",@"联系电话",@"单位联系人",@"联系电话",@"设计院联系人",@"联系电话",@"预约时间"];
+        NSString *str1=[[returnData objectForKey:@"message"]objectForKey:@"title"];
+        NSString *str2=[returnData objectForKey:@"projectid"];
+        NSString *str3=[[returnData objectForKey:@"project"]objectForKey:@"projectName"];
+        NSString *str4=[[returnData objectForKey:@"constructionunit"]objectForKey:@"name"];
+        NSString *str5=[[returnData objectForKey:@"process"]objectForKey:@"name"];
+        NSString *str6=[returnData objectForKey:@"hostdepartment"];
+        if (str1==NULL||str1==nil)  str1=@"";
+        if (str2==NULL||str2==nil)  str2=@"";
+        if (str3==NULL||str3==nil)  str3=@"";
+        if (str4==NULL||str4==nil)  str4=@"";
+        if (str5==NULL||str5==nil)  str5=@"";
+        if (str6==NULL||str6==nil)  str6=@"";
+        
+        NSArray *textArray=@[str1,str2,str3,str4,str5,str6];
+    }
+    
     
     return cell;
 }
