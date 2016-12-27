@@ -136,7 +136,7 @@
     UIView* bgView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, Width, 50)];
     bgView.backgroundColor=[UIColor whiteColor];
     [cell.contentView addSubview:bgView];
-        NSDictionary *dic=[dataList objectAtIndex:indexPath.section];
+    NSDictionary *dic=[dataList objectAtIndex:indexPath.section];
     UILabel*titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, 10, 100, 15)];
     titleLabel.textColor=[UIColor blackColor];
     titleLabel.numberOfLines=1;
@@ -171,10 +171,13 @@
         titleText.textAlignment=NSTextAlignmentLeft;
         titleText.font=[UIFont systemFontOfSize:15];
         [bgView addSubview:titleText];
+        imageText.textColor=[UIColor grayColor];
+        titleText.text=@"未公示";
         NSArray *array=[dic objectForKey:@"publiclist"];
         if (array.count>0) {
             for (int i=0; i<array.count; i++) {
                 NSDictionary *typeDic=[array objectAtIndex:i];
+                
                 if ([[typeDic objectForKey:@"type"]isEqualToString:@"1"]) {
                     NSString*str=[typeDic objectForKey:@"createtime"];//时间戳
                     NSDate*detaildate=[NSDate dateWithTimeIntervalSince1970:[str integerValue]/1000];
@@ -189,52 +192,13 @@
                     NSString*currentDateStr = [dateFormatter stringFromDate:detaildate];
                     if (indexPath.row==1) {
                         imageText.textColor=blueCyan;
+                        cell.accessibilityValue=[NSString stringWithFormat:@"%d",1];
                         titleText.text=currentDateStr;
                     }else{
-                        imageText.textColor=[UIColor grayColor];
-                        titleText.text=@"未公示";
+//                        imageText.textColor=[UIColor grayColor];
+//                        titleText.text=@"未公示";
                     }
                 }else  if ([[typeDic objectForKey:@"type"]isEqualToString:@"2"]) {
-                    NSString*str=[typeDic objectForKey:@"createtime"];//时间戳
-                    NSDate*detaildate=[NSDate dateWithTimeIntervalSince1970:[str integerValue]/1000];
-                    
-                    //实例化一个NSDateFormatter对象
-                    
-                    NSDateFormatter*dateFormatter = [[NSDateFormatter alloc]init];
-                    
-                    //设定时间格式,这里可以设置成自己需要的格式
-                    
-                    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-                    
-                    NSString*currentDateStr = [dateFormatter stringFromDate:detaildate];
-                    if (indexPath.row==2) {
-                        imageText.textColor=blueCyan;
-                        titleText.text=currentDateStr;
-                    }else{
-                         imageText.textColor=[UIColor grayColor];
-                        titleText.text=@"未公示";
-                    }
-                }else  if ([[typeDic objectForKey:@"type"]isEqualToString:@"3"]) {
-                    NSString*str=[typeDic objectForKey:@"createtime"];//时间戳
-                    NSDate*detaildate=[NSDate dateWithTimeIntervalSince1970:[str integerValue]/1000];
-                    
-                    //实例化一个NSDateFormatter对象
-                    
-                    NSDateFormatter*dateFormatter = [[NSDateFormatter alloc]init];
-                    
-                    //设定时间格式,这里可以设置成自己需要的格式
-                    
-                    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-                    
-                    NSString*currentDateStr = [dateFormatter stringFromDate:detaildate];
-                    if (indexPath.row==3) {
-                        imageText.textColor=blueCyan;
-                        titleText.text=currentDateStr;
-                    }else{
-                        imageText.textColor=[UIColor grayColor];
-                        titleText.text=@"未公示";
-                    }
-                }else  if ([[typeDic objectForKey:@"type"]isEqualToString:@"4"]) {
                     NSString*str=[typeDic objectForKey:@"createtime"];//时间戳
                     NSDate*detaildate=[NSDate dateWithTimeIntervalSince1970:[str integerValue]/1000];
                     
@@ -250,9 +214,53 @@
                     if (indexPath.row==4) {
                         imageText.textColor=blueCyan;
                         titleText.text=currentDateStr;
+                        cell.accessibilityValue=[NSString stringWithFormat:@"%d",1];
                     }else{
-                        imageText.textColor=[UIColor grayColor];
-                        titleText.text=@"未公示";
+//                         imageText.textColor=[UIColor grayColor];
+//                        titleText.text=@"未公示";
+                    }
+                }else  if ([[typeDic objectForKey:@"type"]isEqualToString:@"3"]) {
+                    NSString*str=[typeDic objectForKey:@"createtime"];//时间戳
+                    NSDate*detaildate=[NSDate dateWithTimeIntervalSince1970:[str integerValue]/1000];
+                    
+                    //实例化一个NSDateFormatter对象
+                    
+                    NSDateFormatter*dateFormatter = [[NSDateFormatter alloc]init];
+                    
+                    //设定时间格式,这里可以设置成自己需要的格式
+                    
+                    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                    
+                    NSString*currentDateStr = [dateFormatter stringFromDate:detaildate];
+                    if (indexPath.row==2) {
+                        imageText.textColor=blueCyan;
+                        titleText.text=currentDateStr;
+                        cell.accessibilityValue=[NSString stringWithFormat:@"%d",1];
+                    }
+                    else{
+//                        imageText.textColor=[UIColor grayColor];
+//                        titleText.text=@"未公示";
+                    }
+                }else  if ([[typeDic objectForKey:@"type"]isEqualToString:@"4"]) {
+                    NSString*str=[typeDic objectForKey:@"createtime"];//时间戳
+                    NSDate*detaildate=[NSDate dateWithTimeIntervalSince1970:[str integerValue]/1000];
+                    
+                    //实例化一个NSDateFormatter对象
+                    
+                    NSDateFormatter*dateFormatter = [[NSDateFormatter alloc]init];
+                    
+                    //设定时间格式,这里可以设置成自己需要的格式
+                    
+                    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                    
+                    NSString*currentDateStr = [dateFormatter stringFromDate:detaildate];
+                    if (indexPath.row==3) {
+                        imageText.textColor=blueCyan;
+                        titleText.text=currentDateStr;
+                        cell.accessibilityValue=[NSString stringWithFormat:@"%d",1];
+                    }else{
+//                        imageText.textColor=[UIColor grayColor];
+//                        titleText.text=@"未公示";
                     }
                 }
             }
@@ -263,9 +271,62 @@
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     HZGongShiDetailViewController *detail=[[HZGongShiDetailViewController alloc]init];
-//    detail.publicid=[]
-    detail.type=indexPath.row+1;
-    [self.navigationController pushViewController:detail animated:YES];
+    NSDictionary *dic=[dataList objectAtIndex:indexPath.section];
+    NSArray *array=[dic objectForKey:@"publiclist"];
+    if (array.count>0) {
+        for (int i=0; i<array.count; i++) {
+            NSDictionary *typeDic=[array objectAtIndex:i];
+            if ([[typeDic objectForKey:@"type"]integerValue]==1) {
+                if (indexPath.row==1) {
+                     detail.isGongShi=YES;
+                    detail.publicid=[typeDic objectForKey:@"id"];
+                    detail.listDic=dic;
+                }
+            }
+                if ([[typeDic objectForKey:@"type"]integerValue]==2) {
+                    if (indexPath.row==4) {
+                        detail.isGongShi=YES;
+                        detail.publicid=[typeDic objectForKey:@"id"];
+                       detail.listDic=dic;
+                    }
+                }  if ([[typeDic objectForKey:@"type"]integerValue]==3) {
+                    if (indexPath.row==2) {
+                        detail.isGongShi=YES;
+                        detail.publicid=[typeDic objectForKey:@"id"];
+                        detail.listDic=dic;
+                    }
+                }
+                if ([[typeDic objectForKey:@"type"]integerValue]==4) {
+                    if (indexPath.row==3) {
+                        detail.isGongShi=YES;
+                        detail.publicid=[typeDic objectForKey:@"id"];
+                        detail.listDic=dic;
+                    }
+                }
+        }
+    }
+    NSInteger type;
+    switch (indexPath.row) {
+        case 1:
+            type=1;
+            break;
+        case 2:
+            type=3;
+            break;
+        case 3:
+            type=4;
+            break;
+        case 4:
+            type=2;
+            break;
+        default:
+            break;
+    }
+        detail.type=type;
+        if (detail.isGongShi==NO) {
+            detail.listDic=dic;
+        }
+       [self.navigationController pushViewController:detail animated:YES];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

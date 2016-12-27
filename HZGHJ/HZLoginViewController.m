@@ -43,13 +43,7 @@
         [self.rememberBtn setBackgroundImage:[UIImage imageNamed:@"checkbox"] forState:UIControlStateNormal];
     }
 }
--(void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-    self.navigationController.navigationBarHidden=YES;
-}
--(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
-    [self.view endEditing:YES];
-}
+
 - (IBAction)remember:(id)sender {
     isRemember =!isRemember;
     if (isRemember==YES) {
@@ -60,6 +54,7 @@
         NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
         [def setObject:self.userText.text forKey:@"username"];
         [def setObject:self.passwdText.text forKey:@"passwd"];
+        NSLog(@"self.userText   %@  self.passwdText  %@",self.userText .text,self.passwdText.text);
          [def setBool:YES forKey:@"remember"];
         [def synchronize];
         [self.rememberBtn setBackgroundImage:[UIImage imageNamed:@"checkbox_fill"] forState:UIControlStateNormal];
@@ -73,6 +68,13 @@
     }
     
 }
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBarHidden=YES;
+}
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    [self.view endEditing:YES];
+}
 - (IBAction)login:(id)sender {
     MBProgressHUD *hud=[MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.label.text=@"登录中...";
@@ -85,7 +87,8 @@
             NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
             [def setObject:[returnDic objectForKey:@"token"] forKey:@"token"];
             [ def setObject:[[returnDic objectForKey:@"obj"]objectForKey:@"userid"] forKey:@"userid"];
-                [def setObject:[[[returnDic objectForKey:@"obj"]objectForKey:@"dbAConstructionunit"]objectForKey:@"name"]  forKey:@"department"];
+            [ def setObject:[[returnDic objectForKey:@"obj"]objectForKey:@"userid"] forKey:@"phone"];
+           [def setObject:[[[returnDic objectForKey:@"obj"]objectForKey:@"dbAConstructionunit"]objectForKey:@"name"]  forKey:@"department"];
                 NSData *data =    [NSJSONSerialization dataWithJSONObject:returnDic options:NSJSONWritingPrettyPrinted error:nil];
                 [def setObject:data forKey:@"info"];
                 [def synchronize];

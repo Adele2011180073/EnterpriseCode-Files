@@ -121,8 +121,18 @@
                 }else{
                     [dataList addObjectsFromArray:array];
                 }
+                [tableview reloadData];
+
+            }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
+                UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                }];
+                [alert addAction:cancelAlert];
+                [self presentViewController:alert animated:YES completion:nil];
+            }else{
+                
             }
-            [tableview reloadData];
+
             NSLog(@"我的预约    %@",returnDic);
         }];
     }
@@ -197,6 +207,7 @@
     NSDictionary *dic=[dataList objectAtIndex:indexPath.row];
     HAYuYueDetailViewController *details=[[HAYuYueDetailViewController alloc]init];
     details.reservationId=[dic objectForKey:@"id"];
+    details.returnData=dic;
 //    NSLog(@"%@",dic);
     [self.navigationController pushViewController:details animated:YES];
 }

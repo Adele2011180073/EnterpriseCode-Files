@@ -80,6 +80,7 @@
 		1FA926101E038F1E004F6ED5 /* icon_yj.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA9260A1E038F1E004F6ED5 /* icon_yj.png */; };
 		1FA926111E038F1E004F6ED5 /* icon_yj@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA9260B1E038F1E004F6ED5 /* icon_yj@2x.png */; };
 		1FA926121E038F1E004F6ED5 /* icon_yj@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FA9260C1E038F1E004F6ED5 /* icon_yj@3x.png */; };
+		1FA926151E03D912004F6ED5 /* HZGongShiCommitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FA926141E03D912004F6ED5 /* HZGongShiCommitViewController.m */; };
 		1FCDBFFE1DFA5091005E5587 /* BottomMenuItems1.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1FCDBFFD1DFA5091005E5587 /* BottomMenuItems1.plist */; };
 		1FCDC0021DFA5C1D005E5587 /* HZYuYueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FCDC0001DFA5C1D005E5587 /* HZYuYueViewController.m */; };
 		1FCDC0031DFA5C1D005E5587 /* HZYuYueViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1FCDC0011DFA5C1D005E5587 /* HZYuYueViewController.xib */; };
@@ -208,6 +209,8 @@
 		1FA9260A1E038F1E004F6ED5 /* icon_yj.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_yj.png; sourceTree = "<group>"; };
 		1FA9260B1E038F1E004F6ED5 /* icon_yj@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_yj@2x.png"; sourceTree = "<group>"; };
 		1FA9260C1E038F1E004F6ED5 /* icon_yj@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_yj@3x.png"; sourceTree = "<group>"; };
+		1FA926131E03D912004F6ED5 /* HZGongShiCommitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZGongShiCommitViewController.h; sourceTree = "<group>"; };
+		1FA926141E03D912004F6ED5 /* HZGongShiCommitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZGongShiCommitViewController.m; sourceTree = "<group>"; };
 		1FCDBFFD1DFA5091005E5587 /* BottomMenuItems1.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BottomMenuItems1.plist; sourceTree = "<group>"; };
 		1FCDBFFF1DFA5C1D005E5587 /* HZYuYueViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZYuYueViewController.h; sourceTree = "<group>"; };
 		1FCDC0001DFA5C1D005E5587 /* HZYuYueViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZYuYueViewController.m; sourceTree = "<group>"; };
@@ -336,6 +339,8 @@
 				1F3CCE3E1E012F0D0032981B /* HZGongShiDetailViewController.m */,
 				1F717A2E1E00153A00833463 /* HZGongShiListViewController.h */,
 				1F717A2F1E00153A00833463 /* HZGongShiListViewController.m */,
+				1FA926131E03D912004F6ED5 /* HZGongShiCommitViewController.h */,
+				1FA926141E03D912004F6ED5 /* HZGongShiCommitViewController.m */,
 				1F34A6241E02CACA003462B8 /* GongShiListCell.h */,
 				1F34A6251E02CACA003462B8 /* GongShiListCell.m */,
 				1FCDC0131DFA5C60005E5587 /* HZBanShiViewController.h */,
@@ -701,6 +706,7 @@
 				1F34A6261E02CACA003462B8 /* GongShiListCell.m in Sources */,
 				1F8B89401DF6CB0100087C6B /* HZHomeViewController.m in Sources */,
 				1FCDC0111DFA5C52005E5587 /* HZGongShiViewController.m in Sources */,
+				1FA926151E03D912004F6ED5 /* HZGongShiCommitViewController.m in Sources */,
 				1F717A2D1E0009EE00833463 /* HZProjectViewController.m in Sources */,
 				1FF89EAB1DFE4EF4007A4597 /* HAYuYueDetailViewController.m in Sources */,
 				1FF89EA71DFE4EB2007A4597 /* HZIYuYueViewController.m in Sources */,

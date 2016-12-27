@@ -30,7 +30,7 @@
     
     dataList=[[NSMutableArray alloc]init];
     returnData=[[NSDictionary alloc]init];
-    tableview=[[UITableView alloc]initWithFrame:CGRectMake(0, 0, Width, Height-44-0)];
+    tableview=[[UITableView alloc]initWithFrame:CGRectMake(0, 0, Width, Height-44-20)];
     [tableview registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     tableview.rowHeight=40;
     tableview.delegate=self;
@@ -51,10 +51,16 @@
             if ([[returnDic objectForKey:@"code"]integerValue]==0) {
             NSData *data =    [NSJSONSerialization dataWithJSONObject:returnDic options:NSJSONWritingPrettyPrinted error:nil];
                 NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-                NSLog(@"预约列表详情      %@",str);
                 returnData=[returnDic objectForKey:@"list"];
-                NSArray *array=[[returnDic objectForKey:@"list"]objectForKey:@"runTaskResult"];
-                [dataList arrayByAddingObjectsFromArray:array];
+                NSArray *listArray=[returnData objectForKey:@"runTaskResult"];
+                for (int i=0; i<listArray.count; i++) {
+                    NSDictionary *dic=[listArray objectAtIndex:i];
+                    NSArray *array=[dic objectForKey:@"varibles"];
+                    if (array.count>0) {
+                        [dataList addObject:dic];
+                    }
+                }
+                NSLog(@"预约列表详情      %@ ",str);
                 [tableview reloadData];
                 
             }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
@@ -79,7 +85,7 @@
     return height;
 }
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return dataList.count;
+    return dataList.count+2;
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     NSInteger number;
@@ -88,19 +94,22 @@
             number=3;
             break;
         case 1:
-            number=7;
+            number=5;
             break;
         default:
             number=0;
             break;
     }
-    NSDictionary *dic=[dataList objectAtIndex:section];
-    if ([[dic objectForKey:@"whereuser"]integerValue]==1) {
-        number=3;
-    }else if ([[dic objectForKey:@"whereuser"]integerValue]==2) {
-        number=5;
+    if (section>1) {
+        NSDictionary *dic=[dataList objectAtIndex:section-2];
+        if ([[dic objectForKey:@"whereuser"]integerValue]==1) {
+            number=3;
+        }else if ([[dic objectForKey:@"whereuser"]integerValue]==2) {
+            number=5;
+        }
+
     }
-    return number;
+       return number;
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     return 10;
@@ -109,14 +118,18 @@
     UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     if (!cell) {
         cell=[[UITableViewCell alloc]init];
+    }else{
+        for (UIView *subView in cell.contentView.subviews)
+        {
+            [subView removeFromSuperview];
+        }
     }
     cell.selectionStyle=UITableViewCellSelectionStyleNone;
     cell.backgroundColor=[UIColor whiteColor];
     UIView* bgView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, Width, cell.frame.size.height)];
     [cell.contentView addSubview:bgView];
-    UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(0, 5, 120, 20)];
+    UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(0, 10, 120, 20)];
     label.textAlignment=NSTextAlignmentRight;
-    label.numberOfLines=2;
     label.textColor=blueCyan;
     label.font=[UIFont systemFontOfSize:15];
     [bgView addSubview:label];
@@ -125,7 +138,7 @@
     line.backgroundColor=[UIColor colorWithRed:227/255.0 green:227/255.0 blue:227/255.0 alpha:1.0];
     [bgView addSubview:line];
     
-    UILabel *text=[[UILabel alloc]initWithFrame:CGRectMake(130, 10, Width -140, Height/20)];
+    UILabel *text=[[UILabel alloc]initWithFrame:CGRectMake(130, 10, Width -140, 20)];
     text.textAlignment=NSTextAlignmentLeft;
     text.font=[UIFont systemFontOfSize:15];
     [bgView addSubview:text];
@@ -135,74 +148,85 @@
         NSArray *subArray=@[@"预约项目",@"预约事项",@"预约前提条件"];
         NSString *str1=[returnData objectForKey:@"projectName"];
         NSString *str2=[returnData objectForKey:@"nodeName"];
-        NSString *str3=[returnData objectForKey:@"status"];
+//        NSString *str3=[returnData objectForKey:@"status"];
+         NSString *str3=@"全部自主确认";
         if (str1==NULL||str1==nil)  str1=@"";
         if (str2==NULL||str2==nil)  str2=@"";
         if (str3==NULL||str3==nil)  str3=@"";
         NSArray *textArray=@[str1,str2,str3];
-        label.text=[labelArray objectAtIndex:indexPath.row];
+        label.text=[subArray objectAtIndex:indexPath.row];
+        if (indexPath.row==0) {
+            text.frame=CGRectMake(130, 0, Width -140, 40);
+            text.numberOfLines=2;
+        }
         text.text=[textArray objectAtIndex:indexPath.row];
     }else if (indexPath.section==1){
-        NSArray *subArray=@[@"预约人",@"联系电话",@"单位联系人",@"联系电话",@"设计院联系人",@"联系电话",@"预约时间"];
-        NSDictionary *unitUserInfo=[returnData objectForKey:@"unitUserInfo"];
+        NSArray *subArray=@[@"预约人",@"联系电话",@"设计院联系人",@"联系电话",@"预约时间"];
+//        NSDictionary *unitUserInfo=[[returnData objectForKey:@"unitUserInfo"]objectAtIndex:0];
         NSString *str1=[returnData objectForKey:@"username"];
         NSString *str2=[returnData objectForKey:@"adminPhone"];
-        NSString *str3=[unitUserInfo objectForKey:@"username"];
-        NSString *str4=[unitUserInfo objectForKey:@"phone"];
-        NSString *str5=[returnData objectForKey:@"designInstitutename"];
-        NSString *str6=[returnData objectForKey:@"designInstitutephone"];
-        NSString*str=[returnData objectForKey:@"designInstitutephone"];//时间戳
-        NSDate*detaildate=[NSDate dateWithTimeIntervalSince1970:[str integerValue]/1000];
-        //实例化一个NSDateFormatter对象
-        NSDateFormatter*dateFormatter = [[NSDateFormatter alloc]init];
-        //设定时间格式,这里可以设置成自己需要的格式
-        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-        NSString*currentDateStr = [dateFormatter stringFromDate:detaildate];
-
-        NSString *str7=currentDateStr;
-        if (str1==NULL||str1==nil)  str1=@"";
+//        NSString *str3=[unitUserInfo objectForKey:@"username"];
+//        NSString *str4=[unitUserInfo objectForKey:@"phone"];
+        NSString *str3=[returnData objectForKey:@"designInstitutename"];
+        NSString *str4=[returnData objectForKey:@"designInstitutephone"];
+        NSString*str5=[returnData objectForKey:@"timeofappointment"];//时间戳
+            if (str1==NULL||str1==nil)  str1=@"";
         if (str2==NULL||str2==nil)  str2=@"";
         if (str3==NULL||str3==nil)  str3=@"";
         if (str4==NULL||str4==nil)  str4=@"";
         if (str5==NULL||str5==nil)  str5=@"";
-        if (str6==NULL||str6==nil)  str6=@"";
-         if (str7==NULL||str7==nil)  str7=@"";
         
-        NSArray *textArray=@[str1,str2,str3,str4,str5,str6,str7];
-        label.text=[labelArray objectAtIndex:indexPath.row];
+        NSArray *textArray=@[str1,str2,str3,str4,str5];
+        label.text=[subArray objectAtIndex:indexPath.row];
         text.text=[textArray objectAtIndex:indexPath.row];
     }else{
-        NSDictionary *dic=[dataList objectAtIndex:indexPath.section];
+        NSDictionary *dic=[dataList objectAtIndex:indexPath.section-2];
         if ([[dic objectForKey:@"whereuser"]integerValue]==1) {
             NSArray *subArray=@[@"预约时间",@"预约人",@"预约状态"];
-            NSString *str1=[returnData objectForKey:@"projectName"];
-            NSString *str2=[returnData objectForKey:@"nodeName"];
-            NSString *str3=[returnData objectForKey:@"status"];
+            NSArray *itemArray=[dic objectForKey:@"varibles"];
+            NSDictionary *timeDic=[itemArray objectAtIndex:0];
+            NSDictionary *statusDic=[itemArray objectAtIndex:1];
+            NSString *str1=[timeDic objectForKey:@"createtime"];
+            NSString *str2=[dic objectForKey:@"name"];
+            NSString *str3=[statusDic objectForKey:@"varibalevalue"];
             if (str1==NULL||str1==nil)  str1=@"";
             if (str2==NULL||str2==nil)  str2=@"";
             if (str3==NULL||str3==nil)  str3=@"";
             NSArray *textArray=@[str1,str2,str3];
-            label.text=[labelArray objectAtIndex:indexPath.row];
+            label.text=[subArray objectAtIndex:indexPath.row];
             text.text=[textArray objectAtIndex:indexPath.row];
         }else if ([[dic objectForKey:@"whereuser"]integerValue]==2) {
-            
+            NSArray *subArray=@[@"回复时间",@"办理人",@"回复状态",@"回复内容",@""];
+            NSArray *itemArray=[dic objectForKey:@"varibles"];
+            NSDictionary *timeDic=[itemArray objectAtIndex:3];
+            NSDictionary *statusDic=[itemArray objectAtIndex:2];
+            NSDictionary *detailsDic=[itemArray objectAtIndex:1];
+            NSString *str1=[timeDic objectForKey:@"varibalevalue"];
+            NSString *str2=[dic objectForKey:@"name"];
+            NSString *str3=[statusDic objectForKey:@"varibalevalue"];
+            NSString *str4=@"";
+            NSString *str5=[detailsDic objectForKey:@"varibalevalue"];
+            if (str1==NULL||str1==nil)  str1=@"";
+            if (str2==NULL||str2==nil)  str2=@"";
+            if (str3==NULL||str3==nil)  str3=@"";
+            if (str4==NULL||str4==nil)  str4=@"";
+             if (str5==NULL||str5==nil)  str5=@"";
+            NSArray *textArray=@[str1,str2,str3,str4,str5];
+            if (indexPath.row==4) {
+                UILabel *details=[[UILabel alloc]initWithFrame:CGRectMake(30, 0, Width -40, Height/20)];
+                details.layer.cornerRadius=5;
+                details.text=str5;
+                details.layer.borderColor=[UIColor grayColor].CGColor;
+                details.layer.borderWidth=1;
+                details.textAlignment=NSTextAlignmentLeft;
+                details.font=[UIFont systemFontOfSize:15];
+                [cell.contentView addSubview:details];
+            }else{
+                label.text=[subArray objectAtIndex:indexPath.row];
+                text.text=[textArray objectAtIndex:indexPath.row];
+            }
         }
-        NSArray *subArray=@[@"预约人",@"联系电话",@"单位联系人",@"联系电话",@"设计院联系人",@"联系电话",@"预约时间"];
-        NSString *str1=[[returnData objectForKey:@"message"]objectForKey:@"title"];
-        NSString *str2=[returnData objectForKey:@"projectid"];
-        NSString *str3=[[returnData objectForKey:@"project"]objectForKey:@"projectName"];
-        NSString *str4=[[returnData objectForKey:@"constructionunit"]objectForKey:@"name"];
-        NSString *str5=[[returnData objectForKey:@"process"]objectForKey:@"name"];
-        NSString *str6=[returnData objectForKey:@"hostdepartment"];
-        if (str1==NULL||str1==nil)  str1=@"";
-        if (str2==NULL||str2==nil)  str2=@"";
-        if (str3==NULL||str3==nil)  str3=@"";
-        if (str4==NULL||str4==nil)  str4=@"";
-        if (str5==NULL||str5==nil)  str5=@"";
-        if (str6==NULL||str6==nil)  str6=@"";
-        
-        NSArray *textArray=@[str1,str2,str3,str4,str5,str6];
-    }
+            }
     
     
     return cell;

@@ -10,5 +10,6 @@
 
 @interface HAYuYueDetailViewController : UIViewController
 @property(nonatomic,strong)NSString*reservationId;
+@property(nonatomic,strong)NSDictionary*returnData;
 @property(nonatomic,strong)NSMutableArray *dataList;
 @end

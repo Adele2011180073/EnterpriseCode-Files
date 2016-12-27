@@ -19,10 +19,13 @@ typedef void (^ReturnData)(NSDictionary *returnDic, NSError *error);
 +(void)YuYueWithToken:(NSString *)token pageIndex:(int)pageindex andBlock:(ReturnData)YuYueBlock;
 //我的预约
 +(void)WoDeYuYueWithToken:(NSString *)token pageIndex:(int)pageindex andBlock:(ReturnData)YuYueBlock;
-//我要预约
-+(void)YuYueWithToken:(NSString *)token  andBlock:(ReturnData)YuYueBlock;
 //预约详情
 +(void)YuYueWithToken:(NSString *)token ReservationId:(NSString*)reservationid andBlock:(ReturnData)YuYueBlock;
+
+//获取我要预约数据
++(void)WoDeYuYueDataWithToken:(NSString *)token andBlock:(ReturnData)YuYueBlock;
+//预约提交
++(void)YuYueWithToken:(NSString *)token unitcontact:(NSString*)unitcontact  unitcontactphone:(NSString*)unitcontactphone timeofappointment:(NSString*)timeofappointment designInstitutename:(NSString*)designInstitutename designInstitutephone:(NSString*)designInstitutephone hostdepartment:(NSString*)hostdepartment companymisstionid:(NSString*)companymisstionid projectid:(NSString*)projectid nodeId:(NSString*)nodeId andBlock:(ReturnData)YuYueBlock;
 
 //上报
 //过程上报
@@ -49,7 +52,7 @@ typedef void (^ReturnData)(NSDictionary *returnDic, NSError *error);
 //公示记录列表
 +(void)GongShiLstWithToken:(NSString *)token pageIndex:(int)pageindex ProjectName:(NSString*)projectname andBlock:(ReturnData)GongShiBlock;
 //公示提交
-+(void)GongShiCommitWithToken:(NSString *)token ProjectId:(NSString*)projectId Publicid:(NSString*)publicid Type:(NSString*)type  andBlock:(ReturnData)GongShiBlock;
++(void)GongShiCommitWithToken:(NSString *)token ProjectId:(NSString*)projectId Publicid:(NSString*)publicid Type:(NSString*)type imageObjectArray:(NSMutableArray*)imageObjectArray imageNameArray:(NSMutableArray*)imageNameArray andBlock:(ReturnData)GongShiBlock;
 
 //消息通知列表
 +(void)NoticeWithToken:(NSString *)token pageIndex:(int)pageindex andBlock:(ReturnData)NoticeBlock;

@@ -89,7 +89,6 @@
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     
     NSDictionary *dic=[dataSourceArray objectAtIndex:indexPath.row];
-//    NSLog(@"smalldic    %@",dic);
     if ([[dic objectForKey:@"controller"]isEqualToString:@""]) {
         UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"确定退出吗？" message:nil preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *okAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {

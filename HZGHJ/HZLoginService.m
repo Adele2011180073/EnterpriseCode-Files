@@ -75,8 +75,29 @@
     }];
 
 }
-//我要预约
-+(void)YuYueWithToken:(NSString *)token  andBlock:(ReturnData)YuYueBlock{
+//预约详情
++(void)YuYueWithToken:(NSString *)token ReservationId:(NSString*)reservationid andBlock:(ReturnData)YuYueBlock{
+    AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
+    NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kHistoryTaskItemURL];
+    session.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"text/html",@"application/json", @"text/json", nil];
+    session.responseSerializer = [AFHTTPResponseSerializer serializer];
+    session.requestSerializer.timeoutInterval=10.f;
+    NSMutableDictionary *parameters=[NSMutableDictionary dictionary];
+    [parameters setObject:token forKey:@"token"];
+    [parameters setObject:reservationid forKey:@"reservationid"];
+    [session POST:serviceURLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
+        NSString *str=[[NSString alloc]initWithData:responseObject encoding:NSUTF8StringEncoding];
+        NSLog(@"成功  %@",str);
+        YuYueBlock(dic,nil);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"失败%@",error);
+        YuYueBlock(nil,error);
+    }];
+
+}
+//获取我要预约数据
++(void)WoDeYuYueDataWithToken:(NSString *)token andBlock:(ReturnData)YuYueBlock{
     AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
     NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kReservationMissionURL];
     session.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"text/html",@"application/json", @"text/json", nil];
@@ -95,16 +116,25 @@
     }];
 
 }
-//预约详情
-+(void)YuYueWithToken:(NSString *)token ReservationId:(NSString*)reservationid andBlock:(ReturnData)YuYueBlock{
+//预约提交
++(void)YuYueWithToken:(NSString *)token unitcontact:(NSString*)unitcontact  unitcontactphone:(NSString*)unitcontactphone timeofappointment:(NSString*)timeofappointment designInstitutename:(NSString*)designInstitutename designInstitutephone:(NSString*)designInstitutephone hostdepartment:(NSString*)hostdepartment companymisstionid:(NSString*)companymisstionid projectid:(NSString*)projectid nodeId:(NSString*)nodeId andBlock:(ReturnData)YuYueBlock{
     AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
-    NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kHistoryTaskItemURL];
+    NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kReservationURL];
     session.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"text/html",@"application/json", @"text/json", nil];
     session.responseSerializer = [AFHTTPResponseSerializer serializer];
     session.requestSerializer.timeoutInterval=10.f;
     NSMutableDictionary *parameters=[NSMutableDictionary dictionary];
     [parameters setObject:token forKey:@"token"];
-    [parameters setObject:reservationid forKey:@"reservationid"];
+     [parameters setObject:unitcontact forKey:@"unitcontact"];
+     [parameters setObject:unitcontactphone forKey:@"unitcontactphone"];
+     [parameters setObject:timeofappointment forKey:@"timeofappointment"];
+     [parameters setObject:designInstitutename forKey:@"designInstitutename"];
+     [parameters setObject:designInstitutename forKey:@"designInstitutename"];
+    [parameters setObject:designInstitutephone forKey:@"designInstitutephone"];
+     [parameters setObject:hostdepartment forKey:@"hostdepartment"];
+     [parameters setObject:companymisstionid forKey:@"companymisstionid"];
+     [parameters setObject:projectid forKey:@"projectid"];
+     [parameters setObject:nodeId forKey:@"nodeId"];
     [session POST:serviceURLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
         NSString *str=[[NSString alloc]initWithData:responseObject encoding:NSUTF8StringEncoding];
@@ -437,9 +467,9 @@
 
 }
 //公示提交
-+(void)GongShiCommitWithToken:(NSString *)token ProjectId:(NSString*)projectId Publicid:(NSString*)publicid Type:(NSString*)type  andBlock:(ReturnData)GongShiBlock{
++(void)GongShiCommitWithToken:(NSString *)token ProjectId:(NSString*)projectId Publicid:(NSString*)publicid Type:(NSString*)type imageObjectArray:(NSMutableArray*)imageObjectArray imageNameArray:(NSMutableArray*)imageNameArray andBlock:(ReturnData)GongShiBlock{
     AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
-    NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kProjectProcessUploadURL];
+    NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kFindPublicListCommitURL];
     session.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"text/html",@"application/json", @"text/json", nil];
     session.responseSerializer = [AFHTTPResponseSerializer serializer];
     session.requestSerializer.timeoutInterval=10.f;
@@ -448,8 +478,14 @@
     [parameters setObject:projectId forKey:@"projectId"];
     [parameters setObject:publicid forKey:@"publicid"];
     [parameters setObject:type forKey:@"type"];
-    
-    [session POST:serviceURLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [session POST:serviceURLString parameters:parameters constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+       for (int i=0; i<imageObjectArray.count; i++) {
+           NSData *data=[imageObjectArray objectAtIndex:i];
+           NSString *imageName=[imageNameArray objectAtIndex:i];
+            [formData appendPartWithFileData:data name:imageName fileName:imageName mimeType:@"png/jpeg/jpg"];
+        }
+
+    } progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
         NSString *str=[[NSString alloc]initWithData:responseObject encoding:NSUTF8StringEncoding];
         NSLog(@"成功  %@",str);
@@ -458,6 +494,5 @@
         NSLog(@"失败%@",error);
         GongShiBlock(nil,error);
     }];
-
 }
 @end

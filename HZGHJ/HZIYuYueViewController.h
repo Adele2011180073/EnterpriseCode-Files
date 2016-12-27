@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface HZIYuYueViewController : UIViewController
-
+@property(nonatomic,strong)NSDictionary*returnData;
 @end
