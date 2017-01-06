@@ -40,6 +40,7 @@
 //    tableview.separatorColor=[UIColor clearColor];
     tableview.dataSource=self;
     [self.view addSubview:tableview];
+    [self getMessage];
     pageIndex=1;
     [self getDataSource];
 
@@ -55,6 +56,9 @@
     [tableview.pullToRefreshView setTitle:@"下拉以刷新" forState:SVPullToRefreshStateTriggered];
     [tableview.pullToRefreshView setTitle:@"刷新完了哟" forState:SVPullToRefreshStateStopped];
     [tableview.pullToRefreshView setTitle:@"不要命的加载中..." forState:SVPullToRefreshStateLoading];
+}
+-(void)getMessage{
+//    [HZLoginService NavigationWithRecordId:<#(NSString *)#> andBlock:<#^(NSDictionary *returnDic, NSError *error)NavigationBlock#>]
 }
 -(void)getDataSource{
     MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];

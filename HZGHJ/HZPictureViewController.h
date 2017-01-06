@@ -10,5 +10,9 @@
 #import "UIImageView+WebCache.h"
 
 @interface HZPictureViewController : UIViewController
+@property(nonatomic,strong)NSArray *imageArray;
 @property(nonatomic,strong)NSString *imageURL;
+@property(nonatomic,strong)UIImage *image;
+@property(nonatomic,assign)BOOL isWeb;
+@property(nonatomic,assign)NSInteger indexOfImage;
 @end

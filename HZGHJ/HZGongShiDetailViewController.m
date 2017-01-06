@@ -12,13 +12,17 @@
 #import <AVFoundation/AVFoundation.h>
 #import "HZPictureViewController.h"
 #import "UIImageView+WebCache.h"
+#import "UIButton+WebCache.h"
 #import "HZURL.h"
 @interface HZGongShiDetailViewController ()<UIGestureRecognizerDelegate,UITextViewDelegate,UIImagePickerControllerDelegate>
 {
     UIScrollView *bgScrollView;
     NSDictionary *returnData;
-    NSMutableArray *imageAray;
-     NSMutableArray *imageNameAray;
+    NSMutableArray *_nameArray; //名字
+    NSMutableArray *_photoArray; //图片
+    NSMutableArray *_requiredArray; //必选
+    NSMutableArray *imageAray;//获取显示图
+    int _selectBtnIndex;
 }
 
 
@@ -32,24 +36,45 @@
     self.view.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
     self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStyleBordered target:nil action:nil];
     switch (self.type) {
-        case 1:
+        case 1:{
             self.title=@"公示详情(起始日)";
+            _requiredArray = [[NSMutableArray alloc] initWithObjects:@"0",@"0",@"0",@"0",@"0",@"0",@"0", nil];
+            _nameArray = [[NSMutableArray alloc] initWithObjects:@"1_1.jpg",@"1_2.jpg",@"2_1.jpg",@"2_2.jpg",@"3_1.jpg",@"3_2.jpg",@"4_1.jpg", nil];
+            _photoArray = [[NSMutableArray alloc] initWithObjects:@"1",@"2",@"3",@"4",@"5",@"6",@"7", nil];
+        }
             break;
-        case 2:
+        case 2:{
             self.title=@"公示详情(结束日)";
+            _requiredArray = [[NSMutableArray alloc] initWithObjects:@"0",@"0",@"0",@"0",@"0",@"0",@"0", nil];
+            _nameArray = [[NSMutableArray alloc] initWithObjects:@"1_1.jpg",@"1_2.jpg",@"2_1.jpg",@"2_2.jpg",@"3_1.jpg",@"3_2.jpg",@"4_1.jpg", nil];
+            _photoArray = [[NSMutableArray alloc] initWithObjects:@"1",@"2",@"3",@"4",@"5",@"6",@"7", nil];
+        }
             break;
-        case 3:
+        case 3:{
             self.title=@"时间1";
+            _requiredArray = [[NSMutableArray alloc] initWithObjects:@"0",@"0",@"0",@"0",@"0",@"0", nil];
+            _nameArray = [[NSMutableArray alloc] initWithObjects:@"1_1.jpg",@"1_2.jpg",@"2_1.jpg",@"2_2.jpg",@"3_1.jpg",@"3_2.jpg", nil];
+            _photoArray = [[NSMutableArray alloc] initWithObjects:@"1",@"2",@"3",@"4",@"5",@"6", nil];
+        }
             break;
-        case 4:
+        case 4:{
             self.title=@"时间2";
+            _requiredArray = [[NSMutableArray alloc] initWithObjects:@"0",@"0",@"0",@"0",@"0",@"0", nil];
+            _nameArray = [[NSMutableArray alloc] initWithObjects:@"1_1.jpg",@"1_2.jpg",@"2_1.jpg",@"2_2.jpg",@"3_1.jpg",@"3_2.jpg", nil];
+            _photoArray = [[NSMutableArray alloc] initWithObjects:@"1",@"2",@"3",@"4",@"5",@"6", nil];
+        }
             break;
         default:
             break;
     }
+    NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
+    NSData *imageName=[def objectForKey:@"imageName"];
+    NSData *imageData=[def objectForKey:@"imageData"];
+    NSArray *array=[NSKeyedUnarchiver unarchiveObjectWithData:imageName];
+    _requiredArray=[NSMutableArray arrayWithArray:array];
+    _photoArray=[NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:imageData]];
+    NSLog(@"array  %@",array);
     returnData=[[NSDictionary alloc]init];
-    imageAray=[[NSMutableArray alloc]init];
-    imageNameAray=[[NSMutableArray alloc]init];
     bgScrollView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, Width, Height-44)];
     bgScrollView.contentSize=CGSizeMake(Width, 1000);
     bgScrollView.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
@@ -60,8 +85,9 @@
     }else{
         [self addSubviews];
     }
-    NSLog(@"self.listDic  %@",self.listDic);
+       NSLog(@"self.listDic  %@",self.listDic);
 }
+
 -(void)addSubviews{
     NSArray *subArray=nil;
     NSArray *textArray=nil;
@@ -141,40 +167,88 @@
         label.font=[UIFont systemFontOfSize:16];
         [bgScrollView addSubview:label];
         
+        //这里是图片显示的，只看获取图片的就行了，有三行和五行的
         UIView* bgView=[[UIView alloc]initWithFrame:CGRectMake(0,40*4+120*i, Width, 80)];
-        if (self.isGongShi==NO) {
+        if (self.isGongShi==NO) {//获取图片
             bgView.frame=CGRectMake(0,40*5+120*i, Width, 80);
-        }
-        bgView.backgroundColor=[UIColor whiteColor];
-        bgView.userInteractionEnabled=YES;
-        [bgScrollView addSubview:bgView];
-        
-        NSArray*imageNameArray1=@[@"icon_jj",@"icon_yj"];
-        for (int j=0; j<2; j++) {
-            UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake(60, 5, 70, 70)];
-            imageView.userInteractionEnabled=YES;
-            if (j==1) {
-                imageView.frame=CGRectMake(Width-130, 5, 70, 70);
-            }
-            if (i>2) {
-                if (j==1) {
-                    imageView.hidden=YES;
+            if (labArray.count==3) {   //3行
+                NSArray*imageNameArray1=@[@"icon_jj",@"icon_yj"];
+                for (int j=0; j<2; j++) {
+                    UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(60, 5, 70, 70)];
+                    if (j==1) {
+                                        button.frame=CGRectMake(Width-130, 5, 70, 70);
+                                    }
+                    button.tag=i*2+j+1;
+                    //判断有无保存图片
+                    if ([[_requiredArray objectAtIndex:button.tag-1]isEqualToString:@"1"]) {
+                          [button setBackgroundImage:[_photoArray objectAtIndex:button.tag-1] forState:UIControlStateNormal];
+                         [button addTarget:self action:@selector(bigImage:) forControlEvents:UIControlEventTouchUpInside];
+                    }else{
+                        [button setBackgroundImage:[UIImage imageNamed:[imageNameArray1 objectAtIndex:j]] forState:UIControlStateNormal];
+                         [button addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
+                    }
+                    button.accessibilityValue=[NSString stringWithFormat:@"%d",i*2+j];
+                   
+                    
+                    [bgView addSubview:button];
+
                 }
-                  imageView.frame=CGRectMake(Width/2-35, 5, 70, 70);
-            }
-            if (_isGongShi==NO) {
-                if (i<3) {
-                    imageView.tag=i*2+j;
-                }else{
-                    imageView.tag=3+i;
+            }else{   //5行
+                if (i<3) {//前三行
+                    NSArray*imageNameArray1=@[@"icon_jj",@"icon_yj"];
+                    for (int j=0; j<2; j++) {
+                        UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(60, 5, 70, 70)];
+                        if (j==1) {
+                            button.frame=CGRectMake(Width-130, 5, 70, 70);
+                        }
+                        button.tag=i*2+j+1;
+                        //判断有无保存图片
+                        if ([[_requiredArray objectAtIndex:button.tag-1]isEqualToString:@"1"]) {
+                            [button setBackgroundImage:[_photoArray objectAtIndex:button.tag-1] forState:UIControlStateNormal];
+                            [button addTarget:self action:@selector(bigImage:) forControlEvents:UIControlEventTouchUpInside];
+                        }else{
+                            [button setBackgroundImage:[UIImage imageNamed:[imageNameArray1 objectAtIndex:j]] forState:UIControlStateNormal];
+                            [button addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
+                        }
+//                        [button setBackgroundImage:[UIImage imageNamed:[imageNameArray1 objectAtIndex:j]] forState:UIControlStateNormal];
+                        button.accessibilityValue=[NSString stringWithFormat:@"%d",i*2+j+1];
+//                        [button addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
+                        
+                        [bgView addSubview:button];
+                        
+                    }
+                }else{//后两行
+                    UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(Width/2-35, 5, 70, 70)];
+//                    [button setBackgroundImage:[UIImage imageNamed:@"add_photo"] forState:UIControlStateNormal];
+                    button.tag=3+i+1;
+                    button.accessibilityValue=[NSString stringWithFormat:@"%d",3+i];
+                    //判断有无保存图片
+                    if (button.tag==7) {
+                        if ([[_requiredArray objectAtIndex:button.tag-1]isEqualToString:@"1"]) {
+                            [button setBackgroundImage:[_photoArray objectAtIndex:button.tag-1] forState:UIControlStateNormal];
+                            [button addTarget:self action:@selector(bigImage:) forControlEvents:UIControlEventTouchUpInside];
+                        }else{
+                           [button setBackgroundImage:[UIImage imageNamed:@"add_photo"] forState:UIControlStateNormal];
+                            [button addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
+                        }
+
+                    }else{
+                        if (_photoArray.count>7) {
+                            [button setBackgroundImage:[UIImage imageNamed:[_photoArray objectAtIndex:button.tag-1]] forState:UIControlStateNormal];
+                            [button addTarget:self action:@selector(bigImage:) forControlEvents:UIControlEventTouchUpInside];
+                        }else{
+                            [button setBackgroundImage:[UIImage imageNamed:@"add_photo"] forState:UIControlStateNormal];
+                            [button addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
+                        }
+                    }
+                    
+//                    [button addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
+                    
+                    [bgView addSubview:button];
                 }
-                imageView.image=[UIImage imageNamed:[imageNameArray1 objectAtIndex:j]] ;
-                UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(takePhoto:)];
-                tap.delegate=self;
-                tap.accessibilityValue=[NSString stringWithFormat:@"%d_%d",i+1,j+1];
-                [imageView addGestureRecognizer:tap];
-                [bgView addSubview:imageView];
-            }else{
+            }
+        }else{     //显示图片
+            if (labArray.count==3) {   //3行
                 NSMutableArray *imageNameArray2=[[NSMutableArray alloc]init];
                 for (int m=0; m<imageAray.count; m++) {
                     NSDictionary *dic=[imageAray objectAtIndex:m];
@@ -182,28 +256,69 @@
                         [imageNameArray2 addObject:dic];
                     }
                 }
-                NSString *serviceURL=nil;
-                if (imageNameArray2.count==2) {
+                for (int j=0; j<2; j++) {
+                    NSString *serviceURL=nil;
                     NSDictionary *item=[imageNameArray2 objectAtIndex:j];
                     serviceURL=[NSString stringWithFormat:@"%@%@?fileId=%@",kDemoBaseURL,kGetFileURL,[item objectForKey:@"imageId"]];
-                    [imageView sd_setImageWithURL:[NSURL URLWithString:serviceURL]];
-                }else{
-                    if (imageNameArray2.count>0){
-                    NSDictionary *item=[imageNameArray2 objectAtIndex:0];
-                    serviceURL=[NSString stringWithFormat:@"%@%@?fileId=%@",kDemoBaseURL,kGetFileURL,[item objectForKey:@"imageId"]];
-                    [imageView sd_setImageWithURL:[NSURL URLWithString:serviceURL]];
-                      imageView.frame=CGRectMake(Width/2-35, 5, 70, 70);
+                    UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(60, 5, 70, 70)];
+                    if (j==1) {
+                        button.frame=CGRectMake(Width-130, 5, 70, 70);
+                    }
+                    [button sd_setImageWithURL:[NSURL URLWithString:serviceURL] forState:UIControlStateNormal];
+                        button.accessibilityValue=serviceURL;
+                    button.tag=i*2+j+1;
+                    [button addTarget:self action:@selector(bigPhoto:) forControlEvents:UIControlEventTouchUpInside];
+                    
+                    [bgView addSubview:button];
+                    
+                }
+            }else{   //5行
+                NSMutableArray *imageNameArray2=[[NSMutableArray alloc]init];
+                for (int m=0; m<imageAray.count; m++) {
+                    NSDictionary *dic=[imageAray objectAtIndex:m];
+                    if ([[dic objectForKey:@"type"]integerValue]==i+1) {
+                        [imageNameArray2 addObject:dic];
                     }
                 }
-                
-                UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(bigPhoto:)];
-                tap.delegate=self;
-                 tap.accessibilityValue=serviceURL;
-                [imageView addGestureRecognizer:tap];
-                [bgView addSubview:imageView];
+
+                if (i<3) {//前三行
+                    for (int j=0; j<2; j++) {
+                         NSString *serviceURL=nil;
+                        NSDictionary *item=[imageNameArray2 objectAtIndex:j];
+                        serviceURL=[NSString stringWithFormat:@"%@%@?fileId=%@",kDemoBaseURL,kGetFileURL,[item objectForKey:@"imageId"]];
+                        UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(60, 5, 70, 70)];
+                        if (j==1) {
+                            button.frame=CGRectMake(Width-130, 5, 70, 70);
+                        }
+                        [button sd_setImageWithURL:[NSURL URLWithString:serviceURL] forState:UIControlStateNormal];
+                        button.tag=i*2+j+1;
+                        button.accessibilityValue=serviceURL;
+                        [button addTarget:self action:@selector(bigPhoto:) forControlEvents:UIControlEventTouchUpInside];
+                        
+                        [bgView addSubview:button];
+                        
+                    }
+                }else{//后两行
+                    NSString *serviceURL=nil;
+                    if (imageNameArray2.count<1) {
+                        return;
+                    }
+                    NSDictionary *item=[imageNameArray2 objectAtIndex:0];
+                    serviceURL=[NSString stringWithFormat:@"%@%@?fileId=%@",kDemoBaseURL,kGetFileURL,[item objectForKey:@"imageId"]];
+                    UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(Width/2-35, 5, 70, 70)];
+                    button.tag=3+i+1;
+                    [button sd_setImageWithURL:[NSURL URLWithString:serviceURL] forState:UIControlStateNormal];
+                    button.accessibilityValue=serviceURL;
+                    [button addTarget:self action:@selector(bigPhoto:) forControlEvents:UIControlEventTouchUpInside];
+                    
+                    [bgView addSubview:button];
+                }
             }
         }
-    }
+        bgView.backgroundColor=[UIColor whiteColor];
+        bgView.userInteractionEnabled=YES;
+        [bgScrollView addSubview:bgView];
+        }
 
     NSArray *btnLabelArray=@[@"保存",@"提交"];
     if (self.isGongShi==NO) {
@@ -234,15 +349,40 @@
     
 }
 -(void)commit:(UIButton *)sender{
+    if (sender.tag==100) {
+        NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
+        NSData *nameData=[NSKeyedArchiver archivedDataWithRootObject:_requiredArray];
+                NSData *imageData=[NSKeyedArchiver archivedDataWithRootObject:_photoArray ];
+        [def setObject:nameData forKey:@"imageName"];
+        [def setObject:imageData forKey:@"imageData"];
+        UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"保存成功！" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        }];
+        [alert addAction:cancelAlert];
+        [self presentViewController:alert animated:YES completion:nil];
+        return;
+
+    }else{
+    NSString *token=[[NSUserDefaults standardUserDefaults]objectForKey:@"token"];
+    NSString *type=[NSString stringWithFormat:@"%d",self.type];
+    for (NSString *str in _requiredArray) {
+        if ([str isEqualToString:@"0"]) {
+            UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"请拍摄所有必选照片" message:nil preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            }];
+            [alert addAction:cancelAlert];
+            [self presentViewController:alert animated:YES completion:nil];
+            return;
+        }
+    }
     MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.label.text=@"数据加载中，请稍候...";
-    NSString *token=[[NSUserDefaults standardUserDefaults]objectForKey:@"token"];
-    NSString *type=[NSString stringWithFormat:@"%d",type];
-    [HZLoginService GongShiCommitWithToken:token ProjectId:[self.listDic objectForKey:@"projectid"] Publicid:[self.listDic objectForKey:@"id"] Type:type imageObjectArray:imageAray imageNameArray:imageNameAray andBlock:^(NSDictionary *returnDic, NSError *error) {
+    [HZLoginService GongShiCommitWithToken:token ProjectId:[self.listDic objectForKey:@"projectid"] Publicid:[self.listDic objectForKey:@"id"] Type:type imageObjectArray:_photoArray imageNameArray:_nameArray andBlock:^(NSDictionary *returnDic, NSError *error) {
             [hud hideAnimated:YES];
         if ([[returnDic objectForKey:@"code"]integerValue]==0) {
-            UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"提交成功" message:nil preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self.navigationController popViewControllerAnimated:YES];
             }];
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];
@@ -257,9 +397,12 @@
         }
         
     }];
+    }
 
 }
--(void)takePhoto:(UITapGestureRecognizer *)sender{
+-(void)takePhoto:(UIButton *)sender{
+      _selectBtnIndex = (int)sender.tag;
+    NSLog(@"_selectBtnIndex  %d",_selectBtnIndex);
     NSString * mediaType = AVMediaTypeVideo;
     AVAuthorizationStatus  authorizationStatus = [AVCaptureDevice authorizationStatusForMediaType:mediaType];
     if (authorizationStatus == AVAuthorizationStatusRestricted|| authorizationStatus == AVAuthorizationStatusDenied) {
@@ -275,6 +418,7 @@
     UIAlertAction *cameraAlert=[UIAlertAction actionWithTitle:@"相机" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UIImagePickerController* picker = [[UIImagePickerController alloc] init];
         picker.accessibilityValue=sender.accessibilityValue;
+    
         picker.sourceType = UIImagePickerControllerSourceTypeCamera;
         picker.showsCameraControls = YES;
         picker.allowsEditing=YES;
@@ -282,16 +426,15 @@
         [self presentViewController:picker animated:YES completion:Nil];
     }];
     [alert addAction:cameraAlert];
-    UIAlertAction *pictureAlert=[UIAlertAction actionWithTitle:@"从相册中选取" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        UIImagePickerController*picker = [[UIImagePickerController alloc] init];
-        picker.accessibilityValue=sender.accessibilityValue;
-        picker.delegate = self;
-        picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
-        //            picker.allowsEditing=YES;
-        [self presentViewController:picker animated:YES completion:Nil];
-    }];
-    [alert addAction:pictureAlert];
-    
+//    UIAlertAction *pictureAlert=[UIAlertAction actionWithTitle:@"从相册中选取" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//        UIImagePickerController*picker = [[UIImagePickerController alloc] init];
+//        
+//        picker.delegate = self;
+//        picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+//        //            picker.allowsEditing=YES;
+//        [self presentViewController:picker animated:YES completion:Nil];
+//    }];
+//    [alert addAction:pictureAlert];
     [self presentViewController:alert animated:YES completion:nil];
 }
 #pragma mark - Get Photoes Module
@@ -300,14 +443,74 @@
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     UIImage *originImage = [info objectForKey:UIImagePickerControllerOriginalImage];
     UIImage *scaleImage = [self scaleImage:originImage toScale:0.1];
-//    UIImageView *button=[self.view viewWithTag:[picker.accessibilityValue integerValue]-1];
-//    [button setBackgroundImage:scaleImage forState:UIControlStateNormal];
-    NSData *data=UIImagePNGRepresentation(scaleImage);
-    [imageNameAray addObject:picker.accessibilityValue];
-    [imageAray addObject:data];
-    NSLog(@"imageNameAray    %@  imageAray   %@",imageNameAray,imageAray);
+      UIButton *button=(UIButton*)[self.view viewWithTag:_selectBtnIndex];
+    UIButton *imageView=[[UIButton alloc]init];
+    imageView.frame=CGRectMake(0, 0, 70, 70);
+    imageView.tag=button.tag;
+    [imageView setBackgroundImage:scaleImage forState:UIControlStateNormal];
+    [imageView addTarget:self action:@selector(bigImage:) forControlEvents:UIControlEventTouchUpInside];
+    [button addSubview:imageView];
+    if (_selectBtnIndex!=8) {
+        //必选
+        NSLog(@"_photoArray   %@",_photoArray);
+        [_photoArray replaceObjectAtIndex:_selectBtnIndex-1 withObject:scaleImage];
+        [_requiredArray replaceObjectAtIndex:_selectBtnIndex-1 withObject:@"1"];
+    }
+    else{
+        //可选
+        if (_nameArray.count > 7) {
+            //已有第八张可选图片
+            [_photoArray replaceObjectAtIndex:7 withObject:scaleImage];
+        }
+        else{
+            //未有第八张可选图片
+            [_nameArray addObject:@"5_1.jpg"];
+            [_photoArray addObject:scaleImage];
+        }
+    }
+    //长按删除
+    UILongPressGestureRecognizer *longPress=[[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPress:)];
+     longPress.accessibilityValue=[NSString stringWithFormat:@"%ld",button.tag];
+    [imageView addGestureRecognizer:longPress];
+    
+//    NSLog(@"_nameArray    %@  _photoArray   %@  _photoArray.count  %d",_nameArray,_photoArray,_photoArray.count);
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
+-(void)bigImage:(UIButton*)bigImage{
+    HZPictureViewController *picture=[[HZPictureViewController alloc]init];
+    picture.isWeb=YES;
+    NSMutableArray *array=[[NSMutableArray alloc]init];
+    [array addObject:bigImage.currentBackgroundImage];
+    picture.imageArray=array;
+    picture.image=bigImage.currentBackgroundImage;
+    NSInteger index=0;
+    picture.indexOfImage=index;
+    [self.navigationController pushViewController:picture animated:YES];
+}
+
+-(void)longPress:(UILongPressGestureRecognizer*)longPress{
+    UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"确定删除此图片吗？" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    [alert addAction:cancelAlert];
+    
+    UIAlertAction *okAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [longPress.view removeFromSuperview];
+        NSInteger index=[longPress.accessibilityValue integerValue];
+         if (_selectBtnIndex!=8) {
+        [_photoArray replaceObjectAtIndex:index-1 withObject:[NSString stringWithFormat:@"%ld",index]];
+        [_requiredArray replaceObjectAtIndex:index-1 withObject:@"0"];
+         }else{
+               [_photoArray removeObjectAtIndex:index-1];
+             
+         }
+    }];
+    [alert addAction:okAlert];
+    [self presentViewController:alert animated:YES completion:nil];
+    
+}
+
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
@@ -348,8 +551,19 @@
         }
     }];
 }
--(void)bigPhoto:(UITapGestureRecognizer*)sender{
+-(void)bigPhoto:(UIButton*)sender{
     HZPictureViewController *picture=[[HZPictureViewController alloc]init];
+    picture.isWeb=NO;
+    NSMutableArray*array=[[NSMutableArray alloc]init];
+    for (int m=0; m<imageAray.count; m++) {
+        NSDictionary *dic=[imageAray objectAtIndex:m];
+        NSString *serviceURL=[NSString stringWithFormat:@"%@%@?fileId=%@",kDemoBaseURL,kGetFileURL,[dic objectForKey:@"imageId"]];
+        [array addObject:serviceURL];
+    }
+    picture.imageArray=array;
+    picture.image=sender.currentBackgroundImage;
+    NSInteger index=[array indexOfObject:sender.accessibilityValue];
+    picture.indexOfImage=index;
     picture.imageURL=sender.accessibilityValue;
     [self.navigationController pushViewController:picture animated:YES];
 }

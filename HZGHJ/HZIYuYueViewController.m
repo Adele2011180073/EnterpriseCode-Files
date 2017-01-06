@@ -19,7 +19,10 @@
     BOOL isBigClass;
     NSInteger projectNum;
       NSInteger nodeNum;
+    
     UIView *pickerView;
+    UILabel *timeLabel;
+    UIDatePicker *picker;
 }
 
 @end
@@ -34,6 +37,15 @@
      returnData=[[NSDictionary alloc]init];
     projectNum=0;
     nodeNum=0;
+    
+    //    时间选择器视图
+    pickerView=[[UIView alloc]initWithFrame:CGRectMake(20, 200, Width-40, 260)];
+    //    时间标签
+    timeLabel=[[UILabel alloc]init];
+    //    时间选择器
+    picker=[[UIDatePicker alloc]init];
+
+    
     bgScrollView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, Width, Height-44)];
     bgScrollView.contentSize=CGSizeMake(Width, 360+80*projectNameArray.count+40*2+40*3);
     bgScrollView.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
@@ -63,8 +75,9 @@
                 NSArray *array=[returnDic objectForKey:@"reservationservice"];
                 NSDictionary *dic=[array objectAtIndex:0];
                 reservationserviceArray=[NSMutableArray arrayWithArray:[dic objectForKey:@"childList"]];
-                [self addSubviews];
                 NSLog(@"预约数据    %@  ",str);
+
+                [self addSubviews];
             }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
                 UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -109,7 +122,8 @@
     NSArray *labelArray1=@[@"申请内容",@"预约时间",@"主办科室"];
     NSDictionary *messageDic=[projectNameArray objectAtIndex:projectNum];
     NSString *str1;
-    if ([messageDic objectForKey:@"nodelist"]!=NULL) {
+    NSArray*nodelistArray=[messageDic objectForKey:@"nodelist"];
+    if (nodelistArray!=NULL&&![nodelistArray isEqual:[NSNull null]]&&nodelistArray!=nil&&nodelistArray.count>0) {
         str1=[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"value"];
     }else{
        str1=@"方案咨询";
@@ -251,6 +265,9 @@
         
         UITextField *text=[[UITextField alloc]initWithFrame:CGRectMake(130, 10, Width -150, 20)];
         text.tag=10+i;
+        if (i==1) {
+            text.keyboardType = UIKeyboardTypeNumberPad;
+        }
         text.delegate=self;
         text.placeholder=[placeholderArray objectAtIndex:i];
         text.font=[UIFont systemFontOfSize:15];
@@ -268,8 +285,6 @@
     bgScrollView.contentSize=CGSizeMake(Width, 360+80*reservationserviceArray.count+40*2+40*3+120);
 }
 -(void)commit{
-    MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.label.text=@"数据加载中，请稍候...";
     NSString *token=[[NSUserDefaults standardUserDefaults]objectForKey:@"token"];
     NSString *username=[[NSUserDefaults standardUserDefaults]objectForKey:@"username"];
      NSString *phone=[[NSUserDefaults standardUserDefaults]objectForKey:@"phone"];
@@ -280,17 +295,34 @@
     NSString *str3=[messageDic objectForKey:@"hostdepartment"];
     NSString *str2=[messageDic objectForKey:@"id"];
     NSString *str1;
-    if ([messageDic objectForKey:@"nodelist"]!=NULL) {
+    NSArray *nodelist=[messageDic objectForKey:@"nodelist"];
+    if (![nodelist isEqual:[NSNull null]]&&nodelist.count>0) {
         str1=[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"];
     }else{
         str1=@"100";
     }
+    if (reservationserviceArray != nil && ![reservationserviceArray isKindOfClass:[NSNull class]] && reservationserviceArray.count != 0){
+        for (int j=0; j<reservationserviceArray.count; j++) {
+            UIButton *button=[self.view viewWithTag:20+j];
+            if (button.selected==NO) {
+                UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"请把方案提示信息全部选中" message:nil preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                }];
+                [alert addAction:cancelAlert];
+                [self presentViewController:alert animated:YES completion:nil];
+                return;
+            }
+        }
+    }
    NSString *str=[messageDic objectForKey:@"projectid"];
+    MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.label.text=@"数据加载中，请稍候...";
     [HZLoginService YuYueWithToken:token unitcontact:username unitcontactphone:phone timeofappointment:time.text designInstitutename:text1.text designInstitutephone:text2.text hostdepartment:str3 companymisstionid:str2 projectid:str nodeId:str1 andBlock:^(NSDictionary *returnDic, NSError *error) {
         [hud hideAnimated:YES];
         if ([[returnDic objectForKey:@"code"]integerValue]==0) {
             UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self.navigationController popViewControllerAnimated:YES];
             }];
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];
@@ -307,10 +339,10 @@
     }];
 }
 -(void)tap:(UITapGestureRecognizer*)tap{
-//    if ([tap.accessibilityValue isEqualToString:@"resign"]) {
+    if ([tap.accessibilityValue isEqualToString:@"resign"]) {
 //        [bgBigClassView removeFromSuperview];
-//        [self.view endEditing:YES];
-//    }else
+        [self.view endEditing:YES];
+    }else
         if ([tap.accessibilityValue isEqualToString:@"nameList"]) {
         isBigClass=!isBigClass;
         if (isBigClass==YES) {
@@ -342,36 +374,53 @@
         }
         
         }else if ([tap.accessibilityValue isEqualToString:@"timePicker"]){
-            pickerView.frame=CGRectMake(10, 220, Width-20, 300);
+            picker.frame=CGRectMake(0, 40, Width-40, 180);
+            picker.datePickerMode=UIDatePickerModeDate;
+            [picker addTarget:self action:@selector(timeSelect:) forControlEvents:UIControlEventValueChanged];
             pickerView.backgroundColor=[UIColor whiteColor];
-            pickerView.userInteractionEnabled=YES;
-            pickerView.layer.cornerRadius=8;
-            pickerView.clipsToBounds=YES;
+            pickerView.layer.borderColor=[UIColor lightGrayColor].CGColor;
             pickerView.layer.borderWidth=1;
-            pickerView.layer.borderColor=blueCyan.CGColor;
-            [bgScrollView addSubview:pickerView];
-            UIDatePicker *picker=[[UIDatePicker alloc]initWithFrame:CGRectMake(10, 20, Width-40, 200)];
-            // 监听值得改变
-            [picker addTarget : self action : @selector (datePickerValueChanged:) forControlEvents : UIControlEventValueChanged ];
+            pickerView.layer.cornerRadius=5;
+            NSDate *now = [[NSDate alloc] init];
+            [picker setDate:now animated:YES];
             [pickerView addSubview:picker];
+            [self.view addSubview:pickerView];
+            timeLabel.frame=CGRectMake(0, 5, Width-40, 30);
+            timeLabel.textColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1];
+            NSDateFormatter *dateFomatter=[[NSDateFormatter alloc]init];
+            [dateFomatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+            timeLabel.text=[dateFomatter stringFromDate:[NSDate date]];
+            timeLabel.textAlignment=NSTextAlignmentCenter;
+            timeLabel.font=[UIFont systemFontOfSize:17];
+            [pickerView addSubview:timeLabel];
             
-            NSArray *btnLabelArray=@[@"取消",@"确定"];
-            for (int i=0; i<2; i++) {
-                UIButton *button=[UIButton buttonWithType:UIButtonTypeCustom];
-                button.frame=CGRectMake((Width-20)/2*i,260, (Width-20)/2, 40);
-                button.tag=100+i;
-                button.layer.cornerRadius=8;
-                button.clipsToBounds=YES;
-                button.layer.borderWidth=1;
-                button.layer.borderColor=[UIColor grayColor].CGColor;
-                button.titleLabel.textAlignment=NSTextAlignmentCenter;
-                button.titleLabel.font=[UIFont systemFontOfSize:17];
-                [button setTitle:[btnLabelArray objectAtIndex:i] forState:UIControlStateNormal];
-                [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-                button.adjustsImageWhenHighlighted=YES;
-                [button addTarget:self action:@selector(listBtn:) forControlEvents:UIControlEventTouchUpInside];
-                [pickerView addSubview:button];
-            }
+            UIButton *achieve=[UIButton buttonWithType:UIButtonTypeCustom];
+            achieve.frame=CGRectMake(100,230  , Width-40-200, 35);
+            [achieve setTitle:@"完成" forState:UIControlStateNormal];
+              achieve.tag=100;
+            [achieve setBackgroundColor:[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1]];
+            achieve.layer.cornerRadius=5;
+            achieve.clipsToBounds=YES;
+            [achieve addTarget:self action:@selector(listBtn:) forControlEvents:UIControlEventTouchUpInside];
+            [pickerView addSubview:achieve];
+            
+//            NSArray *btnLabelArray=@[@"取消",@"确定"];
+//            for (int i=0; i<2; i++) {
+//                UIButton *button=[UIButton buttonWithType:UIButtonTypeCustom];
+//                button.frame=CGRectMake((Width-20)/2*i,260, (Width-20)/2, 40);
+//                button.tag=100+i;
+//                button.layer.cornerRadius=8;
+//                button.clipsToBounds=YES;
+//                button.layer.borderWidth=1;
+//                button.layer.borderColor=[UIColor grayColor].CGColor;
+//                button.titleLabel.textAlignment=NSTextAlignmentCenter;
+//                button.titleLabel.font=[UIFont systemFontOfSize:17];
+//                [button setTitle:[btnLabelArray objectAtIndex:i] forState:UIControlStateNormal];
+//                [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+//                button.adjustsImageWhenHighlighted=YES;
+//                [button addTarget:self action:@selector(listBtn:) forControlEvents:UIControlEventTouchUpInside];
+//                [pickerView addSubview:button];
+//            }
             
         }
 
@@ -382,6 +431,9 @@
             [v removeFromSuperview];
         }
        [pickerView removeFromSuperview];
+        // 显示时间
+        UILabel *time=[self.view viewWithTag:30];
+        time.text=timeLabel.text;
     }else{
         [bgBigClassView removeFromSuperview];
         projectNum=button.tag-80;
@@ -392,20 +444,20 @@
 }
 -(void)check:(UIButton*)sender{
     sender.selected=!sender.selected;
-//    [sender set]
+
 }
--(void)datePickerValueChanged:(UIDatePicker*)picker{
+-(void)timeSelect:(UIDatePicker*)datePicker{
     NSDateFormatter *formatter = [[ NSDateFormatter alloc ] init ];
     
     // 格式化日期格式
     
     formatter. dateFormat = @"YYYY-MM-dd HH:mm:ss" ;
     
-    NSString *date = [formatter stringFromDate :picker.date ];
+    timeLabel.text=[formatter stringFromDate:datePicker.date];
     
     // 显示时间
     UILabel *time=[self.view viewWithTag:30];
-    time.text=date;
+    time.text=timeLabel.text;
 //    self . birthdayField . text = date;
 }
 -(void)textFieldDidBeginEditing:(UITextField *)textField{

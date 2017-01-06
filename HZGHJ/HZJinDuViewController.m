@@ -91,16 +91,9 @@
     [tableview.pullToRefreshView setTitle:@"不要命的加载中..." forState:SVPullToRefreshStateLoading];
 }
 - (void)search:(UIButton *)sender {
-    for (int i=0; i<dataList.count; i++) {
-        NSDictionary *dic=[dataList objectAtIndex:i];
-        NSString*projectName=[NSString stringWithFormat:@"%@",[dic objectForKey:@"projectName"]];
-        if ([projectName rangeOfString:textField.text].location !=NSNotFound ) {
-            dataList=[[NSMutableArray alloc]init];
-            [dataList addObject:dic];
-        }
-    }
-    [tableview reloadData];
-}
+    pageIndex=1;
+    [self getDataSource];
+   }
 -(void)getDataSource{
     MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.label.text=@"数据加载中，请稍候...";
@@ -114,8 +107,27 @@
             NSData *data =    [NSJSONSerialization dataWithJSONObject:returnDic options:NSJSONWritingPrettyPrinted error:nil];
             NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
             NSLog(@"过程上报列表    %@  %@",str,returnDic);
+            if (pageIndex==1) {
+                dataList=[[NSMutableArray alloc]init];
                 dataList=[NSMutableArray                                                                                                                                                                                                                                                                                                                                           arrayWithArray:array];
-                      [tableview reloadData];
+            }else{
+                [dataList addObjectsFromArray:array];
+            }
+            if ([textField.text isEqualToString:@""]||textField.text==NULL) {
+                
+            }else{
+                dataList=[[NSMutableArray alloc]init];
+                for (int i=0; i<dataList.count; i++) {
+                    NSDictionary *dic=[dataList objectAtIndex:i];
+                    NSString*str=[dic objectForKey:@"projectName"];
+                    if ([str rangeOfString:textField.text].location !=NSNotFound) {
+                        [dataList addObject:dic];
+                    }
+                }
+               
+            }
+
+                [tableview reloadData];
             
         }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
             UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];

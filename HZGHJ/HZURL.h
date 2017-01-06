@@ -22,6 +22,15 @@ static NSString * const kMyReservationURL                = @"/servicesweb/reserv
 static NSString * const kHistoryTaskItemURL                = @"/servicesweb/reservation/findHistoryTaskItem.action";
 //获取我要预约数据
 static NSString * const kReservationMissionURL                = @"/servicesweb/reservation/getReservationMission.action";
+//结束预约//重新预约
+static NSString * const kCompleTaskURL                = @"/servicesweb/reservation/compleTask.action";
+
+
+//重新预约（获取预约条件）
+static NSString * const kFindPremiseConditionURL                = @"/servicesweb/reservation/findPremiseCondition.action";
+//取消预约
+static NSString * const kCancelURL                = @"/servicesweb/reservation/cancel.action";
+
 //获取单位联系人
 static NSString * const kUserByComanyURL                = @"/servicesweb/login/getUserByComany.action";
 //预约提交

@@ -11,6 +11,7 @@
 #import "SVPullToRefresh.h"
 #import "HZLoginService.h"
 #import <AVFoundation/AVFoundation.h>
+#import "HZPictureViewController.h"
 
 @interface HZProjectViewController ()<UIGestureRecognizerDelegate,UITextViewDelegate,UIImagePickerControllerDelegate>{
     UIScrollView *bgScrollView;
@@ -31,6 +32,8 @@
     // Do any additional   after loading the view.
     self.view.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
     self.title=@"项目过程上报";
+     self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStyleBordered target:nil action:nil];
+    
     bgScrollView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, Width, Height-44)];
     bgScrollView.contentSize=CGSizeMake(Width, 680);
     bgScrollView.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
@@ -41,18 +44,6 @@
     tap.accessibilityValue=[NSString stringWithFormat:@"resign"];
     number=0;
     [bgScrollView addGestureRecognizer:tap];
-    detailText=[[UITextView alloc]init];
-    [detailText resignFirstResponder];
-    self.placehoderLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, detailText.frame.size.width, 30)];
-    
-    self.placehoderLabel.backgroundColor = [UIColor whiteColor];
-    
-    self.placehoderLabel.text = @"请输入案件详细描述";
-    self.placehoderLabel.textColor=[UIColor grayColor];
-    
-    self.placehoderLabel.font = [UIFont systemFontOfSize:16.0];
-    
-    [detailText addSubview:self.placehoderLabel];
     
     bgBigClassView=[[UIScrollView alloc]init];
     self.imageArray=[[NSMutableArray alloc]init];
@@ -228,6 +219,7 @@
                detailText=[[UITextView alloc]initWithFrame:CGRectMake(0, 0, Width, 130)];
                detailText.delegate=self;
                detailText.clearsOnInsertion=YES;
+                [detailText resignFirstResponder];
                detailText.font=[UIFont systemFontOfSize:15];
                [bgView addSubview:detailText];
                self.placehoderLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, detailText.frame.size.width-40, 30)];
@@ -306,14 +298,20 @@
     UIButton *imageView=[[UIButton alloc]init];
     imageView.frame=button.frame;
     [imageView setBackgroundImage:scaleImage forState:UIControlStateNormal];
-//    [imageView addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
+    [imageView addTarget:self action:@selector(bigPhoto:) forControlEvents:UIControlEventTouchUpInside];
     [button.superview addSubview:imageView];
-    button.frame=CGRectMake(button.frame.origin.x+80, 10, 80, 80);
+    button.frame=CGRectMake(button.frame.origin.x+100, 10, 80, 80);
     [self.imageArray addObject:scaleImage];
     if (self.imageArray.count==3) {
         button.hidden=YES;
         button.userInteractionEnabled=NO;
     }
+    
+    //长按删除
+    NSInteger index=[self.imageArray indexOfObject:imageView.currentBackgroundImage];
+    UILongPressGestureRecognizer *longPress=[[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPress:)];
+    longPress.accessibilityValue=[NSString stringWithFormat:@"%ld",index];
+    [imageView addGestureRecognizer:longPress];
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
@@ -330,7 +328,36 @@
     UIGraphicsEndImageContext();
     return scaledImage;
 }
+-(void)bigPhoto:(UIButton*)bigImage{
+    HZPictureViewController *picture=[[HZPictureViewController alloc]init];
+    picture.isWeb=YES;
+    picture.imageArray=self.imageArray;
+    picture.image=bigImage.currentBackgroundImage;
+    NSInteger index=[self.imageArray indexOfObject:picture.image];
+    picture.indexOfImage=index;
+    [self.navigationController pushViewController:picture animated:YES];
+}
+-(void)longPress:(UILongPressGestureRecognizer*)longPress{
+    UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"确定删除此图片吗？" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+    }];
+    [alert addAction:cancelAlert];
 
+    UIAlertAction *okAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UIButton *button=[self.view viewWithTag:10];
+        button.frame=CGRectMake(button.frame.origin.x-100, 10, 80, 80);
+        button.hidden=NO;
+        button.userInteractionEnabled=YES;
+        NSInteger index=[longPress.accessibilityValue integerValue];
+        [longPress.view removeFromSuperview];
+        [self.imageArray removeObjectAtIndex:index];
+       
+    }];
+    [alert addAction:okAlert];
+       [self presentViewController:alert animated:YES completion:nil];
+   
+}
 -(void)commit{
     MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.label.text=@"数据加载中，请稍候...";
@@ -359,12 +386,12 @@
     [HZLoginService ShangBaoCommitWithToken:token ProjectId:str processId:str1 details:detailText.text picture:self.imageArray andBlock:^(NSDictionary *returnDic, NSError *error) {
         [hud hideAnimated:YES];
         if ([[returnDic objectForKey:@"code"]integerValue]==0) {
-            UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"提交成功" message:nil preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [self.navigationController popViewControllerAnimated:YES];
             }];
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];
-            [self.navigationController popViewControllerAnimated:YES];
         }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
             UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {

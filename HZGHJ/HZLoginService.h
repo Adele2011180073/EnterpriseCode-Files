@@ -21,6 +21,14 @@ typedef void (^ReturnData)(NSDictionary *returnDic, NSError *error);
 +(void)WoDeYuYueWithToken:(NSString *)token pageIndex:(int)pageindex andBlock:(ReturnData)YuYueBlock;
 //预约详情
 +(void)YuYueWithToken:(NSString *)token ReservationId:(NSString*)reservationid andBlock:(ReturnData)YuYueBlock;
+//结束预约
++(void)YuYueFinishWithTaskId:(NSString *)taskId Status:(NSString*)status timeofappointment:(NSString*)timeofappointment andBlock:(ReturnData)YuYueBlock;
+//重新预约（获取预约条件）
++(void)YuYueRefreshDataWithNodeId:(NSString *)nodeid  andBlock:(ReturnData)YuYueBlock;
+//重新预约
++(void)YuYueRefreshWithTaskId:(NSString *)taskId Status:(NSString*)status timeofappointment:(NSString*)timeofappointment andBlock:(ReturnData)YuYueBlock;
+//取消预约
++(void)YuYueCancelWithId:(NSString*)Id andBlock:(ReturnData)YuYueBlock;
 
 //获取我要预约数据
 +(void)WoDeYuYueDataWithToken:(NSString *)token andBlock:(ReturnData)YuYueBlock;
@@ -63,6 +71,11 @@ typedef void (^ReturnData)(NSDictionary *returnDic, NSError *error);
 +(void)NewsWithToken:(NSString *)token pageIndex:(int)pageindex andBlock:(ReturnData)NoticeBlock;
 //消息公告详情
 +(void)NewsWithRecordId:(NSString*)recordid andBlock:(ReturnData)NoticeBlock;
+
+//消息推送   获取新通知
++(void)NavigationWithToken:(NSString *)token  andBlock:(ReturnData)NavigationBlock;
+//已读标记
++(void)NavigationWithRecordId:(NSString*)recordid andBlock:(ReturnData)NavigationBlock;
 
 //更换密码
 +(void)PWWithNSw:(NSString *)opsw NSW:(NSString*)npsw andBlock:(ReturnData)NewSWBlock;

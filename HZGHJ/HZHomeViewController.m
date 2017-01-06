@@ -11,14 +11,18 @@
 #import "MBProgressHUD.h"
 #import "UIImageView+WebCache.h"
 #import "CollectionViewCell.h"
+#import "HZLoginService.h"
+#import "HZNoticeViewController.h"
 
 
-@interface HZHomeViewController ()<UICollectionViewDelegate,UICollectionViewDataSource>{
+@interface HZHomeViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,UIGestureRecognizerDelegate>{
     UICollectionView *collectionview;
     NSMutableArray *dataSourceArray;
-    
+    NSString *_tongzhidesc;
+    NSString *_tongzhiRecordid;
+    int _tongzhiCount;
 }
-
+@property (nonatomic, weak) NSTimer *timer;
 
 @end 
 
@@ -27,13 +31,31 @@
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden=YES;
+    _timer = [NSTimer scheduledTimerWithTimeInterval:180.0f
+                                              target:self
+                                            selector:@selector(timerFire:)
+                                            userInfo:nil
+                                             repeats:YES];
+    [_timer fire];
+       if (_tongzhidesc!=NULL) {
+           self.noticeLabel.text=_tongzhidesc;
+        UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap)];
+        tap.delegate=self;
+        [self.noticeLabel addGestureRecognizer:tap];
+       }else{
+           self.noticeLabel.text=@"暂无最新通知";
+
+       }
+}
+-(void)tap{
+    HZNoticeViewController *notice=[[HZNoticeViewController alloc]init];
+    [self.navigationController pushViewController:notice animated:YES];
 }
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStyleBordered target:nil action:nil];
     [self.navigationController                                                                                                                                                                                                                                                                                                                                                                                         .navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bgg.png"] forBarMetrics:UIBarMetricsDefault];
-
     self.view.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
     self.userName.text=[NSString stringWithFormat:@"欢迎您，%@",[[self.dic objectForKey:@"obj"]objectForKey:@"name"]];
      [self getDataSource];
@@ -48,6 +70,27 @@
     collectionview.showsVerticalScrollIndicator=NO;
     collectionview.showsHorizontalScrollIndicator=NO;
     [self.view addSubview:collectionview];
+}
+-(void)timerFire:(id)userinfo {
+     NSString *token=[[NSUserDefaults standardUserDefaults]objectForKey:@"token"];
+    [HZLoginService NavigationWithToken:token andBlock:^(NSDictionary *returnDic, NSError *error) {
+         if ([[returnDic objectForKey:@"code"]integerValue]==0) {
+             _tongzhidesc=[returnDic objectForKey:@"desc"];
+             _tongzhiCount=[[returnDic objectForKey:@"count"]intValue];
+//             _tongzhiCount
+         }else  if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000){
+//             UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+//             UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//             }];
+//             [alert addAction:cancelAlert];
+//             [self presentViewController:alert animated:YES completion:nil];
+         }else{
+             
+         }
+    }];
+}
+-(void)dealloc{
+    [_timer invalidate];
 }
 -(void)getDataSource{
     NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"BottomMenuItems1" ofType:@"plist"];
@@ -71,6 +114,15 @@
     NSDictionary *dic=[dataSourceArray objectAtIndex:indexPath.row];
         cell.titleLabel.text=[dic objectForKey:@"title"];
     cell.image.image=[UIImage imageNamed:[dic objectForKey:@"image"]];
+    if ( _tongzhiCount>0) {
+        if ([cell.titleLabel.text isEqualToString:@"消息通知"]) {
+            cell.numLabel.hidden=NO;
+        }else{
+            cell.numLabel.hidden=YES;
+        }
+    }else{
+         cell.numLabel.hidden=YES;
+    }
 //    NSLog(@"cell  %@   %@",[dic objectForKey:@"image"],[dic objectForKey:@"title"]);
     return cell;
 }

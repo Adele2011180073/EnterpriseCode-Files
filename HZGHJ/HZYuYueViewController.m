@@ -150,6 +150,7 @@
     if (!cell) {
         cell=[[UITableViewCell alloc]init];
     }
+    cell.selectionStyle=UITableViewCellSelectionStyleNone;
     UIView* bgView=[[UIView alloc]initWithFrame:CGRectMake(10, 5, Width-20, 150)];
     bgView.backgroundColor=[UIColor colorWithRed:247/255.0 green:247/255.0 blue:247/255.0 alpha:1];
     bgView.layer.borderWidth=1;
@@ -208,7 +209,12 @@
     HAYuYueDetailViewController *details=[[HAYuYueDetailViewController alloc]init];
     details.reservationId=[dic objectForKey:@"id"];
     details.returnData=dic;
-//    NSLog(@"%@",dic);
+    if (segmented.selectedSegmentIndex==1) {
+        details.isMy=YES;
+    }else{
+        details.isMy=NO;
+    }
+    //    NSLog(@"%@",dic);
     [self.navigationController pushViewController:details animated:YES];
 }
 

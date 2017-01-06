@@ -25,18 +25,18 @@
     self.view.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
     self.title=@"修改密码";
     
-    UIView *bgView=[[UIView alloc]initWithFrame:CGRectMake(0, 30, Width, 39*3)];
-    bgView.backgroundColor=[UIColor whiteColor];
-    bgView.userInteractionEnabled=YES;
-    [self.view addSubview:bgView];
     NSArray *labelArray=@[@"旧密码",@"新密码",@"确认密码"];
     for (int i=0; i<3; i++) {
-        UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(20, 40*i, 100, 39)];
+        UIView *bgView=[[UIView alloc]initWithFrame:CGRectMake(0, 40+50*i, Width, 49)];
+        bgView.backgroundColor=[UIColor whiteColor];
+        bgView.userInteractionEnabled=YES;
+        [self.view addSubview:bgView];
+        UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(20, 0, 100, 49)];
         label.font=[UIFont systemFontOfSize:15];
         label.textColor=[UIColor blackColor];
         label.text=[labelArray objectAtIndex:i];
         [bgView addSubview:label];
-        textfield=[[UITextField alloc]initWithFrame:CGRectMake(120, 40*i, Width-130, 39)];
+        textfield=[[UITextField alloc]initWithFrame:CGRectMake(120, 0, Width-130, 49)];
         textfield.tag=30+i;
         textfield.font=[UIFont systemFontOfSize:15];
         textfield.borderStyle=UITextBorderStyleNone;
@@ -47,7 +47,7 @@
     }
     
     UIButton *button=[UIButton buttonWithType:UIButtonTypeCustom];
-    button.frame=CGRectMake(20, 70+40*3, Width-40, 40);
+    button.frame=CGRectMake(20, 100+50*3, Width-40, 40);
     button.tag=10;
     button.layer.cornerRadius=5;
     button.clipsToBounds=YES;

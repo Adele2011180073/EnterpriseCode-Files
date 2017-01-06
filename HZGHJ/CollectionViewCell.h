@@ -11,4 +11,5 @@
 @interface CollectionViewCell : UICollectionViewCell
 @property (strong, nonatomic) IBOutlet UIImageView *image;
 @property (strong, nonatomic) IBOutlet UILabel *titleLabel;
+@property (strong, nonatomic) IBOutlet UILabel *numLabel;
 @end

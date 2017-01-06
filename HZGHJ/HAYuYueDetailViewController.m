@@ -30,6 +30,7 @@
     
     dataList=[[NSMutableArray alloc]init];
     returnData=[[NSDictionary alloc]init];
+    
     tableview=[[UITableView alloc]initWithFrame:CGRectMake(0, 0, Width, Height-44-20)];
     [tableview registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     tableview.rowHeight=40;
@@ -49,6 +50,44 @@
     [HZLoginService YuYueWithToken:token ReservationId:self.reservationId andBlock:^(NSDictionary *returnDic, NSError *error) {
       [hud hideAnimated:YES];
             if ([[returnDic objectForKey:@"code"]integerValue]==0) {
+                if (_isMy==YES) {
+                    if ([returnDic objectForKey:@"taskid"]!=NULL) {
+                         tableview.frame=CGRectMake(0, 0, Width, Height-44-20-60);
+                         NSArray *btnLabelArray=@[@"结束预约",@"重新预约"];
+                        for (int i=0; i<2; i++) {
+                            UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(40, 10,Width/2-60, 40)];
+                                if (i==1) {
+                                    button.frame=CGRectMake(Width-20-(Width/2-40), 10,Width/2-40, 40);
+                                }else{
+                                    button.frame=CGRectMake(10, 10,Width/2-40, 40);
+                                }
+                            button.clipsToBounds=YES;
+                            button.layer.cornerRadius=5;
+                            [button setTitle:[btnLabelArray objectAtIndex:i] forState:UIControlStateNormal];
+                            [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                            button.backgroundColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1];
+                            button.tag=101+i;
+                            [button addTarget:self action:@selector(commit:) forControlEvents:UIControlEventTouchUpInside];
+                            
+                            [self.view addSubview:button];
+                        }
+
+                    }else{
+                        if ([[returnDic objectForKey:@"status"]isEqualToString:@"退回"]||[[returnDic objectForKey:@"status"]isEqualToString:@"已确认"]) {
+                            UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(20, 10,Width-40, 40)];
+                            button.clipsToBounds=YES;
+                            button.layer.cornerRadius=5;
+                            [button setTitle:@"取消预约" forState:UIControlStateNormal];
+                            [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                            button.backgroundColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1];
+                            button.tag=100;
+                            [button addTarget:self action:@selector(commit:) forControlEvents:UIControlEventTouchUpInside];
+                            
+                            [self.view addSubview:button];
+                        }
+                    }
+                }
+
             NSData *data =    [NSJSONSerialization dataWithJSONObject:returnDic options:NSJSONWritingPrettyPrinted error:nil];
                 NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
                 returnData=[returnDic objectForKey:@"list"];
@@ -60,7 +99,7 @@
                         [dataList addObject:dic];
                     }
                 }
-                NSLog(@"预约列表详情      %@ ",str);
+//                NSLog(@"预约列表详情      %@ ",str);
                 [tableview reloadData];
                 
             }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
@@ -74,6 +113,15 @@
             }
 
         }];
+}
+-(void)commit:(UIButton*)sender{
+    if (sender.tag==100) {
+        [HZLoginService]
+    }else  if (sender.tag==101) {
+        
+    }else  if (sender.tag==102) {
+        
+    }
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     NSInteger height;
