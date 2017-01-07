@@ -9,7 +9,8 @@
 #import "HAYuYueDetailViewController.h"
 #import "MBProgressHUD.h"
 #import "HZLoginService.h"
-                                   
+#import "HZYuYueReViewController.h"
+
 @interface HAYuYueDetailViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     UITableView *tableview;
@@ -20,7 +21,7 @@
 
 @end
 
-@implementation HAYuYueDetailViewController
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @implementation HAYuYueDetailViewController
 @synthesize dataList;
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -51,15 +52,17 @@
       [hud hideAnimated:YES];
             if ([[returnDic objectForKey:@"code"]integerValue]==0) {
                 if (_isMy==YES) {
-                    if ([returnDic objectForKey:@"taskid"]!=NULL) {
-                         tableview.frame=CGRectMake(0, 0, Width, Height-44-20-60);
+                    NSDictionary *list=[returnDic objectForKey:@"list"];
+                    NSString *taskid=[list objectForKey:@"taskid"];
+                    if (![taskid isEqual:[NSNull null]]) {
+                         tableview.frame=CGRectMake(0, 60, Width, Height-44-20-60);
                          NSArray *btnLabelArray=@[@"结束预约",@"重新预约"];
                         for (int i=0; i<2; i++) {
                             UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(40, 10,Width/2-60, 40)];
                                 if (i==1) {
-                                    button.frame=CGRectMake(Width-20-(Width/2-40), 10,Width/2-40, 40);
+                                    button.frame=CGRectMake(Width-20-(Width/2-20), 10,Width/2-20, 40);
                                 }else{
-                                    button.frame=CGRectMake(10, 10,Width/2-40, 40);
+                                    button.frame=CGRectMake(10, 10,Width/2-20, 40);
                                 }
                             button.clipsToBounds=YES;
                             button.layer.cornerRadius=5;
@@ -73,7 +76,9 @@
                         }
 
                     }else{
-                        if ([[returnDic objectForKey:@"status"]isEqualToString:@"退回"]||[[returnDic objectForKey:@"status"]isEqualToString:@"已确认"]) {
+                        
+                        if ([[list objectForKey:@"status"]isEqualToString:@"退回"]||[[list objectForKey:@"status"]isEqualToString:@"已确认"]) {
+                            tableview.frame=CGRectMake(0, 60, Width, Height-44-20-60);
                             UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(20, 10,Width-40, 40)];
                             button.clipsToBounds=YES;
                             button.layer.cornerRadius=5;
@@ -86,10 +91,11 @@
                             [self.view addSubview:button];
                         }
                     }
+
                 }
 
-            NSData *data =    [NSJSONSerialization dataWithJSONObject:returnDic options:NSJSONWritingPrettyPrinted error:nil];
-                NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+//            NSData *data =    [NSJSONSerialization dataWithJSONObject:returnDic options:NSJSONWritingPrettyPrinted error:nil];
+//                NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
                 returnData=[returnDic objectForKey:@"list"];
                 NSArray *listArray=[returnData objectForKey:@"runTaskResult"];
                 for (int i=0; i<listArray.count; i++) {
@@ -116,11 +122,38 @@
 }
 -(void)commit:(UIButton*)sender{
     if (sender.tag==100) {
-        [HZLoginService]
+        NSString *Id=[returnData objectForKey:@"id"];
+        [HZLoginService YuYueCancelWithId:Id andBlock:^(NSDictionary *returnDic, NSError *error) {
+             if ([[returnDic objectForKey:@"code"]integerValue]==0) {
+                 [self.navigationController popViewControllerAnimated:YES];
+             }else{
+                 UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+                 UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                 }];
+                 [alert addAction:cancelAlert];
+                 [self presentViewController:alert animated:YES completion:nil];
+             }
+        }];
     }else  if (sender.tag==101) {
-        
+          NSString *taskid=[returnData objectForKey:@"taskid"];
+        NSString *status=[returnData objectForKey:@"status"];
+        NSString *timeofappointment=[returnData objectForKey:@"timeofappointment"];
+        [HZLoginService YuYueFinishWithTaskId:taskid Status:status timeofappointment:timeofappointment andBlock:^(NSDictionary *returnDic, NSError *error) {
+            if ([[returnDic objectForKey:@"code"]integerValue]==0) {
+                [self.navigationController popViewControllerAnimated:YES];
+            }else{
+                UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                }];
+                [alert addAction:cancelAlert];
+                [self presentViewController:alert animated:YES completion:nil];
+            }
+
+        }];
     }else  if (sender.tag==102) {
-        
+        HZYuYueReViewController *woyao=[[HZYuYueReViewController alloc]init];
+        woyao.returnData=returnData;
+        [self.navigationController pushViewController:woyao animated:YES];
     }
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{

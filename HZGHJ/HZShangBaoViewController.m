@@ -217,7 +217,7 @@
             [bgView addSubview:imageView];
             
             UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
-            tap.accessibilityValue=[NSString stringWithFormat:@"%@",url];
+            tap.accessibilityValue=[NSString stringWithFormat:@"%ld",indexPath.row];
             tap.delegate=self;
             [imageView addGestureRecognizer:tap];
         }
@@ -227,8 +227,27 @@
 }
 -(void)tap:(UITapGestureRecognizer*)tap{
     HZPictureViewController *picture=[[HZPictureViewController alloc]init];
-    picture.imageURL=tap.accessibilityValue;
+    picture.isWeb=NO;
+    int index=[tap.accessibilityValue intValue];
+    NSMutableArray *imageArray=[[NSMutableArray alloc]init];
+    NSDictionary *dic=[dataList objectAtIndex:index];
+    if ([dic objectForKey:@"filelist"]!=NULL) {
+        NSArray *array=[dic objectForKey:@"filelist"];
+        for (int i=0; i<array.count; i++) {
+            NSDictionary *imageDic=[array objectAtIndex:i];
+            NSString *url=[NSString stringWithFormat:@"%@%@?fileId=%@",kDemoBaseURL,kGetFileURL,[imageDic objectForKey:@"id"]];
+            [imageArray addObject:url];
+        }
+    }
+    picture.imageArray=imageArray;
+//    picture.image=sender.currentBackgroundImage;
+//    NSInteger index=[array indexOfObject:sender.accessibilityValue];
+    picture.indexOfImage=0;
+//    picture.imageURL=sender.accessibilityValue;
     [self.navigationController pushViewController:picture animated:YES];
+//    HZPictureViewController *picture=[[HZPictureViewController alloc]init];
+//    picture.imageURL=tap.accessibilityValue;
+//    [self.navigationController pushViewController:picture animated:YES];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
