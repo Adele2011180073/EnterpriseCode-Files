@@ -9,11 +9,12 @@
 #import "HZYuYueReViewController.h"
 #import "MBProgressHUD.h"
 #import "HZLoginService.h"
+#import "HZYuYueViewController.h"
 @interface HZYuYueReViewController ()<UIGestureRecognizerDelegate,UITextFieldDelegate>{
     UIScrollView *bgScrollView;
-    NSMutableArray *projectNameArray;
+//    NSMutableArray *projectNameArray;
     NSMutableArray *reservationserviceArray;
-    NSDictionary *returnData;
+//    NSDictionary *returnData;
     UILabel *projectName;
     UIScrollView *bgBigClassView;
     BOOL isBigClass;
@@ -35,7 +36,7 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
     self.title=@"重新预约";
-    returnData=[[NSDictionary alloc]init];
+//    returnData=[[NSDictionary alloc]init];
     projectNum=0;
     nodeNum=0;
     
@@ -48,7 +49,7 @@
     
     
     bgScrollView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, Width, Height-44)];
-    bgScrollView.contentSize=CGSizeMake(Width, 360+80*projectNameArray.count+40*2+40*3);
+//    bgScrollView.contentSize=CGSizeMake(Width, 360+80*projectNameArray.count+40*2+40*3);
     bgScrollView.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
     bgScrollView.userInteractionEnabled=YES;
     pickerView=[[UIView alloc]initWithFrame:CGRectMake(10, 220, Width-20, 300)];
@@ -57,7 +58,7 @@
     tap.delegate=self;
     tap.accessibilityValue=[NSString stringWithFormat:@"resign"];
     [bgScrollView addGestureRecognizer:tap];
-    projectNameArray=[[NSMutableArray alloc]init];
+//    projectNameArray=[[NSMutableArray alloc]init];
     
     reservationserviceArray=[[NSMutableArray alloc]init];
     [self getResourceData];
@@ -70,13 +71,10 @@
     [HZLoginService YuYueRefreshDataWithNodeId:nodeid andBlock:^(NSDictionary *returnDic, NSError *error) {
           [hud hideAnimated:YES];
         if ([[returnDic objectForKey:@"code"]integerValue]==0) {
-            NSData *data =    [NSJSONSerialization dataWithJSONObject:returnDic options:NSJSONWritingPrettyPrinted error:nil];
-            NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-            projectNameArray=[returnDic objectForKey:@"list"];
-            NSArray *array=[returnDic objectForKey:@"reservationservice"];
-            NSDictionary *dic=[array objectAtIndex:0];
-            reservationserviceArray=[NSMutableArray arrayWithArray:[dic objectForKey:@"childList"]];
-            NSLog(@"预约数据    %@  ",str);
+//            projectNameArray=[returnDic objectForKey:@"list"];
+//            NSArray *array=[returnDic objectForKey:@"reservationservice"];
+//            NSDictionary *dic=[array objectAtIndex:0];
+            reservationserviceArray=[NSMutableArray arrayWithArray:[returnDic objectForKey:@"list"]];
             
             [self addSubviews];
         }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
@@ -105,8 +103,7 @@
     [bgScrollView addSubview:bgView];
     projectName=[[UILabel alloc]initWithFrame:CGRectMake(10, 0, Width-50, 40)];
     projectName.textAlignment=NSTextAlignmentLeft;
-    NSDictionary *projectNameDic=[projectNameArray objectAtIndex:projectNum];
-    NSString *projectNameStr=[projectNameDic objectForKey:@"projectname"];
+    NSString *projectNameStr=[self.returnData objectForKey:@"projectName"];
     projectName.text=projectNameStr;
     projectName.font=[UIFont systemFontOfSize:16];
     [bgView addSubview:projectName];
@@ -121,23 +118,16 @@
     [bgView addGestureRecognizer:tap];
     
     NSArray *labelArray1=@[@"申请内容",@"预约时间",@"主办科室"];
-    NSDictionary *messageDic=[projectNameArray objectAtIndex:projectNum];
     NSString *str1;
-    NSArray*nodelistArray=[messageDic objectForKey:@"nodelist"];
-    if (nodelistArray!=NULL&&![nodelistArray isEqual:[NSNull null]]&&nodelistArray!=nil&&nodelistArray.count>0) {
-        str1=[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"value"];
-    }else{
-        str1=@"方案咨询";
-    }
+    str1=[self.returnData objectForKey:@"nodeName"];
     NSString *str2=@"请选择时间";
-    NSString *str3=[messageDic objectForKey:@"hostdepartment"];
+    NSString *str3=[self.returnData objectForKey:@"hostdepartment"];
     NSArray *textArray=@[str1,str2,str3];
     for (int i=0; i<3; i++) {
         UIView* bgView1=[[UIView alloc]initWithFrame:CGRectMake(0, 100+40*i, Width, 40)];
         bgView1.backgroundColor=[UIColor whiteColor];
         bgView1.userInteractionEnabled=YES;
         [bgScrollView addSubview:bgView1];
-        //    bgView1.frame=CGRectMake(0, 100, Width, 40);
         UILabel *label1=[[UILabel alloc]initWithFrame:CGRectMake(0, 10, 99, 20)];
         label1.textAlignment=NSTextAlignmentCenter;
         label1.text=[labelArray1 objectAtIndex:i];
@@ -216,11 +206,9 @@
     }
     
     NSArray *labelArray2=@[@"经办人",@"联系电话"];
-    if (projectNameArray != nil && ![projectNameArray isKindOfClass:[NSNull class]] && projectNameArray.count != 0){
-        NSDictionary *dic=[projectNameArray objectAtIndex:projectNum];
-        NSString *adminName=[dic objectForKey:@"adminName"];
-        NSString *adminPhone=[dic objectForKey:@"adminPhone"];
-        NSArray *textArray=@[adminName,adminPhone];
+        NSString *adminName=[self.returnData objectForKey:@"adminName"];
+        NSString *adminPhone=[self.returnData objectForKey:@"adminPhone"];
+        NSArray *textArray1=@[adminName,adminPhone];
         for (int i=0; i<2; i++) {
             
             UIView* bgView1=[[UIView alloc]initWithFrame:CGRectMake(0, 360+80*reservationserviceArray.count+40*i, Width, 40)];
@@ -240,20 +228,18 @@
             
             UILabel *text=[[UILabel alloc]initWithFrame:CGRectMake(110, 10, Width -120, 20)];
             text.textAlignment=NSTextAlignmentLeft;
-            text.text=[textArray objectAtIndex:i];
+            text.text=[textArray1 objectAtIndex:i];
             text.font=[UIFont systemFontOfSize:15];
             [bgView1 addSubview:text];
         }
-    }
+    
     NSArray *labelArray3=@[@"设计院联系人",@"设计院联系电话"];
     NSArray *placeholderArray=@[@"请输入设计院联系人",@"请输入设计院联系电话"];
-    if (projectNameArray != nil && ![projectNameArray isKindOfClass:[NSNull class]] && projectNameArray.count != 0){
         for (int i=0; i<2; i++) {
             UIView* bgView1=[[UIView alloc]initWithFrame:CGRectMake(0, 380+80*reservationserviceArray.count+40*2+40*i, Width, 40)];
             bgView1.backgroundColor=[UIColor whiteColor];
             bgView1.userInteractionEnabled=YES;
             [bgScrollView addSubview:bgView1];
-            //    bgView1.frame=CGRectMake(0, 100, Width, 40);
             UILabel *label1=[[UILabel alloc]initWithFrame:CGRectMake(0, 10, 119, 20)];
             label1.textAlignment=NSTextAlignmentCenter;
             label1.text=[labelArray3 objectAtIndex:i];
@@ -274,7 +260,7 @@
             text.font=[UIFont systemFontOfSize:15];
             [bgView1 addSubview:text];
         }
-    }
+    
     UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(40, 380+80*reservationserviceArray.count+40*2+40*2+30,Width-80, 40)];
     [button setTitle:@"提交" forState:UIControlStateNormal];
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -286,23 +272,7 @@
     bgScrollView.contentSize=CGSizeMake(Width, 360+80*reservationserviceArray.count+40*2+40*3+120);
 }
 -(void)commit{
-    NSString *token=[[NSUserDefaults standardUserDefaults]objectForKey:@"token"];
-    NSString *username=[[NSUserDefaults standardUserDefaults]objectForKey:@"username"];
-    NSString *phone=[[NSUserDefaults standardUserDefaults]objectForKey:@"phone"];
-    UITextField *text1=[self.view viewWithTag:10];
-    UITextField *text2=[self.view viewWithTag:11];
-    UILabel *time=[self.view viewWithTag:30];
-    NSDictionary *messageDic=[projectNameArray objectAtIndex:projectNum];
-    NSString *str3=[messageDic objectForKey:@"hostdepartment"];
-    NSString *str2=[messageDic objectForKey:@"id"];
-    NSString *str1;
-    NSArray *nodelist=[messageDic objectForKey:@"nodelist"];
-    if (![nodelist isEqual:[NSNull null]]&&nodelist.count>0) {
-        str1=[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"];
-    }else{
-        str1=@"100";
-    }
-    if (reservationserviceArray != nil && ![reservationserviceArray isKindOfClass:[NSNull class]] && reservationserviceArray.count != 0){
+     if (reservationserviceArray != nil && ![reservationserviceArray isKindOfClass:[NSNull class]] && reservationserviceArray.count != 0){
         for (int j=0; j<reservationserviceArray.count; j++) {
             UIButton *button=[self.view viewWithTag:20+j];
             if (button.selected==NO) {
@@ -315,28 +285,27 @@
             }
         }
     }
-    NSString *str=[messageDic objectForKey:@"projectid"];
+    
+    NSString *str3=[self.returnData objectForKey:@"timeofappointment"];
     MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.label.text=@"数据加载中，请稍候...";
-    [HZLoginService YuYueWithToken:token unitcontact:username unitcontactphone:phone timeofappointment:time.text designInstitutename:text1.text designInstitutephone:text2.text hostdepartment:str3 companymisstionid:str2 projectid:str nodeId:str1 andBlock:^(NSDictionary *returnDic, NSError *error) {
-        [hud hideAnimated:YES];
+    [HZLoginService YuYueRefreshWithTaskId:self.taskid Status:@"0" timeofappointment:str3 andBlock:^(NSDictionary *returnDic, NSError *error) {
         if ([[returnDic objectForKey:@"code"]integerValue]==0) {
             UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [self.navigationController popViewControllerAnimated:YES];
+                HZYuYueViewController *yuyue=[[HZYuYueViewController alloc]init];
+                [self.navigationController popToViewController:yuyue animated:YES];
             }];
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];
-        }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
+           
+        }else{
             UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             }];
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];
-        }else{
-            
         }
-        
     }];
 }
 -(void)tap:(UITapGestureRecognizer*)tap{
@@ -345,34 +314,6 @@
         [self.view endEditing:YES];
     }else
         if ([tap.accessibilityValue isEqualToString:@"nameList"]) {
-            isBigClass=!isBigClass;
-            if (isBigClass==YES) {
-                bgBigClassView=[[UIScrollView alloc]init];
-                bgBigClassView.frame=CGRectMake(0, 40, Width, 50*projectNameArray.count);
-                bgBigClassView.userInteractionEnabled=YES;
-                bgBigClassView.backgroundColor=[UIColor whiteColor];
-                [bgScrollView addSubview:bgBigClassView];
-                
-                for (int i=0; i<projectNameArray.count; i++) {
-                    NSDictionary *dic=[projectNameArray objectAtIndex:i];
-                    UIButton *button=[UIButton buttonWithType:UIButtonTypeCustom];
-                    button.frame=CGRectMake(0,50*i, Width, 50);
-                    button.tag=80+i;
-                    button.titleLabel.textAlignment=NSTextAlignmentCenter;
-                    button.titleLabel.font=[UIFont systemFontOfSize:16];
-                    [button setTitle:[dic objectForKey:@"projectname"] forState:UIControlStateNormal];
-                    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-                    button.adjustsImageWhenHighlighted=YES;
-                    [button addTarget:self action:@selector(listBtn:) forControlEvents:UIControlEventTouchUpInside];
-                    [bgBigClassView addSubview:button];
-                    
-                    UILabel *lineLabel=[[UILabel alloc]initWithFrame:CGRectMake(0,49*i, Width, 1)];
-                    lineLabel.backgroundColor=[UIColor colorWithRed:180/255.0 green:180/255.0 blue:180/255.0 alpha:1.0];
-                    [bgBigClassView addSubview:lineLabel];
-                }
-            } else{
-                [bgBigClassView removeFromSuperview];
-            }
             
         }else if ([tap.accessibilityValue isEqualToString:@"timePicker"]){
             picker.frame=CGRectMake(0, 40, Width-40, 180);
@@ -436,11 +377,7 @@
         UILabel *time=[self.view viewWithTag:30];
         time.text=timeLabel.text;
     }else{
-        [bgBigClassView removeFromSuperview];
-        projectNum=button.tag-80;
-        NSDictionary *dic=[projectNameArray objectAtIndex:button.tag-80];
-        projectName.text=[dic objectForKey:@"projectname"];
-    }
+          }
     
 }
 -(void)check:(UIButton*)sender{

@@ -10,5 +10,5 @@
 
 @interface HZYuYueReViewController : UIViewController
 @property(nonatomic,strong)NSDictionary*returnData;
-
+@property(nonatomic,strong)NSString*taskid;
 @end

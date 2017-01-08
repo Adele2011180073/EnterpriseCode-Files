@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface HZNoticeViewController : UIViewController
-
+@property(nonatomic,strong)NSString*noticeid;
 @end

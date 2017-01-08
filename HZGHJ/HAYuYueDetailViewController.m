@@ -40,6 +40,49 @@
     tableview.dataSource=self;
     [self.view addSubview:tableview];
     
+    if (_isMy==YES) {
+        NSString *taskid=[self.detailData objectForKey:@"taskid"];
+        if (![taskid isEqual:[NSNull null]]) {
+            tableview.frame=CGRectMake(0, 60, Width, Height-44-20-60);
+            NSArray *btnLabelArray=@[@"结束预约",@"重新预约"];
+            for (int i=0; i<2; i++) {
+                UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(40, 10,Width/2-60, 40)];
+                if (i==1) {
+                    button.frame=CGRectMake(Width-20-(Width/2-20), 10,Width/2-20, 40);
+                }else{
+                    button.frame=CGRectMake(10, 10,Width/2-20, 40);
+                }
+                button.clipsToBounds=YES;
+                button.layer.cornerRadius=5;
+                [button setTitle:[btnLabelArray objectAtIndex:i] forState:UIControlStateNormal];
+                [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                button.backgroundColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1];
+                button.tag=101+i;
+                [button addTarget:self action:@selector(commit:) forControlEvents:UIControlEventTouchUpInside];
+                
+                [self.view addSubview:button];
+            }
+            
+        }else{
+            
+            if ([[self.detailData objectForKey:@"status"]isEqualToString:@"退回"]||[[self.detailData objectForKey:@"status"]isEqualToString:@"已确认"]) {
+                tableview.frame=CGRectMake(0, 60, Width, Height-44-20-60);
+                UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(20, 10,Width-40, 40)];
+                button.clipsToBounds=YES;
+                button.layer.cornerRadius=5;
+                [button setTitle:@"取消预约" forState:UIControlStateNormal];
+                [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                button.backgroundColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1];
+                button.tag=100;
+                [button addTarget:self action:@selector(commit:) forControlEvents:UIControlEventTouchUpInside];
+                
+                [self.view addSubview:button];
+            }
+        }
+        
+    }
+    
+
     labelArray=[[NSArray alloc]initWithObjects:@"预约项目",@"预约事项",@"预约前提条件",@"预约人",@"联系电话",@"单位联系人",@"联系电话",@"设计院联系人",@"联系电话",@"预约时间",@"预约时间",@"预约人",@"预约状态",@"预约时间",@"预约人",@"",@"",@"",@"", nil];
     [self getDataSource];
   
@@ -51,51 +94,6 @@
     [HZLoginService YuYueWithToken:token ReservationId:self.reservationId andBlock:^(NSDictionary *returnDic, NSError *error) {
       [hud hideAnimated:YES];
             if ([[returnDic objectForKey:@"code"]integerValue]==0) {
-                if (_isMy==YES) {
-                    NSDictionary *list=[returnDic objectForKey:@"list"];
-                    NSString *taskid=[list objectForKey:@"taskid"];
-                    if (![taskid isEqual:[NSNull null]]) {
-                         tableview.frame=CGRectMake(0, 60, Width, Height-44-20-60);
-                         NSArray *btnLabelArray=@[@"结束预约",@"重新预约"];
-                        for (int i=0; i<2; i++) {
-                            UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(40, 10,Width/2-60, 40)];
-                                if (i==1) {
-                                    button.frame=CGRectMake(Width-20-(Width/2-20), 10,Width/2-20, 40);
-                                }else{
-                                    button.frame=CGRectMake(10, 10,Width/2-20, 40);
-                                }
-                            button.clipsToBounds=YES;
-                            button.layer.cornerRadius=5;
-                            [button setTitle:[btnLabelArray objectAtIndex:i] forState:UIControlStateNormal];
-                            [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                            button.backgroundColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1];
-                            button.tag=101+i;
-                            [button addTarget:self action:@selector(commit:) forControlEvents:UIControlEventTouchUpInside];
-                            
-                            [self.view addSubview:button];
-                        }
-
-                    }else{
-                        
-                        if ([[list objectForKey:@"status"]isEqualToString:@"退回"]||[[list objectForKey:@"status"]isEqualToString:@"已确认"]) {
-                            tableview.frame=CGRectMake(0, 60, Width, Height-44-20-60);
-                            UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(20, 10,Width-40, 40)];
-                            button.clipsToBounds=YES;
-                            button.layer.cornerRadius=5;
-                            [button setTitle:@"取消预约" forState:UIControlStateNormal];
-                            [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-                            button.backgroundColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1];
-                            button.tag=100;
-                            [button addTarget:self action:@selector(commit:) forControlEvents:UIControlEventTouchUpInside];
-                            
-                            [self.view addSubview:button];
-                        }
-                    }
-
-                }
-
-//            NSData *data =    [NSJSONSerialization dataWithJSONObject:returnDic options:NSJSONWritingPrettyPrinted error:nil];
-//                NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
                 returnData=[returnDic objectForKey:@"list"];
                 NSArray *listArray=[returnData objectForKey:@"runTaskResult"];
                 for (int i=0; i<listArray.count; i++) {
@@ -122,7 +120,7 @@
 }
 -(void)commit:(UIButton*)sender{
     if (sender.tag==100) {
-        NSString *Id=[returnData objectForKey:@"id"];
+        NSString *Id=[self.detailData objectForKey:@"id"];
         [HZLoginService YuYueCancelWithId:Id andBlock:^(NSDictionary *returnDic, NSError *error) {
              if ([[returnDic objectForKey:@"code"]integerValue]==0) {
                  [self.navigationController popViewControllerAnimated:YES];
@@ -135,10 +133,10 @@
              }
         }];
     }else  if (sender.tag==101) {
-          NSString *taskid=[returnData objectForKey:@"taskid"];
-        NSString *status=[returnData objectForKey:@"status"];
-        NSString *timeofappointment=[returnData objectForKey:@"timeofappointment"];
-        [HZLoginService YuYueFinishWithTaskId:taskid Status:status timeofappointment:timeofappointment andBlock:^(NSDictionary *returnDic, NSError *error) {
+          NSString *taskid=[self.detailData objectForKey:@"taskid"];
+//        NSString *status=[self.detailData objectForKey:@"status"];
+        NSString *timeofappointment=[self.detailData objectForKey:@"timeofappointment"];
+        [HZLoginService YuYueFinishWithTaskId:taskid Status:@"1" timeofappointment:timeofappointment andBlock:^(NSDictionary *returnDic, NSError *error) {
             if ([[returnDic objectForKey:@"code"]integerValue]==0) {
                 [self.navigationController popViewControllerAnimated:YES];
             }else{
@@ -152,6 +150,7 @@
         }];
     }else  if (sender.tag==102) {
         HZYuYueReViewController *woyao=[[HZYuYueReViewController alloc]init];
+        woyao.taskid=[self.detailData objectForKey:@"taskid"];
         woyao.returnData=returnData;
         [self.navigationController pushViewController:woyao animated:YES];
     }

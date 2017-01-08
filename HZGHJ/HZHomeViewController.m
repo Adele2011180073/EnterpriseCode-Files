@@ -13,6 +13,7 @@
 #import "CollectionViewCell.h"
 #import "HZLoginService.h"
 #import "HZNoticeViewController.h"
+#import <UserNotifications/UserNotifications.h>
 
 
 @interface HZHomeViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,UIGestureRecognizerDelegate>{
@@ -58,6 +59,9 @@
     [self.navigationController                                                                                                                                                                                                                                                                                                                                                                                         .navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bgg.png"] forBarMetrics:UIBarMetricsDefault];
     self.view.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
     self.userName.text=[NSString stringWithFormat:@"欢迎您，%@",[[self.dic objectForKey:@"obj"]objectForKey:@"name"]];
+    //UNNotificationSettings,新的替代类,但是目前里面的属性都是readOnly
+    UIUserNotificationSettings *setting = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge | UIUserNotificationTypeAlert | UIUserNotificationTypeSound categories:nil];
+    [[UIApplication sharedApplication]registerUserNotificationSettings:setting];
      [self getDataSource];
     
     UICollectionViewFlowLayout *layout=[[UICollectionViewFlowLayout alloc]init];
@@ -71,13 +75,41 @@
     collectionview.showsHorizontalScrollIndicator=NO;
     [self.view addSubview:collectionview];
 }
+-(void)getNoti{
+    //设置本地通知相关属性
+    //用UNNotificationContent的子类UNMutableNotificationContent实现
+    UNMutableNotificationContent *content = [UNMutableNotificationContent new];
+    //设置应用程序的数字图标
+    content.badge = [NSNumber numberWithInt:_tongzhiCount] ;
+    //设置声音
+    content.sound = [UNNotificationSound defaultSound];
+    //设置文字
+    content.title = @"您有一个新通知";
+    content.subtitle = @"小标题";
+    content.body = @"推送内容";
+    
+    
+    //设置触发时间和重复,用UNNotificationTrigger的子类UNTimeIntervalNotificationTrigger实现
+    //NSTimeInterval发送通知时间
+    //repeats是否重复
+    UNTimeIntervalNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:3 repeats:NO];
+    
+    UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:@"identifer" content:content trigger:trigger];
+    
+    //通过用户通知中心来添加一个本地通知的请求
+    [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
+        //回调
+        HZNoticeViewController *notice=[[HZNoticeViewController alloc]init];
+        [self.navigationController pushViewController:notice animated:YES];
+    }];
+}
 -(void)timerFire:(id)userinfo {
      NSString *token=[[NSUserDefaults standardUserDefaults]objectForKey:@"token"];
     [HZLoginService NavigationWithToken:token andBlock:^(NSDictionary *returnDic, NSError *error) {
          if ([[returnDic objectForKey:@"code"]integerValue]==0) {
              _tongzhidesc=[returnDic objectForKey:@"desc"];
              _tongzhiCount=[[returnDic objectForKey:@"count"]intValue];
-//             _tongzhiCount
+             [self getNoti];
          }else  if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000){
 //             UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
 //             UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {

@@ -208,7 +208,7 @@
     NSDictionary *dic=[dataList objectAtIndex:indexPath.row];
     HAYuYueDetailViewController *details=[[HAYuYueDetailViewController alloc]init];
     details.reservationId=[dic objectForKey:@"id"];
-    details.returnData=dic;
+    details.detailData=dic;
     if (segmented.selectedSegmentIndex==1) {
         details.isMy=YES;
     }else{

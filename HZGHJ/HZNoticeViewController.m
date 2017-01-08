@@ -78,8 +78,6 @@
                 NSData *data =    [NSJSONSerialization dataWithJSONObject:returnDic options:NSJSONWritingPrettyPrinted error:nil];
                 NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
                 [tableview reloadData];
-//                NSLog(@"预约列表    %@ ",str);
-//                NSLog(@"预约列表      %@",returnDic);
                 
             }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
                 UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
@@ -102,7 +100,6 @@
         cell=[[NoticeCell alloc]init];
     }
     NSDictionary *dic=[dataList objectAtIndex:indexPath.row];
-      NSLog(@"预约列表      %@",dic);
     cell.titleLabel.text=[dic objectForKey:@"title"];
     
     cell.subLabel.text=[NSString stringWithFormat:@"推送人：%@",[dic objectForKey:@"sendPerson"]];

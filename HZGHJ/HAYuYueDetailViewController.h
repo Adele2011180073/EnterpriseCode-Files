@@ -10,7 +10,7 @@
 
 @interface HAYuYueDetailViewController : UIViewController
 @property(nonatomic,strong)NSString*reservationId;
-@property(nonatomic,strong)NSDictionary*returnData;
+@property(nonatomic,strong)NSDictionary*detailData;
 @property(nonatomic,strong)NSMutableArray *dataList;
 @property(nonatomic,assign)BOOL isMy;
 @end
