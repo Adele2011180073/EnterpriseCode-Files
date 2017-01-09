@@ -58,7 +58,23 @@
     [tableview.pullToRefreshView setTitle:@"不要命的加载中..." forState:SVPullToRefreshStateLoading];
 }
 -(void)getMessage{
-//    [HZLoginService NavigationWithRecordId:<#(NSString *)#> andBlock:<#^(NSDictionary *returnDic, NSError *error)NavigationBlock#>]
+    if (self.sendDic!=NULL&&self.sendDic!=nil) {
+    [HZLoginService NavigationWithRecordId:[self.sendDic objectForKey:@"recordid"] andBlock:^(NSDictionary *returnDic, NSError *error) {
+        if ([[returnDic objectForKey:@"code"]integerValue]==0) {
+            
+        }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
+            UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            }];
+            [alert addAction:cancelAlert];
+            [self presentViewController:alert animated:YES completion:nil];
+        }else{
+            
+        }
+        
+
+    }];
+    }
 }
 -(void)getDataSource{
     MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];

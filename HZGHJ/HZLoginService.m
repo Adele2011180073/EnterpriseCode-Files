@@ -360,9 +360,10 @@
     NSMutableDictionary *parameters=[NSMutableDictionary dictionary];
     [parameters setObject:recordid forKey:@"recordid"];
     [session POST:serviceURLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        NSData *data =    [NSJSONSerialization dataWithJSONObject:responseObject options:NSJSONWritingPrettyPrinted error:nil];
-        NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+      
         NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
+        NSData *data =    [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
+        NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
         NSLog(@"成功  %@  %@",str,dic);
         NavigationBlock(dic,nil);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {

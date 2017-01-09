@@ -10,4 +10,5 @@
 
 @interface HZNoticeViewController : UIViewController
 @property(nonatomic,strong)NSString*noticeid;
+@property(nonatomic,strong)NSDictionary*sendDic;
 @end

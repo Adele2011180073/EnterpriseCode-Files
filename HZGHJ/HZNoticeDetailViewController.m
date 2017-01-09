@@ -17,7 +17,7 @@
     NSDictionary *totalDic;
     UIScrollView* bgView;
       UIScrollView* bgScrollView;
-    
+    NSMutableArray *imageArray;//图片显示数组
 }
 
 @end
@@ -31,6 +31,7 @@
     self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStyleBordered target:nil action:nil];
     self.title=@"消息详情";
     returnData=[[NSDictionary alloc]init];
+     imageArray=[[NSMutableArray alloc]init];
     [self getResourceData];
     bgView=[[UIScrollView alloc]init];
     bgScrollView=[[UIScrollView alloc]init];
@@ -217,8 +218,10 @@
         NSDictionary *listDic=[listArray objectAtIndex:number];
         NSArray *filelist=[listDic objectForKey:@"filelist"];
         if (![filelist isEqual:[NSNull null]]&&filelist.count>0) {
+              imageArray=[[NSMutableArray alloc]init];
             for (int i=0; i<filelist.count; i++) {
                 NSString *url=[NSString stringWithFormat:@"%@%@?fileId=%@",kDemoBaseURL,kGetFileURL,[[filelist objectAtIndex:i]objectForKey:@"id"]];
+                 [imageArray addObject:url];
                 UIImageView*imageView=[[UIImageView alloc]initWithFrame:CGRectMake(20+100*i, 140, 60, 60)];
                 imageView.userInteractionEnabled=YES;
                 //    NSLog(@"url  %@",url);
@@ -234,39 +237,39 @@
         
         
     }else if (messageattachment==5) {
-        UIImageView*imageView=[[UIImageView alloc]init];
-        bgView.frame=CGRectMake(0, Height/17*6+Height/8*2+Height/16, Width, 60);
-        [bgScrollView addSubview:bgView];
-        imageView.frame=CGRectMake(20, 0, 60, 60);
-        [bgView addSubview:imageView];
         NSArray *listArray=[totalDic objectForKey:@"listfiles"];
-        NSDictionary *listDic=[listArray objectAtIndex:0];
-        NSString *url=[NSString stringWithFormat:@"%@%@?fileId=%@",kDemoBaseURL,kGetFileURL,[listDic objectForKey:@"id"]];
-        imageView.userInteractionEnabled=YES;
-        NSLog(@"url  %@",url);
-        [imageView sd_setImageWithURL:[NSURL URLWithString:url]];
-        
-        UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
-        tap.accessibilityValue=[NSString stringWithFormat:@"%@",url];
-        tap.delegate=self;
-        [imageView addGestureRecognizer:tap];
-        [bgView addSubview:imageView];
+        if (![listArray isEqual:[NSNull null]]&&listArray.count>0) {
+            imageArray=[[NSMutableArray alloc]init];
+            for (int i=0; i<listArray.count; i++) {
+                NSDictionary *listDic=[listArray objectAtIndex:i];
+                NSString *url=[NSString stringWithFormat:@"%@%@?fileId=%@",kDemoBaseURL,kGetFileURL,[listDic objectForKey:@"id"]];
+                [imageArray addObject:url];
+                UIImageView*imageView=[[UIImageView alloc]init];
+                bgView.frame=CGRectMake(0, Height/17*6+Height/8*2+Height/16, Width, 60);
+                [bgScrollView addSubview:bgView];
+                imageView.frame=CGRectMake(20+100*i, 0, 60, 60);
+                [bgView addSubview:imageView];
+                imageView.userInteractionEnabled=YES;
+                NSLog(@"url  %@",url);
+                [imageView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"icon"]];
+                
+                UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
+                tap.accessibilityValue=[NSString stringWithFormat:@"%@",url];
+                tap.delegate=self;
+                [imageView addGestureRecognizer:tap];
+                [bgView addSubview:imageView];
+            }
+        }
         
     }
 }
 -(void)tap:(UITapGestureRecognizer*)tap{
     HZPictureViewController *picture=[[HZPictureViewController alloc]init];
     picture.isWeb=NO;
-    NSMutableArray *array=[[NSMutableArray alloc]init];
-    [array addObject:tap.accessibilityValue];
-    picture.imageArray=array;
-    NSInteger index=0;
+    picture.imageArray=imageArray;
+    NSInteger index=[imageArray indexOfObject:tap.accessibilityValue];
     picture.indexOfImage=index;
     [self.navigationController pushViewController:picture animated:YES];
-    
-//    HZPictureViewController *picture=[[HZPictureViewController alloc]init];
-//    picture.imageURL=tap.accessibilityValue;
-//    [self.navigationController pushViewController:picture animated:YES];
 }
 
 - (void)didReceiveMemoryWarning {

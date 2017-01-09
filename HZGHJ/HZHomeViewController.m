@@ -14,14 +14,15 @@
 #import "HZLoginService.h"
 #import "HZNoticeViewController.h"
 #import <UserNotifications/UserNotifications.h>
+#define KEY_NOTIFICATION @"this is a key for notification"
 
-
-@interface HZHomeViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,UIGestureRecognizerDelegate>{
+@interface HZHomeViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,UIGestureRecognizerDelegate,UNUserNotificationCenterDelegate>{
     UICollectionView *collectionview;
     NSMutableArray *dataSourceArray;
     NSString *_tongzhidesc;
     NSString *_tongzhiRecordid;
     int _tongzhiCount;
+    NSDictionary *sendDic;
 }
 @property (nonatomic, weak) NSTimer *timer;
 
@@ -50,6 +51,7 @@
 }
 -(void)tap{
     HZNoticeViewController *notice=[[HZNoticeViewController alloc]init];
+    notice.sendDic=sendDic;
     [self.navigationController pushViewController:notice animated:YES];
 }
 - (void)viewDidLoad {
@@ -62,6 +64,7 @@
     //UNNotificationSettings,新的替代类,但是目前里面的属性都是readOnly
     UIUserNotificationSettings *setting = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge | UIUserNotificationTypeAlert | UIUserNotificationTypeSound categories:nil];
     [[UIApplication sharedApplication]registerUserNotificationSettings:setting];
+    self.delegate=self;
      [self getDataSource];
     
     UICollectionViewFlowLayout *layout=[[UICollectionViewFlowLayout alloc]init];
@@ -76,53 +79,76 @@
     [self.view addSubview:collectionview];
 }
 -(void)getNoti{
-    //设置本地通知相关属性
-    //用UNNotificationContent的子类UNMutableNotificationContent实现
-    UNMutableNotificationContent *content = [UNMutableNotificationContent new];
-    //设置应用程序的数字图标
-    content.badge = [NSNumber numberWithInt:_tongzhiCount] ;
-    //设置声音
+    //3
+    [[UNUserNotificationCenter currentNotificationCenter]removeAllPendingNotificationRequests];
+    UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+    
+    //需创建一个包含待通知内容的 UNMutableNotificationContent 对象，注意不是 UNNotificationContent ,此对象为不可变对象。
+    UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
+    content.title = [NSString localizedUserNotificationStringForKey:@"移动规划" arguments:nil];
+    content.body = [NSString localizedUserNotificationStringForKey:@"查询到最新消息！"
+                                                         arguments:nil];
     content.sound = [UNNotificationSound defaultSound];
-    //设置文字
-    content.title = @"您有一个新通知";
-    content.subtitle = @"小标题";
-    content.body = @"推送内容";
     
+    // 在 alertTime 后推送本地推送
+    UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger
+                                                  triggerWithTimeInterval:1 repeats:NO];
     
-    //设置触发时间和重复,用UNNotificationTrigger的子类UNTimeIntervalNotificationTrigger实现
-    //NSTimeInterval发送通知时间
-    //repeats是否重复
-    UNTimeIntervalNotificationTrigger *trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:3 repeats:NO];
-    
-    UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:@"identifer" content:content trigger:trigger];
-    
-    //通过用户通知中心来添加一个本地通知的请求
-    [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
-        //回调
-        HZNoticeViewController *notice=[[HZNoticeViewController alloc]init];
-        [self.navigationController pushViewController:notice animated:YES];
+    UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:@"FiveSecond"
+                                                                          content:content trigger:trigger];
+    //添加推送成功后的处理！
+    [center addNotificationRequest:request withCompletionHandler:^(NSError * _Nullable error) {
     }];
 }
+#pragma mark - UNUserNotificationCenterDelegate
+-(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler{
+    //1. 处理通知
+    HZNoticeViewController *notice=[[HZNoticeViewController alloc]init];
+    notice.sendDic=sendDic;
+    [self.navigationController pushViewController:notice animated:YES];
+ 
+    //2. 处理完成后条用 completionHandler ，用于指示在前台显示通知的形式
+    completionHandler(UNNotificationPresentationOptionAlert);
+}
+
 -(void)timerFire:(id)userinfo {
      NSString *token=[[NSUserDefaults standardUserDefaults]objectForKey:@"token"];
     [HZLoginService NavigationWithToken:token andBlock:^(NSDictionary *returnDic, NSError *error) {
          if ([[returnDic objectForKey:@"code"]integerValue]==0) {
              _tongzhidesc=[returnDic objectForKey:@"desc"];
              _tongzhiCount=[[returnDic objectForKey:@"count"]intValue];
-             [self getNoti];
+             sendDic=[returnDic objectForKey:@"obj"];
+               self.noticeLabel.text=@"查询到有最新通知";
+             self.noticeLabel.userInteractionEnabled=YES;
+             UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap)];
+             tap.delegate=self;
+             [self.noticeLabel addGestureRecognizer:tap];
+             if (self.delegate && [self.delegate respondsToSelector:@selector(getNoti)]) {
+                 [self.delegate getNoti];
+             }
+             [collectionview reloadData];
          }else  if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000){
+                [_timer invalidate];
+                _timer=nil;
+                self.noticeLabel.text=@"暂无最新通知";
+             self.noticeLabel.userInteractionEnabled=NO;
+             _tongzhidesc=NULL;
+             _tongzhiCount=0;
+             sendDic=NULL;
+              [collectionview reloadData];
 //             UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
 //             UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 //             }];
 //             [alert addAction:cancelAlert];
 //             [self presentViewController:alert animated:YES completion:nil];
          }else{
-             
+                [_timer invalidate];
          }
     }];
 }
 -(void)dealloc{
     [_timer invalidate];
+    _timer=nil;
 }
 -(void)getDataSource{
     NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"BottomMenuItems1" ofType:@"plist"];
@@ -149,6 +175,7 @@
     if ( _tongzhiCount>0) {
         if ([cell.titleLabel.text isEqualToString:@"消息通知"]) {
             cell.numLabel.hidden=NO;
+            cell.numLabel.text=[NSString stringWithFormat:@"%d",_tongzhiCount];
         }else{
             cell.numLabel.hidden=YES;
         }
@@ -183,12 +210,34 @@
         }];
         [alert addAction:cancelAlert];
         [self presentViewController:alert animated:YES completion:nil];
-    }
+    }else if ([[dic objectForKey:@"title"]isEqualToString:@"消息通知"]){
+        if (sendDic!=NULL&&sendDic!=nil) {
+            HZNoticeViewController *notice=[[HZNoticeViewController alloc]init];
+            notice.sendDic=sendDic;
+            [self.navigationController pushViewController:notice animated:YES];
+        }else{
+            HZNoticeViewController *notice=[[HZNoticeViewController alloc]init];
+            [self.navigationController pushViewController:notice animated:YES];
+        }
+    }else{
     Class clazz = NSClassFromString([dic objectForKey:@"controller"]);
     if (!clazz) clazz = NSClassFromString([dic objectForKey:@"controller"]);
     UIViewController *controller = nil;
     controller = [[clazz alloc] init];
     [self.navigationController pushViewController:controller animated:YES];
+    }
+    
+}
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification{
+    //判断应用程序状态来决定是否弹框
+    if (application.applicationState == UIApplicationStateActive) {
+    }else if (application.applicationState == UIApplicationStateInactive)
+    {
+        //        NSLog(@"UIApplicationStateInactive");
+    }else{
+        NSLog(@"UIApplicationStateBackground");
+    }
+    
     
 }
 

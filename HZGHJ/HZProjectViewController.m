@@ -42,9 +42,9 @@
     UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
     tap.delegate=self;
     tap.accessibilityValue=[NSString stringWithFormat:@"resign"];
-    number=0;
     [bgScrollView addGestureRecognizer:tap];
     
+    number=0;
     bgBigClassView=[[UIScrollView alloc]init];
     self.imageArray=[[NSMutableArray alloc]init];
     projectNameArray=[[NSMutableArray alloc]init];
@@ -120,6 +120,20 @@
     [self addSubviews];
 }
 -(void)addSubviews{
+    for (UIView *view in bgScrollView.subviews) {
+        [view removeFromSuperview];
+    }
+    bgScrollView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, Width, Height-44)];
+    bgScrollView.contentSize=CGSizeMake(Width, 700);
+    bgScrollView.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
+    bgScrollView.userInteractionEnabled=YES;
+    [self.view addSubview:bgScrollView];
+    UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
+    tap.delegate=self;
+    tap.accessibilityValue=[NSString stringWithFormat:@"resign"];
+    [bgScrollView addGestureRecognizer:tap];
+
+    
     NSArray *subArray=@[@"选择项目名称",@"",@"添加照片",@"添加文字"];
     if (projectNameArray==nil||projectNameArray==NULL) return;
     NSDictionary *messageDic=[projectNameArray objectAtIndex:number];

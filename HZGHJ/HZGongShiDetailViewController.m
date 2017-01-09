@@ -22,6 +22,7 @@
     NSMutableArray *_photoArray; //图片
     NSMutableArray *_requiredArray; //必选
     NSMutableArray *imageAray;//获取显示图
+    NSMutableArray *_pictureArray;//图片显示数组
     int _selectBtnIndex;
 }
 
@@ -73,6 +74,7 @@
     NSArray *array=[NSKeyedUnarchiver unarchiveObjectWithData:imageName];
     _requiredArray=[NSMutableArray arrayWithArray:array];
     _photoArray=[NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:imageData]];
+     _pictureArray=[[NSMutableArray alloc]init];
     NSLog(@"array  %@",array);
     returnData=[[NSDictionary alloc]init];
     bgScrollView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, Width, Height-44)];
@@ -210,16 +212,13 @@
                             [button setBackgroundImage:[UIImage imageNamed:[imageNameArray1 objectAtIndex:j]] forState:UIControlStateNormal];
                             [button addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
                         }
-//                        [button setBackgroundImage:[UIImage imageNamed:[imageNameArray1 objectAtIndex:j]] forState:UIControlStateNormal];
                         button.accessibilityValue=[NSString stringWithFormat:@"%d",i*2+j+1];
-//                        [button addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
                         
                         [bgView addSubview:button];
                         
                     }
                 }else{//后两行
                     UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(Width/2-35, 5, 70, 70)];
-//                    [button setBackgroundImage:[UIImage imageNamed:@"add_photo"] forState:UIControlStateNormal];
                     button.tag=3+i+1;
                     button.accessibilityValue=[NSString stringWithFormat:@"%d",3+i];
                     //判断有无保存图片
@@ -256,6 +255,7 @@
                         [imageNameArray2 addObject:dic];
                     }
                 }
+                [_pictureArray addObjectsFromArray:imageNameArray2];
                 for (int j=0; j<2; j++) {
                     NSString *serviceURL=nil;
                     NSDictionary *item=[imageNameArray2 objectAtIndex:j];
@@ -280,7 +280,7 @@
                         [imageNameArray2 addObject:dic];
                     }
                 }
-
+                [_pictureArray addObjectsFromArray:imageNameArray2];
                 if (i<3) {//前三行
                     for (int j=0; j<2; j++) {
                          NSString *serviceURL=nil;
@@ -555,8 +555,8 @@
     HZPictureViewController *picture=[[HZPictureViewController alloc]init];
     picture.isWeb=NO;
     NSMutableArray*array=[[NSMutableArray alloc]init];
-    for (int m=0; m<imageAray.count; m++) {
-        NSDictionary *dic=[imageAray objectAtIndex:m];
+    for (int m=0; m<_pictureArray.count; m++) {
+        NSDictionary *dic=[_pictureArray objectAtIndex:m];
         NSString *serviceURL=[NSString stringWithFormat:@"%@%@?fileId=%@",kDemoBaseURL,kGetFileURL,[dic objectForKey:@"imageId"]];
         [array addObject:serviceURL];
     }
