@@ -27,7 +27,11 @@
 
 @implementation HZShangBaoViewController
 @synthesize dataList;
-
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBarHidden = NO;
+      [self getDataSource];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
@@ -51,7 +55,7 @@
     tableview.separatorColor=[UIColor clearColor];
     tableview.dataSource=self;
     [self.view addSubview:tableview];
-    [self getDataSource];
+  
     NSArray *titleArray=@[@"过程上报",@"我的上报"];
     segmented=[[UISegmentedControl alloc]initWithItems:titleArray];
     segmented.frame=CGRectMake(5, 5, Width-10, 40);
@@ -217,7 +221,7 @@
             [bgView addSubview:imageView];
             
             UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
-            tap.accessibilityValue=[NSString stringWithFormat:@"%ld",indexPath.row];
+            tap.accessibilityValue=[NSString stringWithFormat:@"%ld-%@",indexPath.row,url];
             tap.delegate=self;
             [imageView addGestureRecognizer:tap];
         }
@@ -226,11 +230,14 @@
     return cell;
 }
 -(void)tap:(UITapGestureRecognizer*)tap{
+    NSArray *array=[tap.accessibilityValue componentsSeparatedByString:@"-"];
     HZPictureViewController *picture=[[HZPictureViewController alloc]init];
     picture.isWeb=NO;
-    int index=[tap.accessibilityValue intValue];
+    NSString *str1=array[0];
+    NSString *str2=array[1];
+    NSInteger number=[str1 integerValue];
+    NSDictionary *dic=[dataList objectAtIndex:number];
     NSMutableArray *imageArray=[[NSMutableArray alloc]init];
-    NSDictionary *dic=[dataList objectAtIndex:index];
     if ([dic objectForKey:@"filelist"]!=NULL) {
         NSArray *array=[dic objectForKey:@"filelist"];
         for (int i=0; i<array.count; i++) {
@@ -240,14 +247,9 @@
         }
     }
     picture.imageArray=imageArray;
-//    picture.image=sender.currentBackgroundImage;
-//    NSInteger index=[array indexOfObject:sender.accessibilityValue];
-    picture.indexOfImage=0;
-//    picture.imageURL=sender.accessibilityValue;
+    NSInteger index=[imageArray indexOfObject:str2];
+    picture.indexOfImage=index;
     [self.navigationController pushViewController:picture animated:YES];
-//    HZPictureViewController *picture=[[HZPictureViewController alloc]init];
-//    picture.imageURL=tap.accessibilityValue;
-//    [self.navigationController pushViewController:picture animated:YES];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

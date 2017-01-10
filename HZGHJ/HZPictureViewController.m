@@ -39,17 +39,15 @@
     [self.view addSubview:bgScrollView];
     
     page=[[UIPageControl alloc]initWithFrame:CGRectMake(100, Height-64-40, Width-200, 30)];
-//    [page addTarget:self action:@selector(changePage:)forControlEvents:UIControlEventValueChanged];
     page.numberOfPages=self.imageArray.count;
     page.currentPage=self.indexOfImage;
-//    page.currentPageIndicatorTintColor=[UIColor colorWithRed:0/255.0 green:126/255.0 blue:255/255.0 alpha:1.0];
-//    page.pageIndicatorTintColor=[UIColor lightGrayColor];
     [self.view addSubview:page];
 
     for (int i=0; i<self.imageArray.count; i++) {
         UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake(10+Width*i,10, Width-20, Height-44-40)];
         //开启交互功能
         imageView.userInteractionEnabled=YES;
+        imageView.contentMode=UIViewContentModeScaleAspectFit;
         if (_isWeb==YES) {
             imageView.image=[self.imageArray objectAtIndex:i];
         }else{

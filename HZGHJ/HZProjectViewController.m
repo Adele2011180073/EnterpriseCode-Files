@@ -82,7 +82,11 @@
         isBigClass=!isBigClass;
         if (isBigClass==YES) {
             bgBigClassView=[[UIScrollView alloc]init];
-        bgBigClassView.frame=CGRectMake(0, 40, Width, 50*projectNameArray.count);
+            if (50*projectNameArray.count>Height-160) {
+                bgBigClassView.frame=CGRectMake(0, 90, Width, Height-160);
+            }else{
+                bgBigClassView.frame=CGRectMake(0, 90, Width, 50*projectNameArray.count);
+            }
         bgBigClassView.contentSize=CGSizeMake(Width-140, 50*projectNameArray.count);
         bgBigClassView.userInteractionEnabled=YES;
         bgBigClassView.backgroundColor=[UIColor whiteColor];
@@ -176,6 +180,7 @@
                projectName=[[UILabel alloc]initWithFrame:CGRectMake(10, 0, Width-50, 40)];
                projectName.textAlignment=NSTextAlignmentLeft;
                projectName.text=str;
+               projectName.numberOfLines=2;
                projectName.font=[UIFont systemFontOfSize:16];
                [bgView addSubview:projectName];
                UILabel *imageTitle=[[UILabel alloc]initWithFrame:CGRectMake(Width-30, 5, 20, 20)];
@@ -436,7 +441,7 @@
 -(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
         if ([textView.text length]>=200)
         {
-            return  NO;
+             textView.text = [textView.text substringToIndex:199];
         }
         else
         {

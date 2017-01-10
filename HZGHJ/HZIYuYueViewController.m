@@ -104,6 +104,7 @@
     [bgScrollView addSubview:bgView];
     projectName=[[UILabel alloc]initWithFrame:CGRectMake(10, 0, Width-50, 40)];
     projectName.textAlignment=NSTextAlignmentLeft;
+    projectName.numberOfLines=2;
     NSDictionary *projectNameDic=[projectNameArray objectAtIndex:projectNum];
     NSString *projectNameStr=[projectNameDic objectForKey:@"projectname"];
     projectName.text=projectNameStr;
@@ -347,7 +348,11 @@
         isBigClass=!isBigClass;
         if (isBigClass==YES) {
             bgBigClassView=[[UIScrollView alloc]init];
-            bgBigClassView.frame=CGRectMake(0, 40, Width, 50*projectNameArray.count);
+            if (50*projectNameArray.count>Height-160) {
+                bgBigClassView.frame=CGRectMake(0, 90, Width, Height-160);
+            }else{
+                bgBigClassView.frame=CGRectMake(0, 90, Width, 50*projectNameArray.count);
+            }
             bgBigClassView.userInteractionEnabled=YES;
             bgBigClassView.backgroundColor=[UIColor whiteColor];
             [bgScrollView addSubview:bgBigClassView];

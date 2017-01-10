@@ -21,8 +21,9 @@
     NSMutableArray *_nameArray; //名字
     NSMutableArray *_photoArray; //图片
     NSMutableArray *_requiredArray; //必选
+    NSMutableArray *_remainImageArray; //保存图片数组
     NSMutableArray *imageAray;//获取显示图
-    NSMutableArray *_pictureArray;//图片显示数组
+    NSMutableArray *_pictureArray;//图片可顺序显示数组
     int _selectBtnIndex;
 }
 
@@ -41,41 +42,40 @@
             self.title=@"公示详情(起始日)";
             _requiredArray = [[NSMutableArray alloc] initWithObjects:@"0",@"0",@"0",@"0",@"0",@"0",@"0", nil];
             _nameArray = [[NSMutableArray alloc] initWithObjects:@"1_1.jpg",@"1_2.jpg",@"2_1.jpg",@"2_2.jpg",@"3_1.jpg",@"3_2.jpg",@"4_1.jpg", nil];
-            _photoArray = [[NSMutableArray alloc] initWithObjects:@"1",@"2",@"3",@"4",@"5",@"6",@"7", nil];
+            _photoArray = [[NSMutableArray alloc] initWithObjects:@"1",@"1",@"1",@"1",@"1",@"1",@"1", nil];
         }
             break;
         case 2:{
             self.title=@"公示详情(结束日)";
             _requiredArray = [[NSMutableArray alloc] initWithObjects:@"0",@"0",@"0",@"0",@"0",@"0",@"0", nil];
             _nameArray = [[NSMutableArray alloc] initWithObjects:@"1_1.jpg",@"1_2.jpg",@"2_1.jpg",@"2_2.jpg",@"3_1.jpg",@"3_2.jpg",@"4_1.jpg", nil];
-            _photoArray = [[NSMutableArray alloc] initWithObjects:@"1",@"2",@"3",@"4",@"5",@"6",@"7", nil];
+            _photoArray = [[NSMutableArray alloc] initWithObjects:@"1",@"1",@"1",@"1",@"1",@"1",@"1", nil];
         }
             break;
         case 3:{
             self.title=@"时间1";
             _requiredArray = [[NSMutableArray alloc] initWithObjects:@"0",@"0",@"0",@"0",@"0",@"0", nil];
             _nameArray = [[NSMutableArray alloc] initWithObjects:@"1_1.jpg",@"1_2.jpg",@"2_1.jpg",@"2_2.jpg",@"3_1.jpg",@"3_2.jpg", nil];
-            _photoArray = [[NSMutableArray alloc] initWithObjects:@"1",@"2",@"3",@"4",@"5",@"6", nil];
+            _photoArray = [[NSMutableArray alloc] initWithObjects:@"1",@"1",@"1",@"1",@"1",@"1", nil];
         }
             break;
         case 4:{
             self.title=@"时间2";
             _requiredArray = [[NSMutableArray alloc] initWithObjects:@"0",@"0",@"0",@"0",@"0",@"0", nil];
             _nameArray = [[NSMutableArray alloc] initWithObjects:@"1_1.jpg",@"1_2.jpg",@"2_1.jpg",@"2_2.jpg",@"3_1.jpg",@"3_2.jpg", nil];
-            _photoArray = [[NSMutableArray alloc] initWithObjects:@"1",@"2",@"3",@"4",@"5",@"6", nil];
+            _photoArray = [[NSMutableArray alloc] initWithObjects:@"1",@"1",@"1",@"1",@"1",@"1", nil];
         }
             break;
         default:
             break;
     }
     NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
-    NSData *imageName=[def objectForKey:@"imageName"];
     NSData *imageData=[def objectForKey:@"imageData"];
-    NSArray *array=[NSKeyedUnarchiver unarchiveObjectWithData:imageName];
-    _requiredArray=[NSMutableArray arrayWithArray:array];
-    _photoArray=[NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:imageData]];
+    if (imageData!=NULL&&imageData!=nil) {
+        _remainImageArray=[NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:imageData]];
+        NSLog(@"_remainImageArray  %@",_remainImageArray);
+    }
      _pictureArray=[[NSMutableArray alloc]init];
-    NSLog(@"array  %@",array);
     returnData=[[NSDictionary alloc]init];
     bgScrollView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, Width, Height-44)];
     bgScrollView.contentSize=CGSizeMake(Width, 1000);
@@ -178,16 +178,17 @@
                 for (int j=0; j<2; j++) {
                     UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(60, 5, 70, 70)];
                     if (j==1) {
-                                        button.frame=CGRectMake(Width-130, 5, 70, 70);
-                                    }
+                            button.frame=CGRectMake(Width-130, 5, 70, 70);
+                        }
                     button.tag=i*2+j+1;
                     //判断有无保存图片
-                    if ([[_requiredArray objectAtIndex:button.tag-1]isEqualToString:@"1"]) {
-                          [button setBackgroundImage:[_photoArray objectAtIndex:button.tag-1] forState:UIControlStateNormal];
-                         [button addTarget:self action:@selector(bigImage:) forControlEvents:UIControlEventTouchUpInside];
+                    if (![_remainImageArray isEqual:[NSNull null]]&&_remainImageArray!=nil&&[[_remainImageArray objectAtIndex:button.tag-1]isKindOfClass:[UIImage class]]) {
+                        [button setBackgroundImage:[_remainImageArray objectAtIndex:button.tag-1] forState:UIControlStateNormal];
+                        [_pictureArray replaceObjectAtIndex:button.tag-1 withObject:[_remainImageArray objectAtIndex:button.tag-1]];
+                        [button addTarget:self action:@selector(bigImage:) forControlEvents:UIControlEventTouchUpInside];
                     }else{
                         [button setBackgroundImage:[UIImage imageNamed:[imageNameArray1 objectAtIndex:j]] forState:UIControlStateNormal];
-                         [button addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
+                        [button addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
                     }
                     button.accessibilityValue=[NSString stringWithFormat:@"%d",i*2+j];
                    
@@ -204,9 +205,11 @@
                             button.frame=CGRectMake(Width-130, 5, 70, 70);
                         }
                         button.tag=i*2+j+1;
-                        //判断有无保存图片
-                        if ([[_requiredArray objectAtIndex:button.tag-1]isEqualToString:@"1"]) {
-                            [button setBackgroundImage:[_photoArray objectAtIndex:button.tag-1] forState:UIControlStateNormal];
+//                        判断有无保存图片
+                          if (![_remainImageArray isEqual:[NSNull null]]&&_remainImageArray!=nil&&[[_remainImageArray objectAtIndex:button.tag-1]isKindOfClass:[UIImage class]]) {
+                            [button setBackgroundImage:[_remainImageArray objectAtIndex:button.tag-1] forState:UIControlStateNormal];
+                            [_photoArray replaceObjectAtIndex:button.tag-1 withObject:[_remainImageArray objectAtIndex:button.tag-1]];
+                            [_requiredArray replaceObjectAtIndex:button.tag-1 withObject:@"1"];
                             [button addTarget:self action:@selector(bigImage:) forControlEvents:UIControlEventTouchUpInside];
                         }else{
                             [button setBackgroundImage:[UIImage imageNamed:[imageNameArray1 objectAtIndex:j]] forState:UIControlStateNormal];
@@ -215,7 +218,7 @@
                         button.accessibilityValue=[NSString stringWithFormat:@"%d",i*2+j+1];
                         
                         [bgView addSubview:button];
-                        
+//
                     }
                 }else{//后两行
                     UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(Width/2-35, 5, 70, 70)];
@@ -223,26 +226,34 @@
                     button.accessibilityValue=[NSString stringWithFormat:@"%d",3+i];
                     //判断有无保存图片
                     if (button.tag==7) {
-                        if ([[_requiredArray objectAtIndex:button.tag-1]isEqualToString:@"1"]) {
-                            [button setBackgroundImage:[_photoArray objectAtIndex:button.tag-1] forState:UIControlStateNormal];
-                            [button addTarget:self action:@selector(bigImage:) forControlEvents:UIControlEventTouchUpInside];
-                        }else{
-                           [button setBackgroundImage:[UIImage imageNamed:@"add_photo"] forState:UIControlStateNormal];
-                            [button addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
-                        }
-
+                        if (![_remainImageArray isEqual:[NSNull null]]&&_remainImageArray!=nil&&_remainImageArray.count>6&&[[_remainImageArray objectAtIndex:button.tag-1]isKindOfClass:[UIImage class]]) {
+                                [button setBackgroundImage:[_remainImageArray objectAtIndex:button.tag-1] forState:UIControlStateNormal];
+                                [_photoArray replaceObjectAtIndex:button.tag-1 withObject:[_remainImageArray objectAtIndex:button.tag-1]];
+                               [_requiredArray replaceObjectAtIndex:button.tag-1 withObject:@"1"];
+                                [button addTarget:self action:@selector(bigImage:) forControlEvents:UIControlEventTouchUpInside];
+                            }else{
+                                [button setBackgroundImage:[UIImage imageNamed:@"add_photo"] forState:UIControlStateNormal];
+                                [button addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
+                            }
+            
                     }else{
-                        if (_photoArray.count>7) {
-                            [button setBackgroundImage:[UIImage imageNamed:[_photoArray objectAtIndex:button.tag-1]] forState:UIControlStateNormal];
-                            [button addTarget:self action:@selector(bigImage:) forControlEvents:UIControlEventTouchUpInside];
-                        }else{
-                            [button setBackgroundImage:[UIImage imageNamed:@"add_photo"] forState:UIControlStateNormal];
-                            [button addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
-                        }
+                        if (![_remainImageArray isEqual:[NSNull null]]&&_remainImageArray!=nil&&_remainImageArray.count==8&&[[_remainImageArray objectAtIndex:button.tag-1]isKindOfClass:[UIImage class]]) {
+                            [button setBackgroundImage:[_remainImageArray objectAtIndex:button.tag-1] forState:UIControlStateNormal];
+                            if (_photoArray.count==8) {
+                                  [_photoArray replaceObjectAtIndex:button.tag-1 withObject:[_remainImageArray objectAtIndex:button.tag-1]];
+                            }else{
+                                [_photoArray addObject:[_remainImageArray objectAtIndex:button.tag-1]];
+                                  [_nameArray addObject:@"5_1.jpg"];
+                            }
+                            
+                                [button addTarget:self action:@selector(bigImage:) forControlEvents:UIControlEventTouchUpInside];
+                            }else{
+                                [button setBackgroundImage:[UIImage imageNamed:@"add_photo"] forState:UIControlStateNormal];
+                                [button addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
+                            }
+
                     }
-                    
-//                    [button addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
-                    
+                                        
                     [bgView addSubview:button];
                 }
             }
@@ -351,9 +362,7 @@
 -(void)commit:(UIButton *)sender{
     if (sender.tag==100) {
         NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
-        NSData *nameData=[NSKeyedArchiver archivedDataWithRootObject:_requiredArray];
                 NSData *imageData=[NSKeyedArchiver archivedDataWithRootObject:_photoArray ];
-        [def setObject:nameData forKey:@"imageName"];
         [def setObject:imageData forKey:@"imageData"];
         UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"保存成功！" message:nil preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {

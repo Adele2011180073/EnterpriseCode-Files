@@ -28,6 +28,11 @@
 
 @implementation HZGongShiViewController
 @synthesize dataList;
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBarHidden = NO;
+    [self getDataSource];
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
@@ -107,6 +112,10 @@
                 [tableview reloadData];
                 NSLog(@"公示登记列表    %@  %d",array,dataList.count);
             }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
+                if (pageIndex==1) {
+                    dataList=[[NSMutableArray alloc]init];
+                }
+                [tableview reloadData];
                 UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 }];
