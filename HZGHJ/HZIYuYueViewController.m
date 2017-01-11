@@ -15,6 +15,7 @@
     NSMutableArray *reservationserviceArray;
     NSDictionary *returnData;
     UILabel *projectName;
+    UILabel *nodeName;
     UIScrollView *bgBigClassView;
     BOOL isBigClass;
     NSInteger projectNum;
@@ -71,7 +72,16 @@
             if ([[returnDic objectForKey:@"code"]integerValue]==0) {
                 NSData *data =    [NSJSONSerialization dataWithJSONObject:returnDic options:NSJSONWritingPrettyPrinted error:nil];
                 NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-                projectNameArray=[returnDic objectForKey:@"list"];
+                NSArray *list=[returnDic objectForKey:@"list"];
+                if (![list isEqual:[NSNull null]]&&list.count>0) {
+                    for (int i=0; i<list.count; i++) {
+                        NSDictionary *listDic=[list objectAtIndex:i];
+                        NSArray*nodelist=[listDic objectForKey:@"nodelist"];
+                        if (![nodelist isEqual:[NSNull null]]&&nodelist!=NULL&&nodelist.count>0) {
+                            [projectNameArray addObject:listDic];
+                        }
+                    }
+                }
                 NSArray *array=[returnDic objectForKey:@"reservationservice"];
                 NSDictionary *dic=[array objectAtIndex:0];
                 reservationserviceArray=[NSMutableArray arrayWithArray:[dic objectForKey:@"childList"]];
@@ -162,6 +172,22 @@
              tap.delegate=self;
              tap.accessibilityValue=[NSString stringWithFormat:@"timePicker"];
              [text addGestureRecognizer:tap];
+         }else if (i==0){
+             nodeName=[[UILabel alloc]initWithFrame:CGRectMake(110, 10, Width -150, 20)];
+             nodeName.textAlignment=NSTextAlignmentLeft;
+             nodeName.text=[textArray objectAtIndex:i];
+             nodeName.font=[UIFont systemFontOfSize:15];
+             [bgView1 addSubview:nodeName];
+             
+             UILabel *imageTitle=[[UILabel alloc]initWithFrame:CGRectMake(Width-30, 5, 20, 20)];
+             imageTitle.textColor=blueCyan;
+             imageTitle.text=@"\U0000e62e";
+             imageTitle.font=[UIFont fontWithName:@"iconfont" size:16];
+             [bgView1 addSubview:imageTitle];
+             UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
+             tap.delegate=self;
+             tap.accessibilityValue=[NSString stringWithFormat:@"nodelist"];
+             [bgView1 addGestureRecognizer:tap];
          }
      }
     
@@ -330,6 +356,7 @@
         }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
             UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                 [self.navigationController popViewControllerAnimated:YES];
             }];
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];
@@ -343,8 +370,7 @@
     if ([tap.accessibilityValue isEqualToString:@"resign"]) {
 //        [bgBigClassView removeFromSuperview];
         [self.view endEditing:YES];
-    }else
-        if ([tap.accessibilityValue isEqualToString:@"nameList"]) {
+    }else if ([tap.accessibilityValue isEqualToString:@"nameList"]) {
         isBigClass=!isBigClass;
         if (isBigClass==YES) {
             bgBigClassView=[[UIScrollView alloc]init];
@@ -361,7 +387,7 @@
                 NSDictionary *dic=[projectNameArray objectAtIndex:i];
                 UIButton *button=[UIButton buttonWithType:UIButtonTypeCustom];
                 button.frame=CGRectMake(0,50*i, Width, 50);
-                button.tag=80+i;
+                button.tag=60+i;
                 button.titleLabel.textAlignment=NSTextAlignmentCenter;
                 button.titleLabel.font=[UIFont systemFontOfSize:16];
                 [button setTitle:[dic objectForKey:@"projectname"] forState:UIControlStateNormal];
@@ -378,7 +404,38 @@
             [bgBigClassView removeFromSuperview];
         }
         
-        }else if ([tap.accessibilityValue isEqualToString:@"timePicker"]){
+    }else if ([tap.accessibilityValue isEqualToString:@"nodelist"]) {
+        isBigClass=!isBigClass;
+        if (isBigClass==YES) {
+            bgBigClassView=[[UIScrollView alloc]init];
+            NSDictionary *dic=[projectNameArray objectAtIndex:projectNum];
+            NSArray *nodelist=[dic objectForKey:@"nodelist"];
+                bgBigClassView.frame=CGRectMake(150, 140, Width-180, 50*nodelist.count);
+            bgBigClassView.userInteractionEnabled=YES;
+            bgBigClassView.backgroundColor=[UIColor whiteColor];
+            [bgScrollView addSubview:bgBigClassView];
+                     for (int i=0; i<nodelist.count; i++) {
+                NSDictionary *dic=[nodelist objectAtIndex:i];
+                UIButton *button=[UIButton buttonWithType:UIButtonTypeCustom];
+                button.frame=CGRectMake(0,50*i, Width, 50);
+                button.tag=50+i;
+                button.titleLabel.textAlignment=NSTextAlignmentCenter;
+                button.titleLabel.font=[UIFont systemFontOfSize:16];
+                [button setTitle:[dic objectForKey:@"value"] forState:UIControlStateNormal];
+                [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                button.adjustsImageWhenHighlighted=YES;
+                [button addTarget:self action:@selector(listBtn:) forControlEvents:UIControlEventTouchUpInside];
+                [bgBigClassView addSubview:button];
+                
+                UILabel *lineLabel=[[UILabel alloc]initWithFrame:CGRectMake(0,49*i, Width, 1)];
+                lineLabel.backgroundColor=[UIColor colorWithRed:180/255.0 green:180/255.0 blue:180/255.0 alpha:1.0];
+                [bgBigClassView addSubview:lineLabel];
+            }
+        } else{
+            [bgBigClassView removeFromSuperview];
+        }
+        
+    }else if ([tap.accessibilityValue isEqualToString:@"timePicker"]){
             picker.frame=CGRectMake(0, 40, Width-40, 180);
             picker.datePickerMode=UIDatePickerModeDate;
             [picker addTarget:self action:@selector(timeSelect:) forControlEvents:UIControlEventValueChanged];
@@ -408,25 +465,6 @@
             achieve.clipsToBounds=YES;
             [achieve addTarget:self action:@selector(listBtn:) forControlEvents:UIControlEventTouchUpInside];
             [pickerView addSubview:achieve];
-            
-//            NSArray *btnLabelArray=@[@"取消",@"确定"];
-//            for (int i=0; i<2; i++) {
-//                UIButton *button=[UIButton buttonWithType:UIButtonTypeCustom];
-//                button.frame=CGRectMake((Width-20)/2*i,260, (Width-20)/2, 40);
-//                button.tag=100+i;
-//                button.layer.cornerRadius=8;
-//                button.clipsToBounds=YES;
-//                button.layer.borderWidth=1;
-//                button.layer.borderColor=[UIColor grayColor].CGColor;
-//                button.titleLabel.textAlignment=NSTextAlignmentCenter;
-//                button.titleLabel.font=[UIFont systemFontOfSize:17];
-//                [button setTitle:[btnLabelArray objectAtIndex:i] forState:UIControlStateNormal];
-//                [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-//                button.adjustsImageWhenHighlighted=YES;
-//                [button addTarget:self action:@selector(listBtn:) forControlEvents:UIControlEventTouchUpInside];
-//                [pickerView addSubview:button];
-//            }
-            
         }
 
 }
@@ -439,11 +477,18 @@
         // 显示时间
         UILabel *time=[self.view viewWithTag:30];
         time.text=timeLabel.text;
-    }else{
+    }else if(button.tag>59&&button.tag<100){
         [bgBigClassView removeFromSuperview];
-        projectNum=button.tag-80;
-        NSDictionary *dic=[projectNameArray objectAtIndex:button.tag-80];
+        projectNum=button.tag-60;
+        NSDictionary *dic=[projectNameArray objectAtIndex:button.tag-60];
         projectName.text=[dic objectForKey:@"projectname"];
+    }else if(button.tag>49&&button.tag<60){
+        [bgBigClassView removeFromSuperview];
+        nodeNum=button.tag-50;
+        NSDictionary *dic=[projectNameArray objectAtIndex:projectNum];
+        NSArray *nodelist=[dic objectForKey:@"nodelist"];
+        NSDictionary *nodelistdic=[nodelist objectAtIndex:button.tag-50];
+        nodeName.text=[nodelistdic objectForKey:@"value"];
     }
    
 }

@@ -52,7 +52,7 @@
             imageView.image=[self.imageArray objectAtIndex:i];
         }else{
             NSString *url=[self.imageArray objectAtIndex:i];
-            [imageView sd_setImageWithURL:[NSURL URLWithString:url]];
+            [imageView sd_setImageWithURL:[NSURL URLWithString:url]placeholderImage:[UIImage imageNamed:@"img_default"]];
         }
         [bgScrollView addSubview:imageView];
         //创建一个捏合手势

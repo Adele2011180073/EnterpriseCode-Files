@@ -217,7 +217,7 @@
             NSDictionary *imageDic=[array objectAtIndex:i];
             NSString *url=[NSString stringWithFormat:@"%@%@?fileId=%@",kDemoBaseURL,kGetFileURL,[imageDic objectForKey:@"id"]];
             NSLog(@"url  %@",url);
-            [imageView sd_setImageWithURL:[NSURL URLWithString:url]];
+            [imageView sd_setImageWithURL:[NSURL URLWithString:url]placeholderImage:[UIImage imageNamed:@"img_default"]];
             [bgView addSubview:imageView];
             
             UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];

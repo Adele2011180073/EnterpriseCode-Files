@@ -18,6 +18,7 @@
     UIScrollView* bgView;
       UIScrollView* bgScrollView;
     NSMutableArray *imageArray;//图片显示数组
+    int numberOfArray;//图片显示数组
 }
 
 @end
@@ -216,19 +217,18 @@
     if (messageattachment==1||messageattachment==2||messageattachment==3) {
         NSArray *listArray=[totalDic objectForKey:@"list"];
         NSDictionary *listDic=[listArray objectAtIndex:number];
+        NSLog(@"listDic   %@    number  %d",listDic,number);
         NSArray *filelist=[listDic objectForKey:@"filelist"];
         if (![filelist isEqual:[NSNull null]]&&filelist.count>0) {
-              imageArray=[[NSMutableArray alloc]init];
             for (int i=0; i<filelist.count; i++) {
                 NSString *url=[NSString stringWithFormat:@"%@%@?fileId=%@",kDemoBaseURL,kGetFileURL,[[filelist objectAtIndex:i]objectForKey:@"id"]];
-                 [imageArray addObject:url];
-                UIImageView*imageView=[[UIImageView alloc]initWithFrame:CGRectMake(20+100*i, 140, 60, 60)];
+                UIImageView*imageView=[[UIImageView alloc]initWithFrame:CGRectMake(20+100*i, 140+210*number, 60, 60)];
                 imageView.userInteractionEnabled=YES;
                 //    NSLog(@"url  %@",url);
-                [imageView sd_setImageWithURL:[NSURL URLWithString:url]];
+                [imageView sd_setImageWithURL:[NSURL URLWithString:url]placeholderImage:[UIImage imageNamed:@"img_default"]];
                 
                 UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
-                tap.accessibilityValue=[NSString stringWithFormat:@"%@",url];
+                tap.accessibilityValue=[NSString stringWithFormat:@"%d-%@",number,url];
                 tap.delegate=self;
                 [imageView addGestureRecognizer:tap];
                 [bgView addSubview:imageView];
@@ -251,7 +251,7 @@
                 [bgView addSubview:imageView];
                 imageView.userInteractionEnabled=YES;
                 NSLog(@"url  %@",url);
-                [imageView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"icon"]];
+                [imageView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"img_default"]];
                 
                 UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
                 tap.accessibilityValue=[NSString stringWithFormat:@"%@",url];
@@ -264,10 +264,44 @@
     }
 }
 -(void)tap:(UITapGestureRecognizer*)tap{
+    NSInteger messageattachment=  [[returnData objectForKey:@"messageattachment"]integerValue];
+    NSString *nowUrl;
+    if (messageattachment==1||messageattachment==2||messageattachment==3) {
+        NSArray *array=[tap.accessibilityValue componentsSeparatedByString:@"-"];
+        int number=[array[0] intValue];
+        nowUrl=array[1];
+        NSArray *listArray=[totalDic objectForKey:@"list"];
+        NSDictionary *listDic=[listArray objectAtIndex:number];
+        NSLog(@"listDic   %@    number  %d",listDic,number);
+        NSArray *filelist=[listDic objectForKey:@"filelist"];
+        if (![filelist isEqual:[NSNull null]]&&filelist.count>0) {
+            imageArray=[[NSMutableArray alloc]init];
+            for (int i=0; i<filelist.count; i++) {
+                NSString *url=[NSString stringWithFormat:@"%@%@?fileId=%@",kDemoBaseURL,kGetFileURL,[[filelist objectAtIndex:i]objectForKey:@"id"]];
+                //    NSLog(@"url  %@",url);
+                [imageArray addObject:url];
+            }
+        }
+        
+        
+    }else if (messageattachment==5) {
+        nowUrl=tap.accessibilityValue;
+        NSArray *listArray=[totalDic objectForKey:@"listfiles"];
+        if (![listArray isEqual:[NSNull null]]&&listArray.count>0) {
+            imageArray=[[NSMutableArray alloc]init];
+            for (int i=0; i<listArray.count; i++) {
+                NSDictionary *listDic=[listArray objectAtIndex:i];
+                NSString *url=[NSString stringWithFormat:@"%@%@?fileId=%@",kDemoBaseURL,kGetFileURL,[listDic objectForKey:@"id"]];
+                [imageArray addObject:url];
+            }
+        }
+        
+    }
+
     HZPictureViewController *picture=[[HZPictureViewController alloc]init];
     picture.isWeb=NO;
     picture.imageArray=imageArray;
-    NSInteger index=[imageArray indexOfObject:tap.accessibilityValue];
+    NSInteger index=[imageArray indexOfObject:nowUrl];
     picture.indexOfImage=index;
     [self.navigationController pushViewController:picture animated:YES];
 }

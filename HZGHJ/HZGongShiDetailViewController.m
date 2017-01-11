@@ -181,20 +181,28 @@
                             button.frame=CGRectMake(Width-130, 5, 70, 70);
                         }
                     button.tag=i*2+j+1;
+                    [button setBackgroundImage:[UIImage imageNamed:[imageNameArray1 objectAtIndex:j]] forState:UIControlStateNormal];
+                    [button addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
                     //判断有无保存图片
                     if (![_remainImageArray isEqual:[NSNull null]]&&_remainImageArray!=nil&&[[_remainImageArray objectAtIndex:button.tag-1]isKindOfClass:[UIImage class]]) {
-                        [button setBackgroundImage:[_remainImageArray objectAtIndex:button.tag-1] forState:UIControlStateNormal];
-                        [_pictureArray replaceObjectAtIndex:button.tag-1 withObject:[_remainImageArray objectAtIndex:button.tag-1]];
-                        [button addTarget:self action:@selector(bigImage:) forControlEvents:UIControlEventTouchUpInside];
+                        UIButton *imageView=[[UIButton alloc]init];
+                        imageView.frame=CGRectMake(0, 0, 70, 70);
+                        imageView.tag=button.tag;
+                        [imageView setBackgroundImage:[_remainImageArray objectAtIndex:button.tag-1] forState:UIControlStateNormal];
+                        [imageView addTarget:self action:@selector(bigImage:) forControlEvents:UIControlEventTouchUpInside];
+                        [button addSubview:imageView];
+                        //长按删除
+                        UILongPressGestureRecognizer *longPress=[[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPress:)];
+                        longPress.accessibilityValue=[NSString stringWithFormat:@"%ld",button.tag];
+                        [imageView addGestureRecognizer:longPress];
+                        [bgView addSubview:button];
+                        [_photoArray replaceObjectAtIndex:button.tag-1 withObject:[_remainImageArray objectAtIndex:button.tag-1]];
                     }else{
                         [button setBackgroundImage:[UIImage imageNamed:[imageNameArray1 objectAtIndex:j]] forState:UIControlStateNormal];
                         [button addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
                     }
-                    button.accessibilityValue=[NSString stringWithFormat:@"%d",i*2+j];
-                   
-                    
+                    button.accessibilityValue=[NSString stringWithFormat:@"%d",i*2+j+1];
                     [bgView addSubview:button];
-
                 }
             }else{   //5行
                 if (i<3) {//前三行
@@ -275,7 +283,7 @@
                     if (j==1) {
                         button.frame=CGRectMake(Width-130, 5, 70, 70);
                     }
-                    [button sd_setImageWithURL:[NSURL URLWithString:serviceURL] forState:UIControlStateNormal];
+                    [button sd_setImageWithURL:[NSURL URLWithString:serviceURL] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"img_default"]];
                         button.accessibilityValue=serviceURL;
                     button.tag=i*2+j+1;
                     [button addTarget:self action:@selector(bigPhoto:) forControlEvents:UIControlEventTouchUpInside];
@@ -508,11 +516,10 @@
         [longPress.view removeFromSuperview];
         NSInteger index=[longPress.accessibilityValue integerValue];
          if (_selectBtnIndex!=8) {
-        [_photoArray replaceObjectAtIndex:index-1 withObject:[NSString stringWithFormat:@"%ld",index]];
+        [_photoArray replaceObjectAtIndex:index-1 withObject:@"1"];
         [_requiredArray replaceObjectAtIndex:index-1 withObject:@"0"];
          }else{
                [_photoArray removeObjectAtIndex:index-1];
-             
          }
     }];
     [alert addAction:okAlert];

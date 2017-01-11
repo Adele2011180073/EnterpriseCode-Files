@@ -116,7 +116,7 @@
                     dataList=[[NSMutableArray alloc]init];
                 }
                 [tableview reloadData];
-                UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"无可公示信息" message:nil preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 }];
                 [alert addAction:cancelAlert];

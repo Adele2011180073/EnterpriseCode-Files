@@ -76,7 +76,7 @@
             //                NSLog(@"预约列表      %@",returnDic);
             
         }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
-            UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"没有更多数据" message:nil preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             }];
             [alert addAction:cancelAlert];

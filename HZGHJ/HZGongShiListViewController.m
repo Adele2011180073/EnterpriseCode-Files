@@ -76,6 +76,9 @@
     [tableview.pullToRefreshView setTitle:@"不要命的加载中..." forState:SVPullToRefreshStateLoading];
 }
 - (void)search:(UIButton *)sender {
+    if (textField.text==NULL) {
+        [self getDataSource];
+    }else{
     for (int i=0; i<dataList.count; i++) {
         NSDictionary *dic=[dataList objectAtIndex:i];
        NSString*projectName=[NSString stringWithFormat:@"%@",[dic objectForKey:@"projectname"]];
@@ -85,6 +88,7 @@
         }
     }
     [tableview reloadData];
+    }
 }
 -(void)getDataSource{
     MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
