@@ -151,6 +151,9 @@
     }else  if (sender.tag==102) {
         HZYuYueReViewController *woyao=[[HZYuYueReViewController alloc]init];
         woyao.taskid=[self.detailData objectForKey:@"taskid"];
+        woyao.time=[self.detailData objectForKey:@"timeofappointment"];
+        woyao.name=[returnData objectForKey:@"designInstitutename"];
+        woyao.phone=[returnData objectForKey:@"designInstitutephone"];
         woyao.returnData=returnData;
         [self.navigationController pushViewController:woyao animated:YES];
     }

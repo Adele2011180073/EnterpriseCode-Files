@@ -8,8 +8,9 @@
 
 #ifndef HZURL_h
 #define HZURL_h
-static NSString * const kDemoBaseURL                = @"http://192.168.0.113:8085";
-static NSString * const kBaseURL                = @"http://220.191.210.76:8080";
+//static NSString * const kDemoBaseURL                = @"http://192.168.0.113:8085";
+static NSString * const kDemoBaseURL                = @"http://220.191.210.76:80";
+//static NSString * const kBaseURL                = @"http://220.191.210.76:8080";
 
 //登录
 static NSString * const kLoginURL                = @"/servicesweb/login/login.action";

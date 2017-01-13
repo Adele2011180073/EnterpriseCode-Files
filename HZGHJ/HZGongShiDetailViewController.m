@@ -197,6 +197,7 @@
                         [imageView addGestureRecognizer:longPress];
                         [bgView addSubview:button];
                         [_photoArray replaceObjectAtIndex:button.tag-1 withObject:[_remainImageArray objectAtIndex:button.tag-1]];
+                          [_requiredArray replaceObjectAtIndex:button.tag-1 withObject:@"1"];
                     }else{
                         [button setBackgroundImage:[UIImage imageNamed:[imageNameArray1 objectAtIndex:j]] forState:UIControlStateNormal];
                         [button addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
@@ -213,31 +214,49 @@
                             button.frame=CGRectMake(Width-130, 5, 70, 70);
                         }
                         button.tag=i*2+j+1;
-//                        判断有无保存图片
-                          if (![_remainImageArray isEqual:[NSNull null]]&&_remainImageArray!=nil&&[[_remainImageArray objectAtIndex:button.tag-1]isKindOfClass:[UIImage class]]) {
-                            [button setBackgroundImage:[_remainImageArray objectAtIndex:button.tag-1] forState:UIControlStateNormal];
+                        [button setBackgroundImage:[UIImage imageNamed:[imageNameArray1 objectAtIndex:j]] forState:UIControlStateNormal];
+                        [button addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
+                        //判断有无保存图片
+                        if (![_remainImageArray isEqual:[NSNull null]]&&_remainImageArray!=nil&&[[_remainImageArray objectAtIndex:button.tag-1]isKindOfClass:[UIImage class]]) {
+                            UIButton *imageView=[[UIButton alloc]init];
+                            imageView.frame=CGRectMake(0, 0, 70, 70);
+                            imageView.tag=button.tag;
+                            [imageView setBackgroundImage:[_remainImageArray objectAtIndex:button.tag-1] forState:UIControlStateNormal];
+                            [imageView addTarget:self action:@selector(bigImage:) forControlEvents:UIControlEventTouchUpInside];
+                            [button addSubview:imageView];
+                            //长按删除
+                            UILongPressGestureRecognizer *longPress=[[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPress:)];
+                            longPress.accessibilityValue=[NSString stringWithFormat:@"%ld",button.tag];
+                            [imageView addGestureRecognizer:longPress];
+                            [bgView addSubview:button];
                             [_photoArray replaceObjectAtIndex:button.tag-1 withObject:[_remainImageArray objectAtIndex:button.tag-1]];
-                            [_requiredArray replaceObjectAtIndex:button.tag-1 withObject:@"1"];
-                            [button addTarget:self action:@selector(bigImage:) forControlEvents:UIControlEventTouchUpInside];
+                             [_requiredArray replaceObjectAtIndex:button.tag-1 withObject:@"1"];
                         }else{
                             [button setBackgroundImage:[UIImage imageNamed:[imageNameArray1 objectAtIndex:j]] forState:UIControlStateNormal];
                             [button addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
                         }
                         button.accessibilityValue=[NSString stringWithFormat:@"%d",i*2+j+1];
-                        
                         [bgView addSubview:button];
-//
                     }
                 }else{//后两行
                     UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(Width/2-35, 5, 70, 70)];
                     button.tag=3+i+1;
                     button.accessibilityValue=[NSString stringWithFormat:@"%d",3+i];
+                    [button setBackgroundImage:[UIImage imageNamed:@"add_photo"] forState:UIControlStateNormal];
+                    [button addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
                     //判断有无保存图片
                     if (button.tag==7) {
                         if (![_remainImageArray isEqual:[NSNull null]]&&_remainImageArray!=nil&&_remainImageArray.count>6&&[[_remainImageArray objectAtIndex:button.tag-1]isKindOfClass:[UIImage class]]) {
-                                [button setBackgroundImage:[_remainImageArray objectAtIndex:button.tag-1] forState:UIControlStateNormal];
+                            UIButton *imageView=[[UIButton alloc]init];
+                            imageView.frame=CGRectMake(0, 0, 70, 70);
+                            imageView.tag=button.tag;
+                            [imageView setBackgroundImage:[_remainImageArray objectAtIndex:button.tag-1] forState:UIControlStateNormal];
+                            [imageView addTarget:self action:@selector(bigImage:) forControlEvents:UIControlEventTouchUpInside];
+                            [button addSubview:imageView];
+                            
                                 [_photoArray replaceObjectAtIndex:button.tag-1 withObject:[_remainImageArray objectAtIndex:button.tag-1]];
                                [_requiredArray replaceObjectAtIndex:button.tag-1 withObject:@"1"];
+                        
                                 [button addTarget:self action:@selector(bigImage:) forControlEvents:UIControlEventTouchUpInside];
                             }else{
                                 [button setBackgroundImage:[UIImage imageNamed:@"add_photo"] forState:UIControlStateNormal];
@@ -249,12 +268,22 @@
                             [button setBackgroundImage:[_remainImageArray objectAtIndex:button.tag-1] forState:UIControlStateNormal];
                             if (_photoArray.count==8) {
                                   [_photoArray replaceObjectAtIndex:button.tag-1 withObject:[_remainImageArray objectAtIndex:button.tag-1]];
+                                  [_nameArray replaceObjectAtIndex:button.tag-1 withObject:@"5_1.jpg"];
                             }else{
                                 [_photoArray addObject:[_remainImageArray objectAtIndex:button.tag-1]];
                                   [_nameArray addObject:@"5_1.jpg"];
                             }
-                            
-                                [button addTarget:self action:@selector(bigImage:) forControlEvents:UIControlEventTouchUpInside];
+                            UIButton *imageView=[[UIButton alloc]init];
+                            imageView.frame=CGRectMake(0, 0, 70, 70);
+                            imageView.tag=button.tag;
+                            [imageView setBackgroundImage:[_remainImageArray objectAtIndex:button.tag-1] forState:UIControlStateNormal];
+                            [imageView addTarget:self action:@selector(bigImage:) forControlEvents:UIControlEventTouchUpInside];
+                            [button addSubview:imageView];
+                            //长按删除
+                            UILongPressGestureRecognizer *longPress=[[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPress:)];
+                            longPress.accessibilityValue=[NSString stringWithFormat:@"%ld",button.tag];
+                            [imageView addGestureRecognizer:longPress];
+                            [bgView addSubview:button];
                             }else{
                                 [button setBackgroundImage:[UIImage imageNamed:@"add_photo"] forState:UIControlStateNormal];
                                 [button addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
@@ -478,6 +507,7 @@
         if (_nameArray.count > 7) {
             //已有第八张可选图片
             [_photoArray replaceObjectAtIndex:7 withObject:scaleImage];
+            [_nameArray replaceObjectAtIndex:7 withObject:@"5_1.jpg"];
         }
         else{
             //未有第八张可选图片

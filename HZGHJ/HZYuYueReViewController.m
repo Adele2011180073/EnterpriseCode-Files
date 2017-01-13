@@ -148,6 +148,7 @@
             text.textColor=[UIColor grayColor];
             text.tag=30;
             text.userInteractionEnabled=YES;
+            text.text=self.time;
             UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
             tap.delegate=self;
             tap.accessibilityValue=[NSString stringWithFormat:@"timePicker"];
@@ -187,10 +188,7 @@
             if (reservationserviceArray != nil && ![reservationserviceArray isKindOfClass:[NSNull class]] && reservationserviceArray.count != 0){
                 for (int j=0; j<reservationserviceArray.count; j++) {
                     UIButton *image=[[UIButton alloc]initWithFrame:CGRectMake(10, 25+60*j, 60, 60)];
-                    [image addTarget:self action:@selector(check:) forControlEvents:UIControlEventTouchUpInside];
-                    image.tag=20+j;
-                    [image setImage:[UIImage imageNamed:@"checkbox"] forState:UIControlStateNormal];
-                    [image setImage:[UIImage imageNamed:@"checkbox_fill"] forState:UIControlStateSelected];
+                    [image setImage:[UIImage imageNamed:@"checkbox_fill"] forState:UIControlStateNormal];
                     [bgView1 addSubview:image];
                     
                     UILabel *label2=[[UILabel alloc]initWithFrame:CGRectMake(60, 20+60*j, Width-40-80, 70)];
@@ -252,8 +250,10 @@
             
             UITextField *text=[[UITextField alloc]initWithFrame:CGRectMake(130, 10, Width -150, 20)];
             text.tag=10+i;
+            text.text=self.name;
             if (i==1) {
                 text.keyboardType = UIKeyboardTypeNumberPad;
+                text.text=self.phone;
             }
             text.delegate=self;
             text.placeholder=[placeholderArray objectAtIndex:i];
@@ -272,33 +272,23 @@
     bgScrollView.contentSize=CGSizeMake(Width, 360+80*reservationserviceArray.count+40*2+40*3+120);
 }
 -(void)commit{
-     if (reservationserviceArray != nil && ![reservationserviceArray isKindOfClass:[NSNull class]] && reservationserviceArray.count != 0){
-        for (int j=0; j<reservationserviceArray.count; j++) {
-            UIButton *button=[self.view viewWithTag:20+j];
-            if (button.selected==NO) {
-                UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"请把方案提示信息全部选中" message:nil preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                }];
-                [alert addAction:cancelAlert];
-                [self presentViewController:alert animated:YES completion:nil];
-                return;
-            }
-        }
-    }
-    
     NSString *str3=[self.returnData objectForKey:@"timeofappointment"];
     MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.label.text=@"数据加载中，请稍候...";
     [HZLoginService YuYueRefreshWithTaskId:self.taskid Status:@"0" timeofappointment:str3 andBlock:^(NSDictionary *returnDic, NSError *error) {
         if ([[returnDic objectForKey:@"code"]integerValue]==0) {
-            UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                HZYuYueViewController *yuyue=[[HZYuYueViewController alloc]init];
-                [self.navigationController popToViewController:yuyue animated:YES];
-            }];
-            [alert addAction:cancelAlert];
-            [self presentViewController:alert animated:YES completion:nil];
-           
+            for (UIViewController* controller in self.navigationController.viewControllers)
+            {
+                //Check your view controller is exist / not in navigation controller stack.
+                if ([controller isKindOfClass:[HZYuYueViewController class]])
+                {
+                    // If it is exist then popToViewController
+                    [self.navigationController popToViewController:controller animated:YES];
+                    return;
+                }
+            }
+//            HZYuYueViewController *yuyue=[[HZYuYueViewController alloc]init];
+//            [self.navigationController popToViewController:yuyue animated:YES];
         }else{
             UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {

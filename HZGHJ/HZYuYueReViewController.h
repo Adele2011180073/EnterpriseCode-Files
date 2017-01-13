@@ -11,4 +11,7 @@
 @interface HZYuYueReViewController : UIViewController
 @property(nonatomic,strong)NSDictionary*returnData;
 @property(nonatomic,strong)NSString*taskid;
+@property(nonatomic,strong)NSString*time;
+@property(nonatomic,strong)NSString*name;
+@property(nonatomic,strong)NSString*phone;
 @end

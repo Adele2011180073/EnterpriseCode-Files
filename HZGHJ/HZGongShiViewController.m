@@ -141,6 +141,7 @@
     if (!cell) {
         cell=[[UITableViewCell alloc]init];
     }
+     cell.selectionStyle=UITableViewCellSelectionStyleNone;
     cell.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
     UIView* bgView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, Width, 50)];
     bgView.backgroundColor=[UIColor whiteColor];
