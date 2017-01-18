@@ -9,6 +9,8 @@
 #import "HZIYuYueViewController.h"
 #import "MBProgressHUD.h"
 #import "HZLoginService.h"
+#import "UIView+Toast.h"
+#import "BSRegexValidate.h"
 @interface HZIYuYueViewController ()<UIGestureRecognizerDelegate,UITextFieldDelegate>{
     UIScrollView *bgScrollView;
     NSMutableArray *projectNameArray;
@@ -47,16 +49,6 @@
     picker=[[UIDatePicker alloc]init];
 
     
-    bgScrollView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, Width, Height-44)];
-    bgScrollView.contentSize=CGSizeMake(Width, 360+80*projectNameArray.count+40*2+40*3);
-    bgScrollView.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
-    bgScrollView.userInteractionEnabled=YES;
-     pickerView=[[UIView alloc]initWithFrame:CGRectMake(10, 220, Width-20, 300)];
-    [self.view addSubview:bgScrollView];
-    UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
-    tap.delegate=self;
-    tap.accessibilityValue=[NSString stringWithFormat:@"resign"];
-    [bgScrollView addGestureRecognizer:tap];
     projectNameArray=[[NSMutableArray alloc]init];
     
     reservationserviceArray=[[NSMutableArray alloc]init];
@@ -88,8 +80,8 @@
                 NSLog(@"预约数据    %@  ",str);
 
                 [self addSubviews];
-            }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
-                UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+            }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
+                UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 }];
                 [alert addAction:cancelAlert];
@@ -102,6 +94,21 @@
 
 }
 -(void)addSubviews{
+    for (UIView *view in bgScrollView.subviews) {
+        [view removeFromSuperview];
+    }
+    [bgScrollView removeFromSuperview];
+    bgScrollView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, Width, Height-44)];
+    bgScrollView.contentSize=CGSizeMake(Width, 360+80*projectNameArray.count+40*2+40*3);
+    bgScrollView.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
+    bgScrollView.userInteractionEnabled=YES;
+    pickerView=[[UIView alloc]initWithFrame:CGRectMake(10, 220, Width-20, 300)];
+    [self.view addSubview:bgScrollView];
+    UITapGestureRecognizer *resign=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
+    resign.delegate=self;
+    resign.accessibilityValue=[NSString stringWithFormat:@"resign"];
+    [bgScrollView addGestureRecognizer:resign];
+
     UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(20, 10, 120, 20)];
     label.textAlignment=NSTextAlignmentLeft;
     label.text=@"选择项目名称";
@@ -173,6 +180,7 @@
              tap.accessibilityValue=[NSString stringWithFormat:@"timePicker"];
              [text addGestureRecognizer:tap];
          }else if (i==0){
+             [nodeName removeFromSuperview];
              nodeName=[[UILabel alloc]initWithFrame:CGRectMake(110, 10, Width -150, 20)];
              nodeName.textAlignment=NSTextAlignmentLeft;
              nodeName.text=[textArray objectAtIndex:i];
@@ -318,6 +326,24 @@
     UITextField *text1=[self.view viewWithTag:10];
      UITextField *text2=[self.view viewWithTag:11];
     UILabel *time=[self.view viewWithTag:30];
+
+    if ([time.text isEqualToString:@""]||[time.text isEqualToString:@"请选择时间"]) {
+        [self.view makeToast:@"请选择时间" duration:2 position:CSToastPositionCenter];
+        return;
+    }
+    if ([text1.text length]<14&&[text1.text length]>2) {
+           [self.view makeToast:@"设计院联系人输入不合法,请重新输入" duration:2 position:CSToastPositionCenter];
+        return;
+    }
+    if (![BSRegexValidate validateTelephone:text2.text]) {
+        [self.view makeToast:@"联系电话输入不合法,请重新输入" duration:2 position:CSToastPositionCenter];
+        return;
+    }
+    if ([BSRegexValidate stringContainsEmoji:text1.text]) {
+        [self.view makeToast:@"请不要输入表情" duration:2 position:CSToastPositionCenter];
+        return;
+    }
+
     NSDictionary *messageDic=[projectNameArray objectAtIndex:projectNum];
     NSString *str3=[messageDic objectForKey:@"hostdepartment"];
     NSString *str2=[messageDic objectForKey:@"id"];
@@ -328,6 +354,7 @@
     }else{
         str1=@"100";
     }
+    
     if (reservationserviceArray != nil && ![reservationserviceArray isKindOfClass:[NSNull class]] && reservationserviceArray.count != 0){
         for (int j=0; j<reservationserviceArray.count; j++) {
             UIButton *button=[self.view viewWithTag:20+j];
@@ -374,6 +401,8 @@
         isBigClass=!isBigClass;
         if (isBigClass==YES) {
             bgBigClassView=[[UIScrollView alloc]init];
+            bgBigClassView.layer.borderColor=blueCyan.CGColor;
+            bgBigClassView.layer.borderWidth=1;
             if (50*projectNameArray.count>Height-160) {
                 bgBigClassView.frame=CGRectMake(0, 90, Width, Height-160);
             }else{
@@ -401,6 +430,9 @@
                 [bgBigClassView addSubview:lineLabel];
             }
         } else{
+            for (UIView *view in bgBigClassView.subviews) {
+                [view removeFromSuperview];
+            }
             [bgBigClassView removeFromSuperview];
         }
         
@@ -411,13 +443,15 @@
             NSDictionary *dic=[projectNameArray objectAtIndex:projectNum];
             NSArray *nodelist=[dic objectForKey:@"nodelist"];
                 bgBigClassView.frame=CGRectMake(150, 140, Width-180, 50*nodelist.count);
+            bgBigClassView.layer.borderColor=blueCyan.CGColor;
+            bgBigClassView.layer.borderWidth=1;
             bgBigClassView.userInteractionEnabled=YES;
             bgBigClassView.backgroundColor=[UIColor whiteColor];
             [bgScrollView addSubview:bgBigClassView];
                      for (int i=0; i<nodelist.count; i++) {
                 NSDictionary *dic=[nodelist objectAtIndex:i];
                 UIButton *button=[UIButton buttonWithType:UIButtonTypeCustom];
-                button.frame=CGRectMake(0,50*i, Width, 50);
+                button.frame=CGRectMake(0,50*i, Width-180, 50);
                 button.tag=50+i;
                 button.titleLabel.textAlignment=NSTextAlignmentCenter;
                 button.titleLabel.font=[UIFont systemFontOfSize:16];
@@ -432,6 +466,9 @@
                 [bgBigClassView addSubview:lineLabel];
             }
         } else{
+            for (UIView *view in bgBigClassView.subviews) {
+                [view removeFromSuperview];
+            }
             [bgBigClassView removeFromSuperview];
         }
         
@@ -482,12 +519,14 @@
         projectNum=button.tag-60;
         NSDictionary *dic=[projectNameArray objectAtIndex:button.tag-60];
         projectName.text=[dic objectForKey:@"projectname"];
+        [self addSubviews];
     }else if(button.tag>49&&button.tag<60){
         [bgBigClassView removeFromSuperview];
         nodeNum=button.tag-50;
         NSDictionary *dic=[projectNameArray objectAtIndex:projectNum];
         NSArray *nodelist=[dic objectForKey:@"nodelist"];
         NSDictionary *nodelistdic=[nodelist objectAtIndex:button.tag-50];
+        nodeName.backgroundColor=[UIColor whiteColor];
         nodeName.text=[nodelistdic objectForKey:@"value"];
     }
    
@@ -510,14 +549,21 @@
     time.text=timeLabel.text;
 //    self . birthdayField . text = date;
 }
+-(BOOL)textFieldShouldReturn:(UITextField *)textField{
+    [self.view endEditing:YES];
+    return YES;
+}
 -(void)textFieldDidBeginEditing:(UITextField *)textField{
-    bgScrollView.contentOffset=CGPointMake(0, 900);
+    bgScrollView.contentOffset=CGPointMake(0, 700);
 }
 -(void)textFieldDidEndEditing:(UITextField *)textField{
     bgScrollView.contentOffset=CGPointMake(0, 0);
     [self.view endEditing:YES];
 }
-
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    //   限制苹果系统输入法  禁止输入表情
+       return YES;
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

@@ -10,7 +10,7 @@
 #import "MBProgressHUD.h"
 #import "HZLoginService.h"
 #import "HZYuYueReViewController.h"
-
+#import "BSRegexValidate.h"
 @interface HAYuYueDetailViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     UITableView *tableview;
@@ -107,7 +107,7 @@
                 [tableview reloadData];
                 
             }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
-                UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 }];
                 [alert addAction:cancelAlert];
@@ -265,7 +265,7 @@
     }else{
         NSDictionary *dic=[dataList objectAtIndex:indexPath.section-2];
         if ([[dic objectForKey:@"whereuser"]integerValue]==1) {
-            NSArray *subArray=@[@"预约时间",@"预约人",@"预约状态"];
+            NSArray *subArray=@[@"提交时间",@"预约人",@"预约状态"];
             NSArray *itemArray=[dic objectForKey:@"varibles"];
             NSDictionary *timeDic=[itemArray objectAtIndex:0];
             NSDictionary *statusDic=[itemArray objectAtIndex:1];
@@ -281,10 +281,21 @@
         }else if ([[dic objectForKey:@"whereuser"]integerValue]==2) {
             NSArray *subArray=@[@"回复时间",@"办理人",@"回复状态",@"回复内容",@""];
             NSArray *itemArray=[dic objectForKey:@"varibles"];
-            NSDictionary *timeDic=[itemArray objectAtIndex:3];
+//            NSDictionary *timeDic=[itemArray objectAtIndex:3];
             NSDictionary *statusDic=[itemArray objectAtIndex:2];
             NSDictionary *detailsDic=[itemArray objectAtIndex:1];
-            NSString *str1=[timeDic objectForKey:@"varibalevalue"];
+            NSString*str=[dic objectForKey:@"endtime"];//时间戳
+            NSDate*detaildate=[NSDate dateWithTimeIntervalSince1970:[str integerValue]/1000];
+            
+            //实例化一个NSDateFormatter对象
+            
+            NSDateFormatter*dateFormatter = [[NSDateFormatter alloc]init];
+            
+            //设定时间格式,这里可以设置成自己需要的格式
+            
+            [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+            NSString*currentDateStr = [dateFormatter stringFromDate:detaildate];
+            NSString *str1=currentDateStr;
             NSString *str2=[dic objectForKey:@"name"];
             NSString *str3=[statusDic objectForKey:@"varibalevalue"];
             NSString *str4=@"";

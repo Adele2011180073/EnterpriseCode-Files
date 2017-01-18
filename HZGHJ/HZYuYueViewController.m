@@ -58,6 +58,7 @@
     segmented=[[UISegmentedControl alloc]initWithItems:titleArray];
     segmented.frame=CGRectMake(5, 5, Width-10, 40);
     segmented.selectedSegmentIndex=0;
+     [segmented setTitleTextAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]} forState:UIControlStateNormal];
     [segmented addTarget:self action:@selector(choseSeg:) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:segmented];
     __weak HZYuYueViewController *yuyue=self;
@@ -104,8 +105,8 @@
             [tableview reloadData];
             NSLog(@"预约列表    %@  %@",str,returnDic);
 
-        }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
-            UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+        }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
+            UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             }];
             [alert addAction:cancelAlert];
@@ -128,7 +129,7 @@
                 [tableview reloadData];
 
             }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
-                UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 }];
                 [alert addAction:cancelAlert];

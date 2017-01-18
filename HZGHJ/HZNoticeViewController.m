@@ -96,7 +96,7 @@
                 [tableview reloadData];
                 
             }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
-                UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"没有更多数据" message:nil preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 }];
                 [alert addAction:cancelAlert];

@@ -140,6 +140,7 @@
      [parameters setObject:companymisstionid forKey:@"companymisstionid"];
      [parameters setObject:projectid forKey:@"projectid"];
      [parameters setObject:nodeId forKey:@"nodeId"];
+    NSLog(@"parameters    %@",parameters);
     [session POST:serviceURLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
         NSData *data =    [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
@@ -503,12 +504,13 @@
     session.requestSerializer.timeoutInterval=10.f;
     NSMutableDictionary *parameters=[NSMutableDictionary dictionary];
     [parameters setObject:token forKey:@"token"];
-    [parameters setObject:[NSString stringWithFormat:@"%d",pageindex] forKey:@"pageindex"];
-    [parameters setObject:@"10" forKey:@"pagesize"];
+   // [parameters setObject:[NSString stringWithFormat:@"%d",pageindex] forKey:@"pageindex"];
+   // [parameters setObject:@"10" forKey:@"pagesize"];
     [session POST:serviceURLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
-        NSString *str=[[NSString alloc]initWithData:responseObject encoding:NSUTF8StringEncoding];
-        NSLog(@"成功  %@",str);
+        NSData *data =    [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
+        NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+        NSLog(@"进度上报列表    %@  ",str);
         JinDuBlock(dic,nil);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"失败%@",error);
@@ -591,6 +593,7 @@
     session.requestSerializer.timeoutInterval=10.f;
     NSMutableDictionary *parameters=[NSMutableDictionary dictionary];
     [parameters setObject:token forKey:@"token"];
+     [parameters setObject:projectname forKey:@"projectname"];
     [parameters setObject:[NSString stringWithFormat:@"%d",pageindex] forKey:@"pageindex"];
     [parameters setObject:@"10" forKey:@"pagesize"];
     [session POST:serviceURLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {

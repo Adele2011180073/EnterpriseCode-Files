@@ -19,7 +19,7 @@
     self = [super initWithFrame:frame];
     if (self)
     {
-        self.image=[[UIImageView alloc]initWithFrame:CGRectMake(25, 25,Width/3.5-50,Width/3.5-50)];
+        self.image=[[UIImageView alloc]initWithFrame:CGRectMake(20, 20,Width/3.5-40,Width/3.5-40)];
         self.titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(0,frame.size.height-Width/3.5+80, Width/3.5, 20)];
          self.numLabel=[[UILabel alloc]initWithFrame:CGRectMake(15,15, 30, 30)];
         self.numLabel.clipsToBounds=YES;

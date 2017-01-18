@@ -12,7 +12,7 @@
 #import "HZLoginService.h"
 #import "HZJingDuDetailViewController.h"
 
-@interface HZJinDuViewController ()<UITableViewDataSource,UITableViewDelegate>
+@interface HZJinDuViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 {
     int pageIndex;
     UITableView *tableview;
@@ -41,6 +41,7 @@
     textField.layer.borderWidth=1;
     textField.clearsOnBeginEditing=YES;
     textField.layer.cornerRadius=5;
+    textField.delegate=self;
     textField.layer.borderColor=blueCyan.CGColor;
     [self.view addSubview:textField];
     
@@ -91,8 +92,22 @@
     [tableview.pullToRefreshView setTitle:@"不要命的加载中..." forState:SVPullToRefreshStateLoading];
 }
 - (void)search:(UIButton *)sender {
-    pageIndex=1;
-    [self getDataSource];
+    
+    if ([textField.text isEqualToString:@""]||textField.text==NULL) {
+        pageIndex=1;
+        [self getDataSource];
+    }else{
+           NSMutableArray *array=[[NSMutableArray alloc]init];
+        for (int i=0; i<dataList.count; i++) {
+            NSDictionary *dic=[dataList objectAtIndex:i];
+            NSString*str=[dic objectForKey:@"projectName"];
+            if ([str rangeOfString:textField.text].location !=NSNotFound) {
+                [array addObject:dic];
+            }
+        }
+        dataList=[NSMutableArray arrayWithArray:array];
+        [tableview reloadData];
+    }
    }
 -(void)getDataSource{
     MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -104,33 +119,12 @@
         [hud hideAnimated:YES];
         if ([[returnDic objectForKey:@"code"]integerValue]==0) {
             NSArray *array=[returnDic objectForKey:@"list"];
-            NSData *data =    [NSJSONSerialization dataWithJSONObject:returnDic options:NSJSONWritingPrettyPrinted error:nil];
-            NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-            NSLog(@"过程上报列表    %@  %@",str,returnDic);
-            if (pageIndex==1) {
                 dataList=[[NSMutableArray alloc]init];
                 dataList=[NSMutableArray                                                                                                                                                                                                                                                                                                                                           arrayWithArray:array];
-            }else{
-                [dataList addObjectsFromArray:array];
-            }
-            if ([textField.text isEqualToString:@""]||textField.text==NULL) {
-                
-            }else{
-                dataList=[[NSMutableArray alloc]init];
-                for (int i=0; i<dataList.count; i++) {
-                    NSDictionary *dic=[dataList objectAtIndex:i];
-                    NSString*str=[dic objectForKey:@"projectName"];
-                    if ([str rangeOfString:textField.text].location !=NSNotFound) {
-                        [dataList addObject:dic];
-                    }
-                }
-               
-            }
-
                 [tableview reloadData];
             
-        }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
-            UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+        }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
+            UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             }];
             [alert addAction:cancelAlert];
@@ -206,7 +200,11 @@
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     [self.view endEditing:YES];
 }
-
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+     [self.view endEditing:YES];
+    return true;
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

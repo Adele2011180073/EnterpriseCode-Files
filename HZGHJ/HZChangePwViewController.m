@@ -9,7 +9,8 @@
 #import "HZChangePwViewController.h"
 #import "MBProgressHUD.h"
 #import "HZLoginService.h"
-
+#import "BSRegexValidate.h"
+#import "UIView+Toast.h"
 @interface HZChangePwViewController (){
     UITextField *textfield;
 }
@@ -83,17 +84,22 @@
         [self presentViewController:alertController animated:YES completion:nil];
     }
     else{
+        if (![BSRegexValidate validateUserName:npw.text]||![BSRegexValidate validateUserName:qpw.text]) {
+            [self.view makeToast:@"请输入规定内数字或字母" duration:2 position:CSToastPositionCenter];
+            return;
+        }
         MBProgressHUD *hud=[MBProgressHUD showHUDAddedTo:self.view animated:YES];
         hud.label.text=@"数据上传中...";
         [HZLoginService PWWithNSw:opw.text NSW:npw.text andBlock:^(NSDictionary *returnDic, NSError *error) {
             [hud hideAnimated:YES];
             if ([[returnDic objectForKey:@"code"]integerValue]==0) {
+              [[NSUserDefaults standardUserDefaults]setObject:npw.text forKey:@"passwd"];
                 UIAlertController *alertController = [UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction *action) {
+                    [self.navigationController popViewControllerAnimated:YES];
                 }];
                 [alertController addAction:okAction];
                 [self presentViewController:alertController animated:YES completion:nil];
-                [self.navigationController popViewControllerAnimated:YES];
             }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
                 UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {

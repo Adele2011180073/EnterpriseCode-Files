@@ -11,7 +11,7 @@
 #import "HZURL.h"
 #import "HZLoginService.h"
 #import "HZHomeViewController.h"
-
+#import "UIView+Toast.h"
 @interface HZLoginViewController ()
 {
     BOOL isRemember;
@@ -100,7 +100,7 @@
                 [alert addAction:cancelAlert];
                 [self presentViewController:alert animated:YES completion:nil];
             }else{
-                
+                [self.view makeToast:@"登录失败"];
             }
 
         }

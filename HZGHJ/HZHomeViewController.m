@@ -50,6 +50,7 @@
        }
 }
 -(void)tap{
+        [[UNUserNotificationCenter currentNotificationCenter]removeAllPendingNotificationRequests];
     HZNoticeViewController *notice=[[HZNoticeViewController alloc]init];
     notice.sendDic=sendDic;
     [self.navigationController pushViewController:notice animated:YES];
@@ -212,6 +213,7 @@
         [self presentViewController:alert animated:YES completion:nil];
     }else if ([[dic objectForKey:@"title"]isEqualToString:@"消息通知"]){
         if (sendDic!=NULL&&sendDic!=nil) {
+                [[UNUserNotificationCenter currentNotificationCenter]removeAllPendingNotificationRequests];
             HZNoticeViewController *notice=[[HZNoticeViewController alloc]init];
             notice.sendDic=sendDic;
             [self.navigationController pushViewController:notice animated:YES];

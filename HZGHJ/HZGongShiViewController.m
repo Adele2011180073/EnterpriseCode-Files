@@ -111,12 +111,12 @@
                     projectname=[smallDic objectForKey:@"projectname"];
                 [tableview reloadData];
                 NSLog(@"公示登记列表    %@  %d",array,dataList.count);
-            }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
+            }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
                 if (pageIndex==1) {
                     dataList=[[NSMutableArray alloc]init];
                 }
                 [tableview reloadData];
-                UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"无可公示信息" message:nil preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 }];
                 [alert addAction:cancelAlert];

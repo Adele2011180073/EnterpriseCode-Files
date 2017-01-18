@@ -11,7 +11,7 @@
 #import "SVPullToRefresh.h"
 #import "HZLoginService.h"
 #import "HZGongShiDetailViewController.h"
-@interface HZGongShiListViewController ()<UITableViewDataSource,UITableViewDelegate>
+@interface HZGongShiListViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 {
     int pageIndex;
     UITableView *tableview;
@@ -37,6 +37,7 @@
     textField.backgroundColor=[UIColor whiteColor];
     textField.placeholder=@"请输入项目名称进行查询";
     textField.layer.borderWidth=1;
+    textField.delegate=self;
     textField.clearsOnBeginEditing=YES;
     textField.layer.cornerRadius=5;
     textField.layer.borderColor=blueCyan.CGColor;
@@ -76,19 +77,8 @@
     [tableview.pullToRefreshView setTitle:@"不要命的加载中..." forState:SVPullToRefreshStateLoading];
 }
 - (void)search:(UIButton *)sender {
-    if (textField.text==NULL) {
+        pageIndex=1;
         [self getDataSource];
-    }else{
-    for (int i=0; i<dataList.count; i++) {
-        NSDictionary *dic=[dataList objectAtIndex:i];
-       NSString*projectName=[NSString stringWithFormat:@"%@",[dic objectForKey:@"projectname"]];
-        if ([projectName rangeOfString:textField.text].location !=NSNotFound ) {
-            dataList=[[NSMutableArray alloc]init];
-            [dataList addObject:dic];
-        }
-    }
-    [tableview reloadData];
-    }
 }
 -(void)getDataSource{
     MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -96,7 +86,7 @@
     [tableview.infiniteScrollingView stopAnimating];
     [tableview.pullToRefreshView stopAnimating];
     NSString *token=[[NSUserDefaults standardUserDefaults]objectForKey:@"token"];
-    [HZLoginService GongShiLstWithToken:token pageIndex:pageIndex ProjectName:self.projectname andBlock:^(NSDictionary *returnDic, NSError *error) {
+    [HZLoginService GongShiLstWithToken:token pageIndex:pageIndex ProjectName:textField.text andBlock:^(NSDictionary *returnDic, NSError *error) {
             [hud hideAnimated:YES];
             if ([[returnDic objectForKey:@"code"]integerValue]==0) {
                 NSArray *array=[returnDic objectForKey:@"list"];
@@ -112,7 +102,11 @@
                 [tableview reloadData];
                 
             }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
-                UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+                if (pageIndex==1) {
+                    dataList=[[NSMutableArray alloc]init];
+                    [tableview reloadData];
+                }
+                UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"没有查询到更多数据" message:nil preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 }];
                 [alert addAction:cancelAlert];
@@ -200,6 +194,11 @@
 }
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     [self.view endEditing:YES];
+}
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [self.view endEditing:YES];
+    return true;
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

@@ -12,7 +12,8 @@
 #import "HZLoginService.h"
 #import <AVFoundation/AVFoundation.h>
 #import "HZPictureViewController.h"
-
+#import "BSRegexValidate.h"
+#import "UIView+Toast.h"
 @interface HZProjectViewController ()<UIGestureRecognizerDelegate,UITextViewDelegate,UIImagePickerControllerDelegate>{
     UIScrollView *bgScrollView;
     NSArray *projectNameArray;
@@ -63,8 +64,8 @@
             [self addSubviews];
 //            NSLog(@"预约列表    %@  %@",str,returnDic);
             
-        }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
-            UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+        }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
+            UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             }];
             [alert addAction:cancelAlert];
@@ -290,7 +291,6 @@
         UIImagePickerController* picker = [[UIImagePickerController alloc] init];
         picker.sourceType = UIImagePickerControllerSourceTypeCamera;
         picker.showsCameraControls = YES;
-        picker.allowsEditing=YES;
         picker.delegate = self;
         [self presentViewController:picker animated:YES completion:Nil];
     }];
@@ -378,8 +378,6 @@
    
 }
 -(void)commit{
-    MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.label.text=@"数据加载中，请稍候...";
     NSString *token=[[NSUserDefaults standardUserDefaults]objectForKey:@"token"];
     NSDictionary *messageDic=[projectNameArray objectAtIndex:number];
     NSString *str=[messageDic objectForKey:@"projectId"];
@@ -395,13 +393,19 @@
         return;
     }
     if ([detailText.text isEqualToString:@""]) {
-        UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"请填写意见" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"请填写文字内容" message:nil preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         }];
         [alert addAction:cancelAlert];
         [self presentViewController:alert animated:YES completion:nil];
         return;
     }
+    if ([BSRegexValidate stringContainsEmoji:detailText.text]) {
+        [self.view makeToast:@"请不要输入表情" duration:2 position:CSToastPositionCenter];
+        return;
+    }
+    MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.label.text=@"数据加载中，请稍候...";
     [HZLoginService ShangBaoCommitWithToken:token ProjectId:str processId:str1 details:detailText.text picture:self.imageArray andBlock:^(NSDictionary *returnDic, NSError *error) {
         [hud hideAnimated:YES];
         if ([[returnDic objectForKey:@"code"]integerValue]==0) {

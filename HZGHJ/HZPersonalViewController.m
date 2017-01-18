@@ -138,7 +138,16 @@
        HZChangePwViewController *pw=[[HZChangePwViewController alloc]init];
        [self.navigationController pushViewController:pw animated:YES];
     }else if (indexPath.section==2&&indexPath.row==1){
-         [self clearCachePressed:nil];
+        UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您确定要清除数据吗？" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+               [self clearCachePressed:nil];
+        }];
+        [alert addAction:okAlert];
+        UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        }];
+        [alert addAction:cancelAlert];
+        [self presentViewController:alert animated:YES completion:nil];
+      
     }
 }
 - (void)clearCachePressed:(id)sender
@@ -152,7 +161,7 @@
         NSString *fileName;
         while((fileName = [direnum nextObject]))
         {
-            if([[fileName pathExtension] isEqualToString:@"wav"] ||[[fileName pathExtension] isEqualToString:@"mov"]||[[fileName pathExtension] isEqualToString:@"png"])
+            if([[fileName pathExtension] isEqualToString:@"wav"] ||[[fileName pathExtension] isEqualToString:@"mov"]||[[fileName pathExtension] isEqualToString:@"png"]||[[fileName pathExtension] isEqualToString:@"jpg"])
             {
                 NSString *str = [cachePath stringByAppendingPathComponent:fileName];
                 [fileManager removeItemAtPath:str error:nil];
