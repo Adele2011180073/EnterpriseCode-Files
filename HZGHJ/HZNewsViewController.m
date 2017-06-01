@@ -11,7 +11,7 @@
 #import "SVPullToRefresh.h"
 #import "MBProgressHUD.h"
 #import "HZLoginService.h"
-
+#import "UIView+Toast.h"
 @interface HZNewsViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     UITableView *tableview;
@@ -37,6 +37,7 @@
     tableview.delegate=self;
     //    tableview.separatorColor=[UIColor clearColor];
     tableview.dataSource=self;
+     tableview.tableFooterView = [[UIView alloc] init];
     [self.view addSubview:tableview];
     pageIndex=1;
     [self getDataSource];
@@ -82,13 +83,9 @@
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];
         }else   if ([[returnDic objectForKey:@"code"]integerValue]==1000) {
-            UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            }];
-            [alert addAction:cancelAlert];
-            [self presentViewController:alert animated:YES completion:nil];
+            [self.view makeToast:[returnDic objectForKey:@"desc"]];
         }else{
-            
+            [self.view makeToast:@"请求失败，请重新尝试"];
         }
         
     }];

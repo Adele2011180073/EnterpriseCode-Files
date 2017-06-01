@@ -9,7 +9,7 @@
 
 #import "HZPersonalViewController.h"
 #import "HZChangePwViewController.h"
-
+#import "UIView+Toast.h"
 @interface HZPersonalViewController ()<UITableViewDelegate,UITableViewDataSource>{
     NSDictionary *responseData;
     UITableView *tableview;

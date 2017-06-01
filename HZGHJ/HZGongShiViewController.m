@@ -12,6 +12,7 @@
 #import "SVPullToRefresh.h"
 #import "HZLoginService.h"
 #import "HZGongShiDetailViewController.h"
+#import "UIView+Toast.h"
 
 @interface HZGongShiViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -68,6 +69,7 @@
     tableview.delegate=self;
 //    tableview.separatorColor=[UIColor clearColor];
     tableview.dataSource=self;
+     tableview.tableFooterView = [[UIView alloc] init];
     [self.view addSubview:tableview];
     [self getDataSource];
     __weak HZGongShiViewController *yuyue=self;
@@ -85,7 +87,7 @@
 }
 -(void)shangbao{
     HZGongShiListViewController *shangbao=[[HZGongShiListViewController alloc]init];
-    if (!projectname||projectname==NULL){ return;}
+    if (!projectname||projectname==NULL){[self.view makeToast:@"您的账户暂时无公示记录"];   return;}
     else{
         shangbao.projectname=projectname;
     [self.navigationController pushViewController:shangbao animated:YES];
@@ -121,10 +123,11 @@
                 }];
                 [alert addAction:cancelAlert];
                 [self presentViewController:alert animated:YES completion:nil];
+            }   else   if ([[returnDic objectForKey:@"code"]integerValue]==1000) {
+                [self.view makeToast:[returnDic objectForKey:@"desc"]];
             }else{
-                
+                [self.view makeToast:@"请求不成功，请重新尝试"];
             }
-
         }];
     }
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{

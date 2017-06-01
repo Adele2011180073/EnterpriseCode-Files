@@ -12,6 +12,7 @@
 #import "SVPullToRefresh.h"
 #import "MBProgressHUD.h"
 #import "HZLoginService.h"
+#import "UIView+Toast.h"
 
 @interface HZNoticeViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -37,6 +38,7 @@
     [tableview registerClass:[NoticeCell class] forCellReuseIdentifier:@"cell"];
     tableview.rowHeight=60;
     tableview.delegate=self;
+    tableview.tableFooterView = [[UIView alloc] init];
 //    tableview.separatorColor=[UIColor clearColor];
     tableview.dataSource=self;
     [self.view addSubview:tableview];
@@ -62,17 +64,15 @@
     [HZLoginService NavigationWithRecordId:[self.sendDic objectForKey:@"recordid"] andBlock:^(NSDictionary *returnDic, NSError *error) {
         if ([[returnDic objectForKey:@"code"]integerValue]==0) {
             
-        }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
-            UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+        }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
+            UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             }];
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];
         }else{
-            
+            [self.view makeToast:@"请求失败，请重新尝试"];
         }
-        
-
     }];
     }
 }
@@ -95,14 +95,16 @@
                 NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
                 [tableview reloadData];
                 
-            }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
+            }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
                 UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 }];
                 [alert addAction:cancelAlert];
                 [self presentViewController:alert animated:YES completion:nil];
+            }else   if ([[returnDic objectForKey:@"code"]integerValue]==1000) {
+                 [self.view makeToast:[returnDic objectForKey:@"desc"]];
             }else{
-                
+                   [self.view makeToast:@"请求失败，请重新尝试"];
             }
 
         }];

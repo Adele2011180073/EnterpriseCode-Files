@@ -11,6 +11,7 @@
 #import "SVPullToRefresh.h"
 #import "HZLoginService.h"
 #import "HZGongShiDetailViewController.h"
+#import "UIView+Toast.h"
 @interface HZGongShiListViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 {
     int pageIndex;
@@ -101,7 +102,13 @@
                 }
                 [tableview reloadData];
                 
-            }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
+            }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
+                UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                }];
+                [alert addAction:cancelAlert];
+                [self presentViewController:alert animated:YES completion:nil];
+            }else   if ([[returnDic objectForKey:@"code"]integerValue]==1000) {
                 if (pageIndex==1) {
                     dataList=[[NSMutableArray alloc]init];
                     [tableview reloadData];
@@ -112,7 +119,7 @@
                 [alert addAction:cancelAlert];
                 [self presentViewController:alert animated:YES completion:nil];
             }else{
-                
+                  [self.view makeToast:@"请求不成功，请重新尝试"];
             }
 
         }];
@@ -125,6 +132,7 @@
     if (!cell) {
         cell=[[UITableViewCell alloc]init];
     }
+     cell.selectionStyle=UITableViewCellSelectionStyleNone;
     cell.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
     UIView* bgView=[[UIView alloc]initWithFrame:CGRectMake(0, 5, Width, 100)];
     bgView.backgroundColor=[UIColor whiteColor];

@@ -14,6 +14,7 @@
 #import "UIImageView+WebCache.h"
 #import "UIButton+WebCache.h"
 #import "HZURL.h"
+#import "UIView+Toast.h"
 @interface HZGongShiDetailViewController ()<UIGestureRecognizerDelegate,UITextViewDelegate,UIImagePickerControllerDelegate>
 {
     UIScrollView *bgScrollView;
@@ -70,7 +71,8 @@
             break;
     }
     NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
-    NSData *imageData=[def objectForKey:@"imageData"];
+    NSString *key=[NSString stringWithFormat:@"%@%d",[self.listDic objectForKey:@"projectname"],self.type];
+    NSData *imageData=[def objectForKey:key];
     if (imageData!=NULL&&imageData!=nil) {
         _remainImageArray=[NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:imageData]];
         NSLog(@"_remainImageArray  %@",_remainImageArray);
@@ -400,7 +402,8 @@
     if (sender.tag==100) {
         NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
                 NSData *imageData=[NSKeyedArchiver archivedDataWithRootObject:_photoArray ];
-        [def setObject:imageData forKey:@"imageData"];
+        NSString *key=[NSString stringWithFormat:@"%@%d",[self.listDic objectForKey:@"projectname"],self.type];
+        [def setObject:imageData forKey:key];
         UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"保存成功！" message:nil preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         }];
@@ -432,14 +435,16 @@
             }];
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];
-        }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
-            UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+        }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
+            UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             }];
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];
+        }else   if ([[returnDic objectForKey:@"code"]integerValue]==1000) {
+            [self.view makeToast:[returnDic objectForKey:@"desc"]];
         }else{
-            
+            [self.view makeToast:@"请求不成功，请重新尝试" duration:2 position:CSToastPositionCenter];
         }
         
     }];
@@ -592,7 +597,7 @@
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];
         }else{
-            
+            [self.view makeToast:@"请求失败，请重新尝试"];
         }
     }];
 }

@@ -10,6 +10,7 @@
 #import "MBProgressHUD.h"
 #import "HZLoginService.h"
 #import "HZURL.h"
+#import "UIView+Toast.h"
 @interface HZNewsDetailViewController ()<UIGestureRecognizerDelegate>{
     NSDictionary *returnData;
     NSDictionary *totalDic;
@@ -40,15 +41,18 @@
         if ([[returnDic objectForKey:@"code"]integerValue]==0) {
             returnData=[returnDic objectForKey:@"obj"];
             [self addSubviews];
-        }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
-            UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+        }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
+            UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             }];
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];
+        }else   if ([[returnDic objectForKey:@"code"]integerValue]==1000) {
+            [self.view makeToast:[returnDic objectForKey:@"desc"]];
         }else{
-            
+            [self.view makeToast:@"请求不成功，请重新尝试"];
         }
+
     }];
 }
 -(void)addSubviews{
@@ -63,23 +67,40 @@
     if (str2==NULL||str2==nil)  str2=@"";
      NSArray *textArray=@[str1,str2];
     for (int i=0; i<2; i++) {
-        UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(30, 80*i, 100, 40)];
+        UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(30, 100*i, 100, 40)];
         label.textAlignment=NSTextAlignmentLeft;
         label.text=[subArray objectAtIndex:i];
         label.textColor=[UIColor grayColor];
         label.font=[UIFont systemFontOfSize:16];
         [self.view addSubview:label];
         
-        UIView *topBgView=[[UIView alloc]initWithFrame:CGRectMake(0, 40+80*i, Width, 40)];
+        UIView *topBgView=[[UIView alloc]initWithFrame:CGRectMake(0, 40+120*i, Width, 40)];
+        topBgView.tag=20+i;
         topBgView.backgroundColor=[UIColor whiteColor];
         [self.view addSubview:topBgView];
         
-        UILabel *text=[[UILabel alloc]initWithFrame:CGRectMake(10, 10, Width -20, 20)];
+        UILabel *text=[[UILabel alloc]initWithFrame:CGRectMake(10, 10, Width -25, 20)];
         text.textAlignment=NSTextAlignmentLeft;
         text.text=[textArray objectAtIndex:i];
+      
         text.font=[UIFont systemFontOfSize:16];
         [topBgView addSubview:text];
         if (i==1) {
+            UIView *view=[self.view viewWithTag:20];
+            text.numberOfLines=0;
+            text.lineBreakMode = NSLineBreakByTruncatingTail;
+            
+            CGSize maximumLabelSize = CGSizeMake(Width-20, 9999);//labelsize的最大值
+            
+            //关键语句
+            
+            CGSize expectSize = [text sizeThatFits:maximumLabelSize];
+            
+            //别忘了把frame给回label，如果用xib加了约束的话可以只改一个约束的值
+            label.frame=CGRectMake(30, 40+view.frame.size.height, 100, 40);
+            text.frame = CGRectMake(10, 0, expectSize.width, expectSize.height+20);
+            topBgView.frame=CGRectMake(0, 80+view.frame.size.height, Width, expectSize.height+20);
+        }else{
             text.numberOfLines=0;
             text.lineBreakMode = NSLineBreakByTruncatingTail;
             
@@ -91,8 +112,8 @@
             
             //别忘了把frame给回label，如果用xib加了约束的话可以只改一个约束的值
             
-            text.frame = CGRectMake(20, 0, expectSize.width, expectSize.height+20);
-            topBgView.frame=CGRectMake(0, 40+80*i, Width, expectSize.height+20);
+            text.frame = CGRectMake(10, 0, expectSize.width, expectSize.height+20);
+            topBgView.frame=CGRectMake(0, 40+110*i, Width, expectSize.height+20);
         }
         
         

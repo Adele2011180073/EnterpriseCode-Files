@@ -11,6 +11,7 @@
 #import "HZLoginService.h"
 #import "HZYuYueReViewController.h"
 #import "BSRegexValidate.h"
+#import "UIView+Toast.h"
 @interface HAYuYueDetailViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     UITableView *tableview;
@@ -21,7 +22,7 @@
 
 @end
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @implementation HAYuYueDetailViewController
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @implementation HAYuYueDetailViewController
 @synthesize dataList;
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -106,14 +107,16 @@
 //                NSLog(@"预约列表详情      %@ ",str);
                 [tableview reloadData];
                 
-            }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
+            }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
                 UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 }];
                 [alert addAction:cancelAlert];
                 [self presentViewController:alert animated:YES completion:nil];
+            }else   if ([[returnDic objectForKey:@"code"]integerValue]==1000) {
+                  [self.view makeToast:[returnDic objectForKey:@"desc"]];
             }else{
-                
+                [self.view makeToast:@"请求失败，请重新尝试"];
             }
 
         }];
@@ -124,12 +127,14 @@
         [HZLoginService YuYueCancelWithId:Id andBlock:^(NSDictionary *returnDic, NSError *error) {
              if ([[returnDic objectForKey:@"code"]integerValue]==0) {
                  [self.navigationController popViewControllerAnimated:YES];
-             }else{
-                 UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+             }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
+                 UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
                  UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                  }];
                  [alert addAction:cancelAlert];
                  [self presentViewController:alert animated:YES completion:nil];
+             }else{
+                  [self.view makeToast:@"请求失败，请重新尝试"];
              }
         }];
     }else  if (sender.tag==101) {
@@ -139,12 +144,14 @@
         [HZLoginService YuYueFinishWithTaskId:taskid Status:@"1" timeofappointment:timeofappointment andBlock:^(NSDictionary *returnDic, NSError *error) {
             if ([[returnDic objectForKey:@"code"]integerValue]==0) {
                 [self.navigationController popViewControllerAnimated:YES];
-            }else{
-                UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+            }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
+                UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 }];
                 [alert addAction:cancelAlert];
                 [self presentViewController:alert animated:YES completion:nil];
+            }else{
+                [self.view makeToast:@"请求失败，请重新尝试"];
             }
 
         }];
@@ -161,9 +168,25 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     NSInteger height;
     if (indexPath.section==0&&indexPath.row==0) {
+        if ([returnData objectForKey:@"projectName"]) {
+            NSString *str1=[returnData objectForKey:@"projectName"];
+            CGSize sizeToFit = [str1 sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(Width-140, CGFLOAT_MAX) lineBreakMode:UILineBreakModeTailTruncation];//此处的换行类型（lineBreakMode）可根据自己的实际情况进行设置
+            height=sizeToFit.height+30;
+        }else{
         height=60;
+        }
     }else{
         height=40;
+    }
+    if (indexPath.section>1) {
+        NSDictionary *dic=[dataList objectAtIndex:indexPath.section-2];
+         NSArray *itemArray=[dic objectForKey:@"varibles"];
+        NSDictionary *detailsDic=[itemArray objectAtIndex:1];
+         NSString *str5=[detailsDic objectForKey:@"varibalevalue"];
+       if ([[dic objectForKey:@"whereuser"]integerValue]==2&&indexPath.row==4) {
+            CGSize sizeToFit = [str5 sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(Width-40, CGFLOAT_MAX) lineBreakMode:UILineBreakModeTailTruncation];//此处的换行类型（lineBreakMode）可根据自己的实际情况进行设置
+           height=sizeToFit.height+30;
+        }
     }
     return height;
 }
@@ -239,8 +262,8 @@
         NSArray *textArray=@[str1,str2,str3];
         label.text=[subArray objectAtIndex:indexPath.row];
         if (indexPath.row==0) {
-            text.frame=CGRectMake(130, 0, Width -140, 40);
-            text.numberOfLines=2;
+            text.frame=CGRectMake(130, 10, Width -140, cell.frame.size.height-20);
+            text.numberOfLines=0;
         }
         text.text=[textArray objectAtIndex:indexPath.row];
     }else if (indexPath.section==1){
@@ -307,8 +330,10 @@
              if (str5==NULL||str5==nil)  str5=@"";
             NSArray *textArray=@[str1,str2,str3,str4,str5];
             if (indexPath.row==4) {
-                UILabel *details=[[UILabel alloc]initWithFrame:CGRectMake(30, 0, Width -40, Height/20)];
+                UILabel *details=[[UILabel alloc]initWithFrame:CGRectMake(30, 0, Width -40, cell.frame.size.height)];
+                details.backgroundColor=[UIColor whiteColor];
                 details.layer.cornerRadius=5;
+                details.numberOfLines=0;
                 details.text=str5;
                 details.layer.borderColor=[UIColor grayColor].CGColor;
                 details.layer.borderWidth=1;

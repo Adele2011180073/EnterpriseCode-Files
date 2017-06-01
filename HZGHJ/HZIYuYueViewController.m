@@ -73,13 +73,15 @@
                             [projectNameArray addObject:listDic];
                         }
                     }
+                    [self addSubviews];
+                }else{
+                    [self.view makeToast:@"您的账户暂时无数据"];
                 }
                 NSArray *array=[returnDic objectForKey:@"reservationservice"];
                 NSDictionary *dic=[array objectAtIndex:0];
                 reservationserviceArray=[NSMutableArray arrayWithArray:[dic objectForKey:@"childList"]];
                 NSLog(@"预约数据    %@  ",str);
 
-                [self addSubviews];
             }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
                 UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -87,7 +89,7 @@
                 [alert addAction:cancelAlert];
                 [self presentViewController:alert animated:YES completion:nil];
             }else{
-                
+                [self.view makeToast:@"请求不成功，请重新尝试"];
             }
 
              }];
@@ -380,15 +382,16 @@
             }];
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];
-        }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
-            UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+        }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
+            UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                 [self.navigationController popViewControllerAnimated:YES];
             }];
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];
+        }else   if ([[returnDic objectForKey:@"code"]integerValue]==1000) {
+            [self.view makeToast:[returnDic objectForKey:@"desc"]];
         }else{
-            
+             [self.view makeToast:@"请求不成功，请重新尝试" duration:2 position:CSToastPositionCenter];
         }
 
     }];

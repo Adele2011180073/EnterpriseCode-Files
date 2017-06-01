@@ -71,7 +71,7 @@
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];
         }else{
-            
+            [self.view makeToast:[returnDic objectForKey:@"desc"]];
         }
     }];
 }
@@ -163,7 +163,10 @@
         }else   if (i==2) {
              label.frame=CGRectMake(30, 230, 140, 40);
         }else   if (i==3) {
-            label.frame=CGRectMake(30, 370, 140, 40);
+            label.frame=CGRectMake(30, 380, 140, 40);
+            if (self.imageArray.count>2) {
+                label.frame=CGRectMake(30, 480, 140, 40);
+            }
         }
 
         label.textColor=[UIColor darkGrayColor];
@@ -229,13 +232,41 @@
                [bgView addSubview:text];
            }else  if (i==3) {
                 bgView.frame=CGRectMake(0, 270, Width, 100);
+               if (self.imageArray.count>2) {
+                   bgScrollView.contentSize=CGSizeMake(Width, 800);
+                     bgView.frame=CGRectMake(0, 270, Width, 200);
+               }
+            
+               
                UIButton *imageView=[[UIButton alloc]initWithFrame:CGRectMake(20, 10, 80, 80)];
                imageView.tag=10;
                [imageView setBackgroundImage:[UIImage imageNamed:@"add_photo"] forState:UIControlStateNormal];
                [imageView addTarget:self action:@selector(takePhoto:) forControlEvents:UIControlEventTouchUpInside];
                [bgView addSubview:imageView];
+               if (self.imageArray.count>0) {
+                   for (int i=0; i<self.imageArray.count; i++) {
+                       UIButton *button=[[UIButton alloc]init];
+                       button.frame=CGRectMake(20+120*(i%3), 10+100*(i/3), 80, 80);
+                       [button setBackgroundImage:[self.imageArray objectAtIndex:i] forState:UIControlStateNormal];
+                       [button addTarget:self action:@selector(bigPhoto:) forControlEvents:UIControlEventTouchUpInside];
+                       [bgView addSubview:button];
+                   }
+                   imageView.frame=CGRectMake(20+120*(self.imageArray.count%3), 10+100*(self.imageArray.count/3), 80, 80);
+                   if (self.imageArray.count==6) {
+                       imageView.hidden=YES;
+                       imageView.userInteractionEnabled=NO;
+                   }
+                   //长按删除
+                   NSInteger index=[self.imageArray indexOfObject:imageView.currentBackgroundImage];
+                   UILongPressGestureRecognizer *longPress=[[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPress:)];
+                   longPress.accessibilityValue=[NSString stringWithFormat:@"%ld",index];
+                   [imageView addGestureRecognizer:longPress];
+               }
            }else  if (i==4) {
                bgView.frame=CGRectMake(0, 420, Width, 130);
+               if (self.imageArray.count>2) {
+                   bgView.frame=CGRectMake(0, 520, Width, 130);
+               }
                detailText=[[UITextView alloc]initWithFrame:CGRectMake(0, 0, Width, 130)];
                detailText.delegate=self;
                detailText.clearsOnInsertion=YES;
@@ -265,7 +296,10 @@
            }
        }
     
-    UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(40, 620,Width-80, 40)];
+    UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(40, 610,Width-80, 40)];
+    if (self.imageArray.count>2) {
+        button.frame=CGRectMake(40, 710,Width-80, 40);
+    }
     [button setTitle:@"提交" forState:UIControlStateNormal];
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     button.backgroundColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1];
@@ -291,13 +325,14 @@
         UIImagePickerController* picker = [[UIImagePickerController alloc] init];
         picker.sourceType = UIImagePickerControllerSourceTypeCamera;
         picker.showsCameraControls = YES;
+        picker.videoQuality=UIImagePickerControllerQualityTypeLow;
         picker.delegate = self;
         [self presentViewController:picker animated:YES completion:Nil];
     }];
     [alert addAction:cameraAlert];
     UIAlertAction *pictureAlert=[UIAlertAction actionWithTitle:@"从相册中选取" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UIImagePickerController*picker = [[UIImagePickerController alloc] init];
-        
+         picker.videoQuality=UIImagePickerControllerQualityTypeLow;
         picker.delegate = self;
         picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
         //            picker.allowsEditing=YES;
@@ -311,27 +346,14 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
-    UIImage *originImage = [info objectForKey:UIImagePickerControllerOriginalImage];
-    UIImage *scaleImage = [self scaleImage:originImage toScale:0.5];
-    UIButton *button=[self.view viewWithTag:10];
-    UIButton *imageView=[[UIButton alloc]init];
-    imageView.frame=button.frame;
-    [imageView setBackgroundImage:scaleImage forState:UIControlStateNormal];
-    [imageView addTarget:self action:@selector(bigPhoto:) forControlEvents:UIControlEventTouchUpInside];
-    [button.superview addSubview:imageView];
-    button.frame=CGRectMake(button.frame.origin.x+100, 10, 80, 80);
-    [self.imageArray addObject:scaleImage];
-    if (self.imageArray.count==3) {
-        button.hidden=YES;
-        button.userInteractionEnabled=NO;
-    }
-    
-    //长按删除
-    NSInteger index=[self.imageArray indexOfObject:imageView.currentBackgroundImage];
-    UILongPressGestureRecognizer *longPress=[[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPress:)];
-    longPress.accessibilityValue=[NSString stringWithFormat:@"%ld",index];
-    [imageView addGestureRecognizer:longPress];
     [picker dismissViewControllerAnimated:YES completion:nil];
+    UIImage *originImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+    UIImage *scaleImage = [self scaleImage:originImage toScale:1];
+    [self.imageArray addObject:scaleImage];
+
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    [self addSubviews];
+
 }
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
@@ -415,14 +437,14 @@
             }];
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];
-        }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
-            UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+        }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
+            UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
             UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             }];
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];
         }else{
-            
+            [self.view makeToast:@"请求失败，请重新尝试"];
         }
 
     }];

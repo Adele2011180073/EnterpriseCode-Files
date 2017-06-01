@@ -14,7 +14,7 @@
 #import "HZLoginService.h"
 #import "HAYuYueDetailViewController.h"
 #import "HZYuYueDetailCell.h"
-
+#import "UIView+Toast.h"
 
 @interface HZYuYueViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -52,6 +52,7 @@
     tableview.delegate=self;
     tableview.separatorColor=[UIColor clearColor];
     tableview.dataSource=self;
+    tableview.tableFooterView = [[UIView alloc] init];
     [self.view addSubview:tableview];
     [self getDataSource];
     NSArray *titleArray=@[@"在线预约",@"我的预约"];
@@ -99,7 +100,10 @@
             }else{
                [dataList addObjectsFromArray:array];
             }
-            
+            if (dataList.count<1||dataList==NULL) {
+                [self.view makeToast:@"暂时没有数据" duration:2 position:CSToastPositionCenter];
+            }
+          
             NSData *data =    [NSJSONSerialization dataWithJSONObject:returnDic options:NSJSONWritingPrettyPrinted error:nil];
             NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
             [tableview reloadData];
@@ -112,7 +116,7 @@
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];
         }else{
-            
+             [self.view makeToast:@"请求失败，请重新尝试" duration:2 position:CSToastPositionCenter];
         }
 
     }];
@@ -126,16 +130,19 @@
                 }else{
                     [dataList addObjectsFromArray:array];
                 }
+                if (dataList.count<1||dataList==NULL) {
+                   [self.view makeToast:@"暂时没有数据" duration:2 position:CSToastPositionBottom];
+                }
                 [tableview reloadData];
 
-            }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
+            }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
                 UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 }];
                 [alert addAction:cancelAlert];
                 [self presentViewController:alert animated:YES completion:nil];
             }else{
-                
+                [self.view makeToast:@"请求不成功，请重新尝试" duration:2 position:CSToastPositionCenter];
             }
 
             NSLog(@"我的预约    %@",returnDic);
@@ -169,32 +176,33 @@
     titleLabel.font=[UIFont systemFontOfSize:17];
     [bgView addSubview:titleLabel];
     UILabel*subTitle=[[UILabel alloc]initWithFrame:CGRectMake(10, 45, Width-40, 20)];
-    subTitle.textColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1];
+    subTitle.textColor=[UIColor colorWithRed:237/255.0 green:129/255.0 blue:85/255.0 alpha:1];
     subTitle.textAlignment=NSTextAlignmentLeft;
     subTitle.font=[UIFont systemFontOfSize:15];
     [bgView addSubview:subTitle];
    UILabel*nameTitle=[[UILabel alloc]initWithFrame:CGRectMake(10, 65, Width-40, 17)];
-   titleLabel.textColor=[UIColor blackColor];
+   nameTitle.textColor=[UIColor darkGrayColor];
    nameTitle.textAlignment=NSTextAlignmentLeft;
    nameTitle.font=[UIFont systemFontOfSize:15];
     [bgView addSubview:nameTitle];
    UILabel* phoneLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, 82, Width-40, 17)];
-    titleLabel.textColor=[UIColor blackColor];
+    phoneLabel.textColor=[UIColor darkGrayColor];
     phoneLabel.textAlignment=NSTextAlignmentLeft;
     phoneLabel.font=[UIFont systemFontOfSize:15];
     [bgView addSubview:phoneLabel];
    UILabel*timeTitle=[[UILabel alloc]initWithFrame:CGRectMake(10, 99, Width-40, 17)];
-   timeTitle.textColor=[UIColor blackColor];
+   timeTitle.textColor=[UIColor darkGrayColor];
    timeTitle.textAlignment=NSTextAlignmentLeft;
    timeTitle.font=[UIFont systemFontOfSize:15];
     [bgView addSubview:timeTitle];
    UILabel*statusLabel=[[UILabel alloc]initWithFrame:CGRectMake(110, 116, 80, 20)];
    statusLabel.textAlignment=NSTextAlignmentLeft;
    statusLabel.font=[UIFont systemFontOfSize:15];
-    statusLabel.textColor=[UIColor blueColor];
+   statusLabel.textColor=[UIColor colorWithRed:34/255.0 green:164/255.0 blue:255/255.0 alpha:1];
    [bgView addSubview:statusLabel];
    UILabel*subLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, 116, 100, 20)];
    subLabel.text=@"预约状态";
+    subLabel.textColor=[UIColor darkGrayColor];
    subLabel.textAlignment=NSTextAlignmentLeft;
    subLabel.font=[UIFont systemFontOfSize:15];
     [bgView addSubview:subLabel];

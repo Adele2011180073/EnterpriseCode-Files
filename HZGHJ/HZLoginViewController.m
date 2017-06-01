@@ -76,6 +76,14 @@
     [self.view endEditing:YES];
 }
 - (IBAction)login:(id)sender {
+    if (self.userText.text==NULL||[self.userText.text isEqualToString:@""]) {
+        [self.view makeToast:@"请输入正确的用户名"];
+        return;
+    }
+    if (self.passwdText.text==NULL||[self.passwdText.text isEqualToString:@""]) {
+        [self.view makeToast:@"请输入正确的密码"];
+        return;
+    }
     MBProgressHUD *hud=[MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.label.text=@"登录中...";
     [HZLoginService LoginWithUserName:self.userText.text passwd:self.passwdText.text andBlock:^(NSDictionary *returnDic, NSError *error) {
@@ -93,7 +101,14 @@
                 [def setObject:data forKey:@"info"];
                 [def synchronize];
             [self.navigationController pushViewController:home animated:YES];
-            }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
+            }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
+                UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                }];
+                [alert addAction:cancelAlert];
+                [self presentViewController:alert animated:YES completion:nil];
+            }
+            else   if ([[returnDic objectForKey:@"code"]integerValue]==1000) {
                 UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 }];

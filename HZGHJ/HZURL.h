@@ -8,8 +8,8 @@
 
 #ifndef HZURL_h
 #define HZURL_h
-//static NSString * const kDemoBaseURL                = @"http://192.168.0.113:8085";
-static NSString * const kDemoBaseURL                = @"http://220.191.210.76:80";
+static NSString * const kDemoBaseURL                = @"http://192.168.0.113:8085";
+//static NSString * const kDemoBaseURL                = @"http://220.191.210.76:80";
 //static NSString * const kDemoBaseURL                = @"http://192.168.0.188:80";
 
 //static NSString * const kBaseURL                = @"http://220.191.210.76:8080";
@@ -85,6 +85,7 @@ static NSString * const kReadURL                = @"/servicesweb/message/read.ac
 
 //图片下载
 static NSString * const kGetFileURL                = @"/servicesweb/file/getfile.action";
-
+//MARK:办事指南
+static NSString * const kWorkGuidURL                = @"/servicesweb/workguid/list.action";
 //改密码
 #endif /* HZURL_h */

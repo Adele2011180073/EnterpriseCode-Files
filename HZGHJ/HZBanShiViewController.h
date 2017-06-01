@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface HZBanShiViewController : UIViewController
+@property(nonatomic,strong)NSMutableArray *dataList;
 
 @end

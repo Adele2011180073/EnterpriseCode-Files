@@ -11,6 +11,7 @@
 #import "MBProgressHUD.h"
 #import "HZLoginService.h"
 #import "HZURL.h"
+#import "UIView+Toast.h"
 
 @interface HZNoticeDetailViewController ()<UIGestureRecognizerDelegate>{
     NSDictionary *returnData;
@@ -38,7 +39,7 @@
     bgScrollView=[[UIScrollView alloc]init];
     
     bgScrollView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, Width, Height-44)];
-    //    bgScrollView.contentSize=CGSizeMake(Width, 1000);
+        bgScrollView.contentSize=CGSizeMake(Width,  Height-20);
     bgScrollView.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
     bgScrollView.userInteractionEnabled=YES;
     [self.view addSubview:bgScrollView];
@@ -53,24 +54,26 @@
            totalDic=returnDic;
              returnData=[returnDic objectForKey:@"obj"];
               [self addSubviews];
-       }else   if ([[returnDic objectForKey:@"code"]integerValue]==900||[[returnDic objectForKey:@"code"]integerValue]==1000) {
-           UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+       }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
+           UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
            UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
            }];
            [alert addAction:cancelAlert];
            [self presentViewController:alert animated:YES completion:nil];
+       }else   if ([[returnDic objectForKey:@"code"]integerValue]==1000) {
+           [self.view makeToast:[returnDic objectForKey:@"desc"]];
        }else{
-           
+           [self.view makeToast:@"请求不成功，请重新尝试"];
        }
      }];
 }
 -(void)addSubviews{
     UIView *topBgView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, Width, Height/17*6)];
-    topBgView.backgroundColor=[UIColor whiteColor];
+    topBgView.backgroundColor=[UIColor  whiteColor];
     [bgScrollView addSubview:topBgView];
     NSArray *subArray=@[@"消息标题",@"项目编号",@"项目名称",@"建设单位",@"项目阶段",@"主办科室"];
     NSString *str1=[[returnData objectForKey:@"message"]objectForKey:@"title"];
-    NSString *str2=[returnData objectForKey:@"projectid"];
+    NSString *str2=[returnData objectForKey:@"realprojectid"];
     NSString *str3=[[returnData objectForKey:@"project"]objectForKey:@"projectName"];
     NSString *str4=[[returnData objectForKey:@"constructionunit"]objectForKey:@"name"];
     NSString *str5=[[returnData objectForKey:@"process"]objectForKey:@"name"];
@@ -222,7 +225,7 @@
         if (![filelist isEqual:[NSNull null]]&&filelist.count>0) {
             for (int i=0; i<filelist.count; i++) {
                 NSString *url=[NSString stringWithFormat:@"%@%@?fileId=%@",kDemoBaseURL,kGetFileURL,[[filelist objectAtIndex:i]objectForKey:@"id"]];
-                UIImageView*imageView=[[UIImageView alloc]initWithFrame:CGRectMake(20+100*i, 140+210*number, 60, 60)];
+                UIImageView*imageView=[[UIImageView alloc]initWithFrame:CGRectMake(20+100*i, 140+210*(number/3), 70, 70)];
                 imageView.userInteractionEnabled=YES;
                 //    NSLog(@"url  %@",url);
                 [imageView sd_setImageWithURL:[NSURL URLWithString:url]placeholderImage:[UIImage imageNamed:@"img_default"]];
@@ -245,9 +248,9 @@
                 NSString *url=[NSString stringWithFormat:@"%@%@?fileId=%@",kDemoBaseURL,kGetFileURL,[listDic objectForKey:@"id"]];
                 [imageArray addObject:url];
                 UIImageView*imageView=[[UIImageView alloc]init];
-                bgView.frame=CGRectMake(0, Height/17*6+Height/8*2+Height/16, Width, 60);
+                bgView.frame=CGRectMake(0, Height/17*6+Height/8*2+Height/16, Width, 70+100*(listArray.count-1)/3);
                 [bgScrollView addSubview:bgView];
-                imageView.frame=CGRectMake(20+100*i, 0, 60, 60);
+                imageView.frame=CGRectMake(20+100*(i%3), 100*(i/3), 70, 70);
                 [bgView addSubview:imageView];
                 imageView.userInteractionEnabled=YES;
                 NSLog(@"url  %@",url);

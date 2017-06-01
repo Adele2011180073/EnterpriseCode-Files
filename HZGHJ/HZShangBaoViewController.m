@@ -14,6 +14,8 @@
 #import "UIImageView+WebCache.h"
 #import "HZPictureViewController.h"
 #import "HZURL.h"
+#import "UIView+Toast.h"
+
 @interface HZShangBaoViewController ()<UITableViewDataSource,UITableViewDelegate,UIGestureRecognizerDelegate>
 {
     int pageIndex;
@@ -50,7 +52,6 @@
     dataList=[[NSMutableArray alloc]init];
     tableview=[[UITableView alloc]initWithFrame:CGRectMake(0, 55, Width, Height-44-55)];
     [tableview registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
-    tableview.rowHeight=215;
     tableview.delegate=self;
     tableview.separatorColor=[UIColor clearColor];
     tableview.dataSource=self;
@@ -83,7 +84,7 @@
 }
 -(void)getDataSource{
     MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.label.text=@"数据加载中，请稍候...";
+    hud.label.text=@"数据提交中，请稍候...";
     [tableview.infiniteScrollingView stopAnimating];
     [tableview.pullToRefreshView stopAnimating];
     NSString *token=[[NSUserDefaults standardUserDefaults]objectForKey:@"token"];
@@ -97,7 +98,11 @@
                 }else{
                     [dataList addObjectsFromArray:array];
                 }
-                
+                if (dataList.count>0){
+                    
+                                 }else{
+                                     [self.view makeToast:@"您的过程上报暂无数据"];
+                }
                 NSData *data =    [NSJSONSerialization dataWithJSONObject:returnDic options:NSJSONWritingPrettyPrinted error:nil];
                 NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
                 [tableview reloadData];
@@ -109,8 +114,11 @@
                 }];
                 [alert addAction:cancelAlert];
                 [self presentViewController:alert animated:YES completion:nil];
+            }
+            else   if ([[returnDic objectForKey:@"code"]integerValue]==1000) {
+                 [self.view makeToast:[returnDic objectForKey:@"desc"]];
             }else{
-                
+                [self.view makeToast:@"请求不成功"];
             }
 
         }];
@@ -124,14 +132,22 @@
                 }else{
                     [dataList addObjectsFromArray:array];
                 }
+                if (dataList.count>0){
+                    
+                }else{
+                    [self.view makeToast:@"您的过程上报暂无数据"];
+                }
+                [tableview reloadData];
             }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
                 UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 }];
                 [alert addAction:cancelAlert];
                 [self presentViewController:alert animated:YES completion:nil];
+            }   else   if ([[returnDic objectForKey:@"code"]integerValue]==1000) {
+                [self.view makeToast:[returnDic objectForKey:@"desc"]];
             }else{
-                
+                [self.view makeToast:@"请求不成功"];
             }
 
             [tableview reloadData];
@@ -144,6 +160,18 @@
     pageIndex=1;
     [self getDataSource];
 }
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    NSDictionary *dic=[dataList objectAtIndex:indexPath.row];
+    NSArray *array=[dic objectForKey:@"filelist"];
+    CGFloat height;
+    if (array.count<4) {
+        height=230;
+    }else{
+        height=320;
+    }
+    return height;
+
+}
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return dataList.count;
 }
@@ -154,7 +182,7 @@
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
-    UIView* bgView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, Width, 210)];
+    UIView* bgView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, Width, 225)];
     bgView.backgroundColor=[UIColor whiteColor];
     bgView.userInteractionEnabled=YES;
     [cell.contentView addSubview:bgView];
@@ -210,10 +238,15 @@
     phoneLabel.text=[NSString stringWithFormat:@"上报人 : %@   上报日期:  %@",[[dic objectForKey:@"dbAUser"]objectForKey:@"name"],currentDateStr];
     timeTitle.text=[NSString stringWithFormat:@"文字信息: "];
     statusLabel.text=[NSString stringWithFormat:@"%@",[dic objectForKey:@"details"]];
-    if ([dic objectForKey:@"filelist"]!=NULL) {
-        NSArray *array=[dic objectForKey:@"filelist"];
+    NSArray *array=[dic objectForKey:@"filelist"];
+    if (array.count<4) {
+        bgView.frame=CGRectMake(0, 0, Width, 225);
+    }else{
+        bgView.frame=CGRectMake(0, 0, Width, 315);
+    }
+    if (array!=NULL) {
         for (int i=0; i<array.count; i++) {
-            UIImageView*imageView=[[UIImageView alloc]initWithFrame:CGRectMake(20+70*i, 140, 60, 60)];
+            UIImageView*imageView=[[UIImageView alloc]initWithFrame:CGRectMake(20+90*(i%3), 140+80*(i/3), 70, 70)];
             imageView.userInteractionEnabled=YES;
             NSDictionary *imageDic=[array objectAtIndex:i];
             NSString *url=[NSString stringWithFormat:@"%@%@?fileId=%@",kDemoBaseURL,kGetFileURL,[imageDic objectForKey:@"id"]];

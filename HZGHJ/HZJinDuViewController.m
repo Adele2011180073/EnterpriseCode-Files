@@ -11,6 +11,7 @@
 #import "SVPullToRefresh.h"
 #import "HZLoginService.h"
 #import "HZJingDuDetailViewController.h"
+#import "UIView+Toast.h"
 
 @interface HZJinDuViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 {
@@ -121,6 +122,9 @@
             NSArray *array=[returnDic objectForKey:@"list"];
                 dataList=[[NSMutableArray alloc]init];
                 dataList=[NSMutableArray                                                                                                                                                                                                                                                                                                                                           arrayWithArray:array];
+            if (dataList.count<1||dataList==NULL) {
+                [self.view makeToast:@"暂时没有数据" duration:2 position:CSToastPositionBottom];
+            }
                 [tableview reloadData];
             
         }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
@@ -129,8 +133,11 @@
             }];
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];
+         
+        }else   if ([[returnDic objectForKey:@"code"]integerValue]==1000) {
+                [self.view makeToast:@"您的进度暂时还无数据"];
         }else{
-            
+            [self.view makeToast:@"请求失败，请重新尝试"];
         }
         
     }];
