@@ -9,7 +9,7 @@
 #import "HZLocateDetailViewController.h"
 #import "HZLocateContentViewController.h"
 #import "UIView+Toast.h"
-#import "HZMapServiceViewController.h"
+//#import "HZMapServiceViewController.h"
 
 
 @interface HZLocateDetailViewController ()
@@ -66,7 +66,7 @@
     UIButton *button2=[self.view viewWithTag:21];
     UIButton *button3=[self.view viewWithTag:22];
     if (button1.selected==YES&&button2.selected==YES&&button3.selected==YES) {
-        HZMapServiceViewController *content=[[HZMapServiceViewController alloc]init];
+        HZLocateContentViewController *content=[[HZLocateContentViewController alloc]init];
         [self.navigationController pushViewController:content animated:YES];
     }else{
         [self.view makeToast:@"必须全部勾选受理条件才能在线办理事项"];

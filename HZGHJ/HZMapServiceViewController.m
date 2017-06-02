@@ -52,30 +52,27 @@
      _mapView = [[BMKMapView alloc]initWithFrame:CGRectMake(0, 0, Width, Height-44)];
     _mapView.delegate =self;
     //设置地图的显示样式
-    _mapView.mapType = BMKMapTypeSatellite;//卫星地图
+//    _mapView.userTrackingMode=BMKUserTrackingModeNone;
+//    _mapView.mapType = BMKMapTypeStandard;//卫星地图
     _service = [[BMKLocationService alloc] init];
     
     //设置代理
     _service.delegate = self;
-    
     //开启定位
     [_service startUserLocationService];
     //设定地图是否打开路况图层
-    _mapView.trafficEnabled = YES;
-    
+//    _mapView.trafficEnabled = YES;
     //底图poi标注
-    _mapView.showMapPoi = NO;
-    
+//    _mapView.showMapPoi = NO;
     //在手机上当前可使用的级别为3-21级
-   _mapView.zoomLevel = 21;
-    
+//   _mapView.zoomLevel = 21;
     //设定地图View能否支持旋转
     _mapView.rotateEnabled = NO;
-    
     //设定地图View能否支持用户移动地图
-    _mapView.scrollEnabled = NO;
-    self.view = _mapView;
+//    _mapView.scrollEnabled = NO;
+    [self.view addSubview:_mapView];
 }
+
 #pragma mark -------BMKLocationServiceDelegate
 
 /**
@@ -83,18 +80,12 @@
  *@param userLocation 新的用户位置
  */
 - (void)didUpdateBMKUserLocation:(BMKUserLocation *)userLocation {
-    
-    
     //展示定位
     _mapView.showsUserLocation = YES;
-    
     //更新位置数据
     [_mapView updateLocationData:userLocation];
-    
     //获取用户的坐标
     _mapView.centerCoordinate = userLocation.location.coordinate;
-    
-    _mapView.zoomLevel =18;
     
 }
 - (void)didReceiveMemoryWarning {

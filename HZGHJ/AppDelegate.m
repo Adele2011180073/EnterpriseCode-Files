@@ -29,6 +29,7 @@ static NSString *BaiDuAK=@"P5OwjL02LUfDGEIslEMDGREsGkK9MtZI";
        // 使用 UNUserNotificationCenter 来管理通知
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
     //监听回调事件
+    
     center.delegate = self;
     
     //iOS 10 使用以下方法注册，才能得到授权
@@ -54,7 +55,7 @@ static NSString *BaiDuAK=@"P5OwjL02LUfDGEIslEMDGREsGkK9MtZI";
     
     // 要使用百度地图，请先启动BaiduMapManager
     _mapManager = [[BMKMapManager alloc]init];
-    BOOL ret = [_mapManager start:@"Please enter your key" generalDelegate:self];
+    BOOL ret = [_mapManager start:BaiDuAK generalDelegate:self];
     if (!ret) {
         NSLog(@"manager start failed!");
     }
