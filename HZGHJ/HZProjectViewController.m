@@ -325,17 +325,16 @@
         UIImagePickerController* picker = [[UIImagePickerController alloc] init];
         picker.sourceType = UIImagePickerControllerSourceTypeCamera;
         picker.showsCameraControls = YES;
-        picker.videoQuality=UIImagePickerControllerQualityTypeLow;
+//        picker.videoQuality=UIImagePickerControllerQualityTypeLow;
         picker.delegate = self;
         [self presentViewController:picker animated:YES completion:Nil];
     }];
     [alert addAction:cameraAlert];
     UIAlertAction *pictureAlert=[UIAlertAction actionWithTitle:@"从相册中选取" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         UIImagePickerController*picker = [[UIImagePickerController alloc] init];
-         picker.videoQuality=UIImagePickerControllerQualityTypeLow;
+//         picker.videoQuality=UIImagePickerControllerQualityTypeLow;
         picker.delegate = self;
         picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
-        //            picker.allowsEditing=YES;
         [self presentViewController:picker animated:YES completion:Nil];
     }];
     [alert addAction:pictureAlert];
@@ -348,9 +347,15 @@
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     [picker dismissViewControllerAnimated:YES completion:nil];
     UIImage *originImage = [info objectForKey:UIImagePickerControllerOriginalImage];
-    UIImage *scaleImage = [self scaleImage:originImage toScale:1];
+    NSData *imageData=UIImageJPEGRepresentation(originImage, 1);
+    float length=[imageData length]/1024;
+    NSLog(@"图片大小   %f  M",length);
+    UIImage *scaleImage = [self imageWithImage:originImage scaledToSize:CGSizeMake(320*1.5, 480*1.5)];
+    NSData *scaleImageData=UIImagePNGRepresentation(scaleImage);
+    float length1=[scaleImageData length]/1024;
+    NSLog(@"图片大小1   %f  M",length1);
     [self.imageArray addObject:scaleImage];
-
+   
     [picker dismissViewControllerAnimated:YES completion:nil];
     [self addSubviews];
 
@@ -361,13 +366,14 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     
 }
--(UIImage *)scaleImage:(UIImage *)image toScale:(float)scaleSize
+- (UIImage *)imageWithImage:(UIImage*)image
+               scaledToSize:(CGSize)newSize;
 {
-    UIGraphicsBeginImageContext(CGSizeMake(image.size.width*scaleSize,image.size.height*scaleSize));
-    [image drawInRect:CGRectMake(0, 0, image.size.width * scaleSize, image.size.height *scaleSize)];
-    UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsBeginImageContext(newSize);
+    [image drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
+    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    return scaledImage;
+    return newImage;
 }
 -(void)bigPhoto:(UIButton*)bigImage{
     HZPictureViewController *picture=[[HZPictureViewController alloc]init];

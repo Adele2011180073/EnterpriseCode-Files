@@ -103,10 +103,10 @@
                                  }else{
                                      [self.view makeToast:@"您的过程上报暂无数据"];
                 }
-                NSData *data =    [NSJSONSerialization dataWithJSONObject:returnDic options:NSJSONWritingPrettyPrinted error:nil];
-                NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+//                NSData *data =    [NSJSONSerialization dataWithJSONObject:returnDic options:NSJSONWritingPrettyPrinted error:nil];
+//                NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
                 [tableview reloadData];
-                NSLog(@"过程上报列表    %@  %@",str,returnDic);
+//                NSLog(@"过程上报列表    %@  %@",str,returnDic);
                 
             }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
                 UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
@@ -179,7 +179,13 @@
     UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     if (!cell) {
         cell=[[UITableViewCell alloc]init];
+    }else{
+        for (UIView *subView in cell.contentView.subviews)
+        {
+            [subView removeFromSuperview];
+        }
     }
+ 
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
     UIView* bgView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, Width, 225)];
@@ -238,7 +244,8 @@
     phoneLabel.text=[NSString stringWithFormat:@"上报人 : %@   上报日期:  %@",[[dic objectForKey:@"dbAUser"]objectForKey:@"name"],currentDateStr];
     timeTitle.text=[NSString stringWithFormat:@"文字信息: "];
     statusLabel.text=[NSString stringWithFormat:@"%@",[dic objectForKey:@"details"]];
-    NSArray *array=[dic objectForKey:@"filelist"];
+    NSArray *array=[[NSArray alloc]init];
+    array=[dic objectForKey:@"filelist"];
     if (array.count<4) {
         bgView.frame=CGRectMake(0, 0, Width, 225);
     }else{

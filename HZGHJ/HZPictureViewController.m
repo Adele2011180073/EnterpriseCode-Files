@@ -44,7 +44,7 @@
     [self.view addSubview:page];
 
     for (int i=0; i<self.imageArray.count; i++) {
-        UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake(10+Width*i,10, Width-20, Height-44-40)];
+        UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake(30+Width*i,40, Width-60, Height-44-140)];
         //开启交互功能
         imageView.userInteractionEnabled=YES;
         imageView.contentMode=UIViewContentModeScaleAspectFit;

@@ -68,6 +68,7 @@
     if (!cell) {
         cell=[[UITableViewCell alloc]init];
     }
+    cell.selectionStyle=UITableViewCellSelectionStyleNone;
     UIView* bgView=[[UIView alloc]initWithFrame:CGRectMake(50, 10, Width-20-Height/16, 110)];
     bgView.clipsToBounds=YES;
     bgView.layer.cornerRadius=5;

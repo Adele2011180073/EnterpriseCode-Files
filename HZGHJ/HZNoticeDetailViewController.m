@@ -73,7 +73,7 @@
     [bgScrollView addSubview:topBgView];
     NSArray *subArray=@[@"消息标题",@"项目编号",@"项目名称",@"建设单位",@"项目阶段",@"主办科室"];
     NSString *str1=[[returnData objectForKey:@"message"]objectForKey:@"title"];
-    NSString *str2=[returnData objectForKey:@"realprojectid"];
+    NSString *str2=[[returnData objectForKey:@"project"]objectForKey:@"realprojectid"];
     NSString *str3=[[returnData objectForKey:@"project"]objectForKey:@"projectName"];
     NSString *str4=[[returnData objectForKey:@"constructionunit"]objectForKey:@"name"];
     NSString *str5=[[returnData objectForKey:@"process"]objectForKey:@"name"];
@@ -103,16 +103,7 @@
         text.font=[UIFont systemFontOfSize:15];
         [topBgView addSubview:text];
     }
-    NSArray *subArray1=@[@"推送对象",@"推送内容",@"附件(图片)信息"];
-    for (int i=0; i<3; i++) {
-        UILabel *text=[[UILabel alloc]initWithFrame:CGRectMake(25, Height/17*6+Height/8*i, 150, Height/16)];
-        text.textAlignment=NSTextAlignmentLeft;
-        text.text=[NSString stringWithFormat:@"   %@",[subArray1 objectAtIndex:i]];
-        text.font=[UIFont systemFontOfSize:15];
-        [bgScrollView addSubview:text];
-
-    }
-    NSString *str7=[[returnData objectForKey:@"message"]objectForKey:@"detail"];
+       NSString *str7=[[returnData objectForKey:@"message"]objectForKey:@"detail"];
      if (str7==NULL||str7==nil)  str7=@"";
     NSArray *textArray1=@[str4,str7];
     for (int i=0; i<2; i++) {
@@ -122,35 +113,52 @@
         text.textAlignment=NSTextAlignmentLeft;
         text.font=[UIFont systemFontOfSize:15];
         [bgScrollView addSubview:text];
-//        if (i==1) {
-//            text.numberOfLines=10;
-//            text.lineBreakMode = NSLineBreakByTruncatingTail;
-//            
-//            CGSize maximumLabelSize = CGSizeMake(Width-20, 160);//labelsize的最大值
-//            
-//            //关键语句
-//            
-//            CGSize expectSize = [text sizeThatFits:maximumLabelSize];
-//            
-//            //别忘了把frame给回label，如果用xib加了约束的话可以只改一个约束的值
-//            
-//            text.frame = CGRectMake(20, 0, expectSize.width, expectSize.height+20);
+        if (i==1) {
+            text.tag=10;
+            text.numberOfLines=10;
+            text.lineBreakMode = NSLineBreakByTruncatingTail;
+            
+            CGSize maximumLabelSize = CGSizeMake(Width-20, 160);//labelsize的最大值
+            
+            //关键语句
+            
+            CGSize expectSize = [text sizeThatFits:maximumLabelSize];
+            
+            //别忘了把frame给回label，如果用xib加了约束的话可以只改一个约束的值
+            
+            text.frame = CGRectMake(0, Height/17*6+Height/16+Height/8*i, Width, expectSize.height+20);
 //            topBgView.frame=CGRectMake(0, 40+80*i, Width, expectSize.height+20);
-//        }
+        }
 
     }
+    NSArray *subArray1=@[@"推送对象",@"推送内容",@"附件(图片)信息"];
+    for (int i=0; i<3; i++) {
+        UILabel *text=[[UILabel alloc]initWithFrame:CGRectMake(25, Height/17*6+Height/8*i, 150, Height/16)];
+        if (i==2) {
+            UILabel *label=[self.view viewWithTag:10];
+            text.frame=CGRectMake(25, label.frame.origin.y+label.frame.size.height+10, 150, Height/16);
+            text.tag=11;
+        }
+        text.textAlignment=NSTextAlignmentLeft;
+        text.text=[NSString stringWithFormat:@"   %@",[subArray1 objectAtIndex:i]];
+        text.font=[UIFont systemFontOfSize:15];
+        [bgScrollView addSubview:text];
+        
+    }
+
    NSInteger messageattachment=  [[returnData objectForKey:@"messageattachment"]integerValue];
     if (messageattachment==1||messageattachment==2||messageattachment==3) {
         [self addFuJian];
     }else if (messageattachment==5) {
         [self addPicture:0];
     }else{
-        
+            [self.view makeToast:@"没有图片数据"];
     }
 }
 -(void)addFuJian{
     NSArray *filelist=[totalDic objectForKey:@"list"];
-    bgView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, Height/17*6+Height/8*3-Height/16, Width, 210*filelist.count)];
+    UILabel *label=[self.view viewWithTag:11];
+    bgView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, Height/17*5+Height/8*3-Height/16+label.frame.size.height, Width, 210*filelist.count)];
     //    bgView.contentSize=CGSizeMake(Width, 210*filelist.count);
     bgView.backgroundColor=[UIColor whiteColor];
     bgView.userInteractionEnabled=YES;
@@ -213,10 +221,13 @@
             
             [self addPicture:i];
         }
+    }else{
+        [self.view makeToast:@"没有图片数据"];
     }
 }
 -(void)addPicture:(int)number{
     NSInteger messageattachment=  [[returnData objectForKey:@"messageattachment"]integerValue];
+     UILabel *label=[self.view viewWithTag:11];
     if (messageattachment==1||messageattachment==2||messageattachment==3) {
         NSArray *listArray=[totalDic objectForKey:@"list"];
         NSDictionary *listDic=[listArray objectAtIndex:number];
@@ -234,8 +245,12 @@
                 tap.accessibilityValue=[NSString stringWithFormat:@"%d-%@",number,url];
                 tap.delegate=self;
                 [imageView addGestureRecognizer:tap];
+                
+                bgView.contentSize=CGSizeMake(100*imageArray.count, 70);
                 [bgView addSubview:imageView];
             }
+        }else{
+              [self.view makeToast:@"没有图片数据"];
         }
         
         
@@ -248,9 +263,10 @@
                 NSString *url=[NSString stringWithFormat:@"%@%@?fileId=%@",kDemoBaseURL,kGetFileURL,[listDic objectForKey:@"id"]];
                 [imageArray addObject:url];
                 UIImageView*imageView=[[UIImageView alloc]init];
-                bgView.frame=CGRectMake(0, Height/17*6+Height/8*2+Height/16, Width, 70+100*(listArray.count-1)/3);
+                bgView.frame=CGRectMake(0, label.frame.origin.y+label.frame.size.height+10, Width, 70+100*(listArray.count-1)/3);
+                bgView.contentSize=CGSizeMake(100*imageArray.count, 70);
                 [bgScrollView addSubview:bgView];
-                imageView.frame=CGRectMake(20+100*(i%3), 100*(i/3), 70, 70);
+                imageView.frame=CGRectMake(20+100*i, 0, 70, 70);
                 [bgView addSubview:imageView];
                 imageView.userInteractionEnabled=YES;
                 NSLog(@"url  %@",url);
@@ -262,6 +278,8 @@
                 [imageView addGestureRecognizer:tap];
                 [bgView addSubview:imageView];
             }
+        }else{
+            [self.view makeToast:@"没有图片数据"];
         }
         
     }

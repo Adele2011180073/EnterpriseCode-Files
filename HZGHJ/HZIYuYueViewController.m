@@ -73,14 +73,15 @@
                             [projectNameArray addObject:listDic];
                         }
                     }
-                    [self addSubviews];
                 }else{
                     [self.view makeToast:@"您的账户暂时无数据"];
                 }
                 NSArray *array=[returnDic objectForKey:@"reservationservice"];
                 NSDictionary *dic=[array objectAtIndex:0];
                 reservationserviceArray=[NSMutableArray arrayWithArray:[dic objectForKey:@"childList"]];
-                NSLog(@"预约数据    %@  ",str);
+                [self addSubviews];
+
+                NSLog(@"预约数据    %@  ",reservationserviceArray);
 
             }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
                 UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
@@ -121,6 +122,13 @@
     bgView.backgroundColor=[UIColor whiteColor];
     bgView.userInteractionEnabled=YES;
     [bgScrollView addSubview:bgView];
+    if (projectNameArray.count>0) {
+        
+    }else{
+        [self.view makeToast:@"无可报送预约材料"];
+        [self.navigationController popViewControllerAnimated:YES];
+        return;
+    }
     projectName=[[UILabel alloc]initWithFrame:CGRectMake(10, 0, Width-50, 40)];
     projectName.textAlignment=NSTextAlignmentLeft;
     projectName.numberOfLines=2;
@@ -230,7 +238,8 @@
             [bgView1 addSubview:label2];
         }else{
             bgView1.frame=CGRectMake(20, 350, Width-40, 70*reservationserviceArray.count);
-          if (reservationserviceArray != nil && ![reservationserviceArray isKindOfClass:[NSNull class]] && reservationserviceArray.count != 0){
+            NSLog(@"reservationserviceArray   %@",reservationserviceArray);
+          if (reservationserviceArray.count >0){
             for (int j=0; j<reservationserviceArray.count; j++) {
                 UIButton *image=[[UIButton alloc]initWithFrame:CGRectMake(10, 25+60*j, 60, 60)];
                 [image addTarget:self action:@selector(check:) forControlEvents:UIControlEventTouchUpInside];
@@ -333,7 +342,7 @@
         [self.view makeToast:@"请选择时间" duration:2 position:CSToastPositionCenter];
         return;
     }
-    if ([text1.text length]<14&&[text1.text length]>2) {
+    if ([text1.text length]<3&&[text1.text length]>16) {
            [self.view makeToast:@"设计院联系人输入不合法,请重新输入" duration:2 position:CSToastPositionCenter];
         return;
     }

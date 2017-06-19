@@ -152,7 +152,7 @@
     _timer=nil;
 }
 -(void)getDataSource{
-    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"BottomMenuItems1" ofType:@"plist"];
+    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"BottomMenuItems" ofType:@"plist"];
      NSArray* dataArray = [[NSArray alloc] initWithContentsOfFile:plistPath];
     dataSourceArray=[NSMutableArray arrayWithArray:dataArray];
     
@@ -221,7 +221,11 @@
             HZNoticeViewController *notice=[[HZNoticeViewController alloc]init];
             [self.navigationController pushViewController:notice animated:YES];
         }
-    }else{
+    }
+    else if ([[dic objectForKey:@"title"]isEqualToString:@"在线办理"]){
+          //暂时不显示在线办理  屏蔽
+    }
+    else{
     Class clazz = NSClassFromString([dic objectForKey:@"controller"]);
     if (!clazz) clazz = NSClassFromString([dic objectForKey:@"controller"]);
     UIViewController *controller = nil;

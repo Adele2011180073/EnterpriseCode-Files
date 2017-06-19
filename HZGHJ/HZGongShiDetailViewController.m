@@ -492,7 +492,7 @@
 {
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     UIImage *originImage = [info objectForKey:UIImagePickerControllerOriginalImage];
-    UIImage *scaleImage = [self scaleImage:originImage toScale:0.1];
+    UIImage *scaleImage = [self scaleImage:originImage toScale:0.3];
       UIButton *button=(UIButton*)[self.view viewWithTag:_selectBtnIndex];
     UIButton *imageView=[[UIButton alloc]init];
     imageView.frame=CGRectMake(0, 0, 70, 70);

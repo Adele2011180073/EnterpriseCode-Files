@@ -27,6 +27,13 @@
     self.title=@"受理条件";
     
     NSArray *titleArray=[[NSArray alloc]initWithObjects:@"一、符合经批准的控制性详细规划；",@"二、符合规划管理技术规范和标准的要求；",@"三、建设项目需要批准、核准的证明文件；", nil];
+//    UIButton *selectImage=[[UIButton alloc]initWithFrame:CGRectMake(Width-40,40+50*i, 30, 30)];
+//    [selectImage addTarget:self action:@selector(checkBox:) forControlEvents:UIControlEventTouchUpInside];
+//    image.tag=20+i;
+//    [image setImage:[UIImage imageNamed:@"checkbox"] forState:UIControlStateNormal];
+//    [image setImage:[UIImage imageNamed:@"checkbox_fill"] forState:UIControlStateSelected];
+//    [self.view addSubview:image];
+    
     for (int i=0; i<3; i++) {
         UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(10, 40+50*i, Width-100, 20)];
         label.font=[UIFont systemFontOfSize:16];
