@@ -80,4 +80,6 @@ typedef void (^ReturnData)(NSDictionary *returnDic, NSError *error);
 //更换密码
 +(void)PWWithNSw:(NSString *)opsw NSW:(NSString*)npsw andBlock:(ReturnData)NewSWBlock;
 
+//在线办事
++(void)BanShiWithAndBlock:(ReturnData)BanShiBlock;
 @end

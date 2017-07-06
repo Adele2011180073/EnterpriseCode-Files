@@ -63,13 +63,13 @@
     //设定地图是否打开路况图层
 //    _mapView.trafficEnabled = YES;
     //底图poi标注
-//    _mapView.showMapPoi = NO;
+    _mapView.showMapPoi = YES;
     //在手机上当前可使用的级别为3-21级
-//   _mapView.zoomLevel = 21;
+   _mapView.zoomLevel = 10;
     //设定地图View能否支持旋转
     _mapView.rotateEnabled = NO;
     //设定地图View能否支持用户移动地图
-//    _mapView.scrollEnabled = NO;
+    _mapView.scrollEnabled = YES;
     [self.view addSubview:_mapView];
 }
 
@@ -86,7 +86,7 @@
     [_mapView updateLocationData:userLocation];
     //获取用户的坐标
     _mapView.centerCoordinate = userLocation.location.coordinate;
-    
+    _mapView.zoomLevel =18;
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

@@ -27,21 +27,27 @@
     self.title=@"受理条件";
     
     NSArray *titleArray=[[NSArray alloc]initWithObjects:@"一、符合经批准的控制性详细规划；",@"二、符合规划管理技术规范和标准的要求；",@"三、建设项目需要批准、核准的证明文件；", nil];
-//    UIButton *selectImage=[[UIButton alloc]initWithFrame:CGRectMake(Width-40,40+50*i, 30, 30)];
-//    [selectImage addTarget:self action:@selector(checkBox:) forControlEvents:UIControlEventTouchUpInside];
-//    image.tag=20+i;
-//    [image setImage:[UIImage imageNamed:@"checkbox"] forState:UIControlStateNormal];
-//    [image setImage:[UIImage imageNamed:@"checkbox_fill"] forState:UIControlStateSelected];
-//    [self.view addSubview:image];
+    
+    UILabel*titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(Width-100, 30, 50, 30)];
+    titleLabel.textColor=[UIColor blackColor];
+    titleLabel.text=@"全选";
+    titleLabel.textAlignment=NSTextAlignmentLeft;
+    titleLabel.font=[UIFont systemFontOfSize:15];
+    [self.view addSubview:titleLabel];
+    UIButton *selectAllImage=[[UIButton alloc]initWithFrame:CGRectMake(Width-50,30, 30, 30)];
+    [selectAllImage addTarget:self action:@selector(checkAllBox:) forControlEvents:UIControlEventTouchUpInside];
+    [selectAllImage setImage:[UIImage imageNamed:@"checkbox"] forState:UIControlStateNormal];
+    [selectAllImage setImage:[UIImage imageNamed:@"checkbox_fill"] forState:UIControlStateSelected];
+    [self.view addSubview:selectAllImage];
     
     for (int i=0; i<3; i++) {
-        UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(10, 40+50*i, Width-100, 20)];
+        UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(10, 80+50*i, Width-100, 20)];
         label.font=[UIFont systemFontOfSize:16];
         label.text=[titleArray objectAtIndex:i];
         label.textAlignment=NSTextAlignmentLeft;
         [self.view addSubview:label];
         
-        UIButton *image=[[UIButton alloc]initWithFrame:CGRectMake(Width-40,40+50*i, 30, 30)];
+        UIButton *image=[[UIButton alloc]initWithFrame:CGRectMake(Width-50,80+50*i, 30, 30)];
         [image addTarget:self action:@selector(checkBox:) forControlEvents:UIControlEventTouchUpInside];
         image.tag=20+i;
         [image setImage:[UIImage imageNamed:@"checkbox"] forState:UIControlStateNormal];
@@ -49,15 +55,15 @@
         [self.view addSubview:image];
     }
     
-    UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(10, 200, Width-20, 40)];
+    UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(20, 240, Width-40, 40)];
     label.font=[UIFont systemFontOfSize:16];
     label.numberOfLines=2;
     label.textColor=[UIColor grayColor];
-    label.text=@"受理条件必须全部勾选！";
+    label.text=@"提示：必须全部勾选受理条件才能在线办理事项！";
     label.textAlignment=NSTextAlignmentLeft;
     [self.view addSubview:label];
     
-    UIButton *commit=[[UIButton alloc]initWithFrame:CGRectMake(Width/2-60,280, 120, 40)];
+    UIButton *commit=[[UIButton alloc]initWithFrame:CGRectMake(Width/2-80,360, 160, 40)];
     [commit addTarget:self action:@selector(commit) forControlEvents:UIControlEventTouchUpInside];
     commit.backgroundColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1];
     commit.clipsToBounds=YES;
@@ -67,6 +73,21 @@
 }
 -(void)checkBox:(UIButton *)sender{
     sender.selected=!sender.selected;
+}
+-(void)checkAllBox:(UIButton *)sender{
+    sender.selected=!sender.selected;
+    UIButton *button1=[self.view viewWithTag:20];
+    UIButton *button2=[self.view viewWithTag:21];
+    UIButton *button3=[self.view viewWithTag:22];
+    if (sender.selected==YES) {
+        button1.selected=YES;
+        button2.selected=YES;
+        button3.selected=YES;
+    }else{
+        button1.selected=NO;
+        button2.selected=NO;
+        button3.selected=NO;
+    }
 }
 -(void)commit{
     UIButton *button1=[self.view viewWithTag:20];

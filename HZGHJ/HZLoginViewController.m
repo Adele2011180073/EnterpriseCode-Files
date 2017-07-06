@@ -118,6 +118,8 @@
                 [self.view makeToast:@"登录失败"];
             }
 
+        }else{
+            [self.view makeToast:@"登录超时"];
         }
     }];
 }

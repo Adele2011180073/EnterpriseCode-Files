@@ -12,6 +12,14 @@
 	</dict>
 	<dict>
 		<key>title</key>
+		<string>在线办理</string>
+		<key>image</key>
+		<string>icon_zaixianbanshi</string>
+		<key>controller</key>
+		<string>HZLocateViewController</string>
+	</dict>
+	<dict>
+		<key>title</key>
 		<string>进度查询</string>
 		<key>image</key>
 		<string>icon_jinduchaxun</string>

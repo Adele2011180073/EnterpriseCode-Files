@@ -222,9 +222,6 @@
             [self.navigationController pushViewController:notice animated:YES];
         }
     }
-    else if ([[dic objectForKey:@"title"]isEqualToString:@"在线办理"]){
-          //暂时不显示在线办理  屏蔽
-    }
     else{
     Class clazz = NSClassFromString([dic objectForKey:@"controller"]);
     if (!clazz) clazz = NSClassFromString([dic objectForKey:@"controller"]);

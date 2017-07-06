@@ -8,8 +8,8 @@
 
 #ifndef HZURL_h
 #define HZURL_h
-//static NSString * const kDemoBaseURL                = @"http://192.168.0.113:8085";//公司局域网
-static NSString * const kDemoBaseURL                = @"http://220.191.210.76:80";//正式版本
+static NSString * const kDemoBaseURL                = @"http://192.168.0.113:8085";//公司局域网
+//static NSString * const kDemoBaseURL                = @"http://220.191.210.76:80";//正式版本
 //static NSString * const kDemoBaseURL                = @"http://192.168.0.188:80";
 
 //static NSString * const kBaseURL                = @"http://220.191.210.76:8080";
@@ -88,4 +88,12 @@ static NSString * const kGetFileURL                = @"/servicesweb/file/getfile
 //MARK:办事指南
 static NSString * const kWorkGuidURL                = @"/servicesweb/workguid/list.action";
 //改密码
+//MARK:在线办事 1.获取办理窗口
+static NSString * const kQueryOrgURL                = @"/servicesweb/onlineapproval/queryOrg.action";
+//MARK: 在线办事提交
+static NSString * const kUploadApprovalURL                = @"/servicesweb/onlineapproval/uploadApproval.action";
+//MARK: 3.在线办事进度查询
+static NSString * const kQueryListURL                = @"/servicesweb/onlineapproval/queryList.action";
+//MARK: 申请附件材料信息和修正材料附件信息
+static NSString * const kQueryAttachmentListURL                = @"/servicesweb/onlineapproval/queryAttachmentList.action";
 #endif /* HZURL_h */

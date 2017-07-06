@@ -11,6 +11,8 @@
 #import "HZURL.h"
 #import "UIViewController+BackButtonHandler.h"
 #import "HZLocateDetailViewController.h"
+#import "HZLoginService.h"
+#import "HZOptionViewController.h"
 
 
 @interface HZLocateViewController ()<UITableViewDataSource,UITableViewDelegate>
@@ -33,9 +35,9 @@
     self.navigationController.navigationBarHidden=NO;
     self.view.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
     self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStyleBordered target:nil action:nil];
-    self.title=@"建设项目选址审批";
+    self.title=@"在线办事";
     
-     dataList=[[NSMutableArray alloc]initWithObjects:@"建设项目选址审批：一般建设项目新建、基本变更（选址位置、用地规模、建设规模",@"建设项目选址审批：一般建设项目证书失效重新核发",@"建设项目选址审批：一般建设项目简易变更（项目名称、建设单位）",@"建设项目选址审批：一般建设项目延期", nil];
+     dataList=[[NSMutableArray alloc]initWithObjects:@"建设项目选址审批：一般建设项目新建、基本变更（选址位置、用地规模、建设规模）",@"建设项目选址审批：一般建设项目证书失效重新核发",@"建设项目选址审批：一般建设项目简易变更（项目名称、建设单位）",@"建设项目选址审批：一般建设项目延期", @"建设用地规划许可",@"临时建设用地规划许可",@"规划条件审定",@"规划条件变更审批",nil];
     NSArray *titleArray=@[@"在线申请",@"进度查询"];
     segmented=[[UISegmentedControl alloc]initWithItems:titleArray];
     segmented.frame=CGRectMake(5, 5, Width-10, 40);
@@ -44,7 +46,8 @@
     [segmented addTarget:self action:@selector(choseSeg:) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:segmented];
     
-    tableview=[[UITableView alloc]initWithFrame:CGRectMake(0, 50, Width, Height-44)];
+    [self getResourceData];
+    tableview=[[UITableView alloc]initWithFrame:CGRectMake(0, 50, Width, Height-44-55)];
     [tableview registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     tableview.rowHeight=120;
     tableview.backgroundColor=[UIColor whiteColor];
@@ -53,6 +56,11 @@
     tableview.dataSource=self;
     tableview.tableFooterView = [[UIView alloc] init];
     [self.view addSubview:tableview];
+}
+-(void)getResourceData{
+    [HZLoginService BanShiWithAndBlock:^(NSDictionary *returnDic, NSError *error) {
+        
+    }];
 }
 //MARK:分段选择
 -(void)choseSeg:(UISegmentedControl *)segmented{
@@ -87,7 +95,7 @@
     return cell;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    HZLocateDetailViewController *details=[[HZLocateDetailViewController alloc]init];
+    HZOptionViewController *details=[[HZOptionViewController alloc]init];
    
     [self.navigationController pushViewController:details animated:YES];
 }
