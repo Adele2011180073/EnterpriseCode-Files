@@ -88,6 +88,9 @@
     _mapView.centerCoordinate = userLocation.location.coordinate;
     _mapView.zoomLevel =18;
 }
+-(void)mapView:(BMKMapView *)mapView onClickedMapPoi:(BMKMapPoi *)mapPoi{
+    NSLog(@"mapPoi.text   %@",mapPoi.text);
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

@@ -50,6 +50,7 @@
     NSString *text=[_dataList objectAtIndex:indexPath.row];
     cell.textLabel.text=[NSString stringWithFormat:@"%@",text];
     cell.textLabel.numberOfLines=0;
+    cell.textLabel.textColor=[UIColor darkGrayColor];
     return cell;
 }
 

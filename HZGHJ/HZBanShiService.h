@@ -11,7 +11,8 @@
 @interface HZBanShiService : NSObject
 typedef void (^ReturnData)(NSDictionary *returnDic ,NSError *error);
 
-//获取列表内容
+// MARK: 办事指南 获取列表内容
 +(void)BanShiWithId:(NSString*)IsPId GetBlock:(ReturnData)GetContent;
+
 
 @end

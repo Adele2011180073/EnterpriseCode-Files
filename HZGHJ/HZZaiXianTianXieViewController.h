@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface HZZaiXianTianXieViewController : UIViewController
-
+@property(nonatomic,strong)UILabel *placehoderLabel1;
+@property(nonatomic,strong)UILabel *placehoderLabel2;
 @end

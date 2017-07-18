@@ -563,6 +563,7 @@
 		1F8C15C51ECD8DE300B3E022 /* 在线办事 */ = {
 			isa = PBXGroup;
 			children = (
+				1F8EDB2B1F1CB884009FF377 /* 获取数据 */,
 				1F73AEEA1EC1A91F00A1BE7E /* HZLocateViewController.h */,
 				1F73AEEB1EC1A91F00A1BE7E /* HZLocateViewController.m */,
 				1F7F9AFF1F03B3F50006F56C /* HZOptionViewController.h */,
@@ -596,10 +597,17 @@
 				1F7926CE1ECC75F80022B7F2 /* HZBanShiContenViewController.m */,
 				1F7E527D1ED7DBC100ABBA6A /* HZBanShiContenWebViewViewController.h */,
 				1F7E527E1ED7DBC100ABBA6A /* HZBanShiContenWebViewViewController.m */,
+			);
+			name = "办事指南";
+			sourceTree = "<group>";
+		};
+		1F8EDB2B1F1CB884009FF377 /* 获取数据 */ = {
+			isa = PBXGroup;
+			children = (
 				1F980C411ED6E7E9005B8A4F /* HZBanShiService.h */,
 				1F980C421ED6E7E9005B8A4F /* HZBanShiService.m */,
 			);
-			name = "办事指南";
+			name = "获取数据";
 			sourceTree = "<group>";
 		};
 		1FF89EA81DFE4EC7007A4597 /* 预约 */ = {
