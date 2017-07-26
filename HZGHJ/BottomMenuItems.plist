@@ -4,7 +4,7 @@
 <array>
 	<dict>
 		<key>title</key>
-		<string>在线预约</string>
+		<string>咨询预约</string>
 		<key>image</key>
 		<string>icon_zaixianyuyue</string>
 		<key>controller</key>

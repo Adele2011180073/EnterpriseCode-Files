@@ -11,6 +11,8 @@
 #import "HZLoginService.h"
 #import "HZURL.h"
 #import "UIView+Toast.h"
+#import "HZLoginViewController.h"
+
 @interface HZNewsDetailViewController ()<UIGestureRecognizerDelegate>{
     NSDictionary *returnData;
     NSDictionary *totalDic;
@@ -43,7 +45,12 @@
             [self addSubviews];
         }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
             UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            UIAlertAction *okAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                HZLoginViewController *login=[[HZLoginViewController alloc]init];
+                [self.navigationController pushViewController:login animated:YES];
+            }];
+            [alert addAction:okAlert];
+            UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             }];
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];
@@ -74,7 +81,7 @@
         label.font=[UIFont systemFontOfSize:16];
         [self.view addSubview:label];
         
-        UIView *topBgView=[[UIView alloc]initWithFrame:CGRectMake(0, 40+120*i, Width, 40)];
+        UIScrollView *topBgView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 40+120*i, Width, 40)];
         topBgView.tag=20+i;
         topBgView.backgroundColor=[UIColor whiteColor];
         [self.view addSubview:topBgView];
@@ -99,7 +106,12 @@
             //别忘了把frame给回label，如果用xib加了约束的话可以只改一个约束的值
             label.frame=CGRectMake(30, 40+view.frame.size.height, 100, 40);
             text.frame = CGRectMake(10, 0, expectSize.width, expectSize.height+20);
+            if (expectSize.height+20>Height-64-140) {
+                topBgView.frame=CGRectMake(0, 80+view.frame.size.height, Width, Height-64-140);
+                  topBgView.contentSize=CGSizeMake(Width, expectSize.height+20);
+            }else{
             topBgView.frame=CGRectMake(0, 80+view.frame.size.height, Width, expectSize.height+20);
+            }
         }else{
             text.numberOfLines=0;
             text.lineBreakMode = NSLineBreakByTruncatingTail;

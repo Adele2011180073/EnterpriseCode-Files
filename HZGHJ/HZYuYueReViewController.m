@@ -11,6 +11,7 @@
 #import "HZLoginService.h"
 #import "HZYuYueViewController.h"
 #import "UIView+Toast.h"
+#import "HZLoginViewController.h"
 @interface HZYuYueReViewController ()<UIGestureRecognizerDelegate,UITextFieldDelegate>{
     UIScrollView *bgScrollView;
 //    NSMutableArray *projectNameArray;
@@ -80,7 +81,12 @@
             [self addSubviews];
         }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
             UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            UIAlertAction *okAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                HZLoginViewController *login=[[HZLoginViewController alloc]init];
+                [self.navigationController pushViewController:login animated:YES];
+            }];
+            [alert addAction:okAlert];
+            UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             }];
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];

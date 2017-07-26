@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface HZLocateDetailViewController : UIViewController
+@property(nonatomic,retain)NSString *qlsxcode;
+@property(nonatomic,assign)int PCODE;
 
 @end

@@ -64,6 +64,7 @@
 		1F49E4191E24FC600019E664 /* img_default.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F49E4161E24FC600019E664 /* img_default.png */; };
 		1F49E41A1E24FC600019E664 /* img_default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F49E4171E24FC600019E664 /* img_default@2x.png */; };
 		1F49E41B1E24FC600019E664 /* img_default@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F49E4181E24FC600019E664 /* img_default@3x.png */; };
+		1F5154F81F1E12AE00B4A5F8 /* must_pic.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F5154F71F1E12AE00B4A5F8 /* must_pic.png */; };
 		1F717A251DFF9BDC00833463 /* HZPictureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F717A241DFF9BDC00833463 /* HZPictureViewController.m */; };
 		1F717A291DFFA58A00833463 /* HZNoticeDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F717A271DFFA58A00833463 /* HZNoticeDetailViewController.m */; };
 		1F717A2A1DFFA58A00833463 /* HZNoticeDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F717A281DFFA58A00833463 /* HZNoticeDetailViewController.xib */; };
@@ -84,6 +85,13 @@
 		1F7E527F1ED7DBC100ABBA6A /* HZBanShiContenWebViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7E527E1ED7DBC100ABBA6A /* HZBanShiContenWebViewViewController.m */; };
 		1F7ED60D1EF7A96100B87395 /* MBProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F7ED60C1EF7A96100B87395 /* MBProgressHUD.framework */; };
 		1F7F9B011F03B3F50006F56C /* HZOptionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F7F9B001F03B3F50006F56C /* HZOptionViewController.m */; };
+		1F8B3FF41F26EF7500CF557A /* HZRegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8B3FF31F26EF7500CF557A /* HZRegisterViewController.m */; };
+		1F8B3FFC1F27270100CF557A /* UITextView+PinchZoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8B3FF71F27270100CF557A /* UITextView+PinchZoom.m */; };
+		1F8B3FFD1F27270100CF557A /* UITextView+PlaceHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8B3FF91F27270100CF557A /* UITextView+PlaceHolder.m */; };
+		1F8B3FFE1F27270100CF557A /* UITextView+Select.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8B3FFB1F27270100CF557A /* UITextView+Select.m */; };
+		1F8B40011F2733A700CF557A /* HZRegistCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8B40001F2733A700CF557A /* HZRegistCell.m */; };
+		1F8B40051F2737ED00CF557A /* HZRegisterCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8B40031F2737ED00CF557A /* HZRegisterCell.m */; };
+		1F8B40061F2737ED00CF557A /* HZRegisterCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1F8B40041F2737ED00CF557A /* HZRegisterCell.xib */; };
 		1F8B89191DF6A02500087C6B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8B89181DF6A02500087C6B /* main.m */; };
 		1F8B891C1DF6A02500087C6B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8B891B1DF6A02500087C6B /* AppDelegate.m */; };
 		1F8B891F1DF6A02500087C6B /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1F8B891E1DF6A02500087C6B /* ViewController.mm */; };
@@ -104,6 +112,9 @@
 		1F9641501ED98E7700F900F1 /* icon_zaixianbanshi@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F96414D1ED98E7700F900F1 /* icon_zaixianbanshi@3x.png */; };
 		1F980C431ED6E7E9005B8A4F /* HZBanShiService.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F980C421ED6E7E9005B8A4F /* HZBanShiService.m */; };
 		1F9A9CBF1E20DA4100E56AFF /* HZYuYueReViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9A9CBE1E20DA4100E56AFF /* HZYuYueReViewController.m */; };
+		1F9AF8421F284166003E309E /* BottomMenuItems2.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1F9AF8411F284166003E309E /* BottomMenuItems2.plist */; };
+		1F9AF8481F288E57003E309E /* HZZiXunDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9AF8471F288E57003E309E /* HZZiXunDetailViewController.m */; };
+		1F9AF84B1F28A08E003E309E /* HZZiXunReViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9AF84A1F28A08E003E309E /* HZZiXunReViewController.m */; };
 		1F9D6A0B1F0B44D000F3035F /* HZZaiXianTianXieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9D6A0A1F0B44D000F3035F /* HZZaiXianTianXieViewController.m */; };
 		1F9D6A0E1F0B451C00F3035F /* HZYangBiaoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9D6A0D1F0B451C00F3035F /* HZYangBiaoViewController.m */; };
 		1F9D6A111F0BA0C000F3035F /* HZIllustrateViewController1.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F9D6A101F0BA0C000F3035F /* HZIllustrateViewController1.m */; };
@@ -223,6 +234,7 @@
 		1F49E4161E24FC600019E664 /* img_default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = img_default.png; sourceTree = "<group>"; };
 		1F49E4171E24FC600019E664 /* img_default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_default@2x.png"; sourceTree = "<group>"; };
 		1F49E4181E24FC600019E664 /* img_default@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img_default@3x.png"; sourceTree = "<group>"; };
+		1F5154F71F1E12AE00B4A5F8 /* must_pic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = must_pic.png; sourceTree = "<group>"; };
 		1F717A231DFF9BDC00833463 /* HZPictureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZPictureViewController.h; sourceTree = "<group>"; };
 		1F717A241DFF9BDC00833463 /* HZPictureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZPictureViewController.m; sourceTree = "<group>"; };
 		1F717A261DFFA58A00833463 /* HZNoticeDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZNoticeDetailViewController.h; sourceTree = "<group>"; };
@@ -254,6 +266,19 @@
 		1F7ED60C1EF7A96100B87395 /* MBProgressHUD.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MBProgressHUD.framework; path = "Pods/../build/Release-iphoneos/MBProgressHUD/MBProgressHUD.framework"; sourceTree = "<group>"; };
 		1F7F9AFF1F03B3F50006F56C /* HZOptionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZOptionViewController.h; sourceTree = "<group>"; };
 		1F7F9B001F03B3F50006F56C /* HZOptionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZOptionViewController.m; sourceTree = "<group>"; };
+		1F8B3FF21F26EF7500CF557A /* HZRegisterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZRegisterViewController.h; sourceTree = "<group>"; };
+		1F8B3FF31F26EF7500CF557A /* HZRegisterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZRegisterViewController.m; sourceTree = "<group>"; };
+		1F8B3FF61F27270100CF557A /* UITextView+PinchZoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+PinchZoom.h"; sourceTree = "<group>"; };
+		1F8B3FF71F27270100CF557A /* UITextView+PinchZoom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+PinchZoom.m"; sourceTree = "<group>"; };
+		1F8B3FF81F27270100CF557A /* UITextView+PlaceHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+PlaceHolder.h"; sourceTree = "<group>"; };
+		1F8B3FF91F27270100CF557A /* UITextView+PlaceHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+PlaceHolder.m"; sourceTree = "<group>"; };
+		1F8B3FFA1F27270100CF557A /* UITextView+Select.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+Select.h"; sourceTree = "<group>"; };
+		1F8B3FFB1F27270100CF557A /* UITextView+Select.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+Select.m"; sourceTree = "<group>"; };
+		1F8B3FFF1F2733A700CF557A /* HZRegistCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZRegistCell.h; sourceTree = "<group>"; };
+		1F8B40001F2733A700CF557A /* HZRegistCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZRegistCell.m; sourceTree = "<group>"; };
+		1F8B40021F2737ED00CF557A /* HZRegisterCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZRegisterCell.h; sourceTree = "<group>"; };
+		1F8B40031F2737ED00CF557A /* HZRegisterCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZRegisterCell.m; sourceTree = "<group>"; };
+		1F8B40041F2737ED00CF557A /* HZRegisterCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HZRegisterCell.xib; sourceTree = "<group>"; };
 		1F8B89141DF6A02500087C6B /* HZGHJ.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HZGHJ.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F8B89181DF6A02500087C6B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1F8B891A1DF6A02500087C6B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -281,6 +306,12 @@
 		1F980C421ED6E7E9005B8A4F /* HZBanShiService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZBanShiService.m; sourceTree = "<group>"; };
 		1F9A9CBD1E20DA4100E56AFF /* HZYuYueReViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZYuYueReViewController.h; sourceTree = "<group>"; };
 		1F9A9CBE1E20DA4100E56AFF /* HZYuYueReViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZYuYueReViewController.m; sourceTree = "<group>"; };
+		1F9AF8411F284166003E309E /* BottomMenuItems2.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BottomMenuItems2.plist; sourceTree = "<group>"; };
+		1F9AF8451F288827003E309E /* HZGHJ.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HZGHJ.entitlements; sourceTree = "<group>"; };
+		1F9AF8461F288E57003E309E /* HZZiXunDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZZiXunDetailViewController.h; sourceTree = "<group>"; };
+		1F9AF8471F288E57003E309E /* HZZiXunDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZZiXunDetailViewController.m; sourceTree = "<group>"; };
+		1F9AF8491F28A08E003E309E /* HZZiXunReViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZZiXunReViewController.h; sourceTree = "<group>"; };
+		1F9AF84A1F28A08E003E309E /* HZZiXunReViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZZiXunReViewController.m; sourceTree = "<group>"; };
 		1F9D6A091F0B44D000F3035F /* HZZaiXianTianXieViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZZaiXianTianXieViewController.h; sourceTree = "<group>"; };
 		1F9D6A0A1F0B44D000F3035F /* HZZaiXianTianXieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZZaiXianTianXieViewController.m; sourceTree = "<group>"; };
 		1F9D6A0C1F0B451C00F3035F /* HZYangBiaoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZYangBiaoViewController.h; sourceTree = "<group>"; };
@@ -386,6 +417,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1F8B3FF11F26EF5F00CF557A /* 注册 */ = {
+			isa = PBXGroup;
+			children = (
+				1F8B3FF21F26EF7500CF557A /* HZRegisterViewController.h */,
+				1F8B3FF31F26EF7500CF557A /* HZRegisterViewController.m */,
+				1F8B40021F2737ED00CF557A /* HZRegisterCell.h */,
+				1F8B40031F2737ED00CF557A /* HZRegisterCell.m */,
+				1F8B40041F2737ED00CF557A /* HZRegisterCell.xib */,
+				1F8B3FFF1F2733A700CF557A /* HZRegistCell.h */,
+				1F8B40001F2733A700CF557A /* HZRegistCell.m */,
+			);
+			name = "注册";
+			sourceTree = "<group>";
+		};
+		1F8B3FF51F27270100CF557A /* UITextView */ = {
+			isa = PBXGroup;
+			children = (
+				1F8B3FF61F27270100CF557A /* UITextView+PinchZoom.h */,
+				1F8B3FF71F27270100CF557A /* UITextView+PinchZoom.m */,
+				1F8B3FF81F27270100CF557A /* UITextView+PlaceHolder.h */,
+				1F8B3FF91F27270100CF557A /* UITextView+PlaceHolder.m */,
+				1F8B3FFA1F27270100CF557A /* UITextView+Select.h */,
+				1F8B3FFB1F27270100CF557A /* UITextView+Select.m */,
+			);
+			path = UITextView;
+			sourceTree = "<group>";
+		};
 		1F8B890B1DF6A02500087C6B = {
 			isa = PBXGroup;
 			children = (
@@ -407,6 +465,7 @@
 		1F8B89161DF6A02500087C6B /* HZGHJ */ = {
 			isa = PBXGroup;
 			children = (
+				1F9AF8451F288827003E309E /* HZGHJ.entitlements */,
 				1F8B891A1DF6A02500087C6B /* AppDelegate.h */,
 				1F8B891B1DF6A02500087C6B /* AppDelegate.m */,
 				1FB1538C1E2DBFE600A24C07 /* UIView+Toast.h */,
@@ -468,7 +527,9 @@
 				1FCDC0241DFA5CB7005E5587 /* HZPersonalViewController.xib */,
 				1FF89EC41DFEACF3007A4597 /* HZChangePwViewController.h */,
 				1FF89EC51DFEACF3007A4597 /* HZChangePwViewController.m */,
+				1F8B3FF11F26EF5F00CF557A /* 注册 */,
 				1F8B89201DF6A02500087C6B /* Main.storyboard */,
+				1F8B3FF51F27270100CF557A /* UITextView */,
 				1F8B89231DF6A02500087C6B /* Assets.xcassets */,
 				1F8B89251DF6A02500087C6B /* LaunchScreen.storyboard */,
 				1F8B89281DF6A02500087C6B /* Info.plist */,
@@ -480,20 +541,77 @@
 		1F8B89171DF6A02500087C6B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				1F9AF8441F288585003E309E /* iconfont */,
+				1F9AF8431F28853C003E309E /* Images */,
 				1FA0CFD41EE021BF00269EBD /* mapapi.bundle */,
+				1FAAC9AB1EF61CB900E9B19E /* BottomMenuItems.plist */,
+				1FCDBFFD1DFA5091005E5587 /* BottomMenuItems1.plist */,
+				1F9AF8411F284166003E309E /* BottomMenuItems2.plist */,
+				1F340C5D1DF80746003937DF /* .DS_Store */,
+				1F8B89181DF6A02500087C6B /* main.m */,
+				1F340C3E1DF7A180003937DF /* HZURL.h */,
+				1FF89EA41DFE3743007A4597 /* PrefixHeader.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1F8C15C51ECD8DE300B3E022 /* 在线办事 */ = {
+			isa = PBXGroup;
+			children = (
+				1F8EDB2B1F1CB884009FF377 /* 获取数据 */,
+				1F73AEEA1EC1A91F00A1BE7E /* HZLocateViewController.h */,
+				1F73AEEB1EC1A91F00A1BE7E /* HZLocateViewController.m */,
+				1F7F9AFF1F03B3F50006F56C /* HZOptionViewController.h */,
+				1F7F9B001F03B3F50006F56C /* HZOptionViewController.m */,
+				1F73AEEF1EC1BA5B00A1BE7E /* HZLocateDetailViewController.h */,
+				1F73AEF01EC1BA5B00A1BE7E /* HZLocateDetailViewController.m */,
+				1F73AEF21EC1C76F00A1BE7E /* HZLocateContentViewController.h */,
+				1F73AEF31EC1C76F00A1BE7E /* HZLocateContentViewController.m */,
+				1F73AEEC1EC1A91F00A1BE7E /* HZLocateViewController.xib */,
+				1F7926D01ECC76700022B7F2 /* HZMapServiceViewController.h */,
+				1F7926D11ECC76700022B7F2 /* HZMapServiceViewController.m */,
+				1F2EAED21EE16D7900B5F8B8 /* HZIllustrateViewController.h */,
+				1F2EAED31EE16D7900B5F8B8 /* HZIllustrateViewController.m */,
+				1F9D6A091F0B44D000F3035F /* HZZaiXianTianXieViewController.h */,
+				1F9D6A0A1F0B44D000F3035F /* HZZaiXianTianXieViewController.m */,
+				1F9D6A0C1F0B451C00F3035F /* HZYangBiaoViewController.h */,
+				1F9D6A0D1F0B451C00F3035F /* HZYangBiaoViewController.m */,
+				1F9D6A0F1F0BA0C000F3035F /* HZIllustrateViewController1.h */,
+				1F9D6A101F0BA0C000F3035F /* HZIllustrateViewController1.m */,
+			);
+			name = "在线办事";
+			sourceTree = "<group>";
+		};
+		1F8C15E21ECDA76400B3E022 /* 办事指南 */ = {
+			isa = PBXGroup;
+			children = (
+				1FCDC0131DFA5C60005E5587 /* HZBanShiViewController.h */,
+				1FCDC0141DFA5C60005E5587 /* HZBanShiViewController.m */,
+				1FCDC0151DFA5C60005E5587 /* HZBanShiViewController.xib */,
+				1F7926CD1ECC75F80022B7F2 /* HZBanShiContenViewController.h */,
+				1F7926CE1ECC75F80022B7F2 /* HZBanShiContenViewController.m */,
+				1F7E527D1ED7DBC100ABBA6A /* HZBanShiContenWebViewViewController.h */,
+				1F7E527E1ED7DBC100ABBA6A /* HZBanShiContenWebViewViewController.m */,
+			);
+			name = "办事指南";
+			sourceTree = "<group>";
+		};
+		1F8EDB2B1F1CB884009FF377 /* 获取数据 */ = {
+			isa = PBXGroup;
+			children = (
+				1F980C411ED6E7E9005B8A4F /* HZBanShiService.h */,
+				1F980C421ED6E7E9005B8A4F /* HZBanShiService.m */,
+			);
+			name = "获取数据";
+			sourceTree = "<group>";
+		};
+		1F9AF8431F28853C003E309E /* Images */ = {
+			isa = PBXGroup;
+			children = (
 				1F49E4161E24FC600019E664 /* img_default.png */,
 				1F49E4171E24FC600019E664 /* img_default@2x.png */,
 				1F49E4181E24FC600019E664 /* img_default@3x.png */,
-				1FAAC9AB1EF61CB900E9B19E /* BottomMenuItems.plist */,
-				1FCDBFFD1DFA5091005E5587 /* BottomMenuItems1.plist */,
-				1FF89EB61DFE9B1F007A4597 /* demo.css */,
-				1FF89EB71DFE9B1F007A4597 /* demo.html */,
-				1FF89EB81DFE9B1F007A4597 /* iconfont.css */,
-				1FF89EB91DFE9B1F007A4597 /* iconfont.eot */,
-				1FF89EBA1DFE9B1F007A4597 /* iconfont.svg */,
-				1FF89EBB1DFE9B1F007A4597 /* iconfont.ttf */,
-				1FF89EBC1DFE9B1F007A4597 /* iconfont.woff */,
-				1F340C5D1DF80746003937DF /* .DS_Store */,
+				1F5154F71F1E12AE00B4A5F8 /* must_pic.png */,
 				1FF89EB11DFE8709007A4597 /* title_bgg.png */,
 				1F340C5E1DF80746003937DF /* 登录页面@3x.png */,
 				1F340C5F1DF80746003937DF /* 主页@3x.png */,
@@ -553,61 +671,22 @@
 				1F340C8A1DF80746003937DF /* user.png */,
 				1F340C8B1DF80746003937DF /* user@2x.png */,
 				1F340C8C1DF80746003937DF /* user@3x.png */,
-				1F8B89181DF6A02500087C6B /* main.m */,
-				1F340C3E1DF7A180003937DF /* HZURL.h */,
-				1FF89EA41DFE3743007A4597 /* PrefixHeader.pch */,
 			);
-			name = "Supporting Files";
+			name = Images;
 			sourceTree = "<group>";
 		};
-		1F8C15C51ECD8DE300B3E022 /* 在线办事 */ = {
+		1F9AF8441F288585003E309E /* iconfont */ = {
 			isa = PBXGroup;
 			children = (
-				1F8EDB2B1F1CB884009FF377 /* 获取数据 */,
-				1F73AEEA1EC1A91F00A1BE7E /* HZLocateViewController.h */,
-				1F73AEEB1EC1A91F00A1BE7E /* HZLocateViewController.m */,
-				1F7F9AFF1F03B3F50006F56C /* HZOptionViewController.h */,
-				1F7F9B001F03B3F50006F56C /* HZOptionViewController.m */,
-				1F73AEEF1EC1BA5B00A1BE7E /* HZLocateDetailViewController.h */,
-				1F73AEF01EC1BA5B00A1BE7E /* HZLocateDetailViewController.m */,
-				1F73AEF21EC1C76F00A1BE7E /* HZLocateContentViewController.h */,
-				1F73AEF31EC1C76F00A1BE7E /* HZLocateContentViewController.m */,
-				1F73AEEC1EC1A91F00A1BE7E /* HZLocateViewController.xib */,
-				1F7926D01ECC76700022B7F2 /* HZMapServiceViewController.h */,
-				1F7926D11ECC76700022B7F2 /* HZMapServiceViewController.m */,
-				1F2EAED21EE16D7900B5F8B8 /* HZIllustrateViewController.h */,
-				1F2EAED31EE16D7900B5F8B8 /* HZIllustrateViewController.m */,
-				1F9D6A091F0B44D000F3035F /* HZZaiXianTianXieViewController.h */,
-				1F9D6A0A1F0B44D000F3035F /* HZZaiXianTianXieViewController.m */,
-				1F9D6A0C1F0B451C00F3035F /* HZYangBiaoViewController.h */,
-				1F9D6A0D1F0B451C00F3035F /* HZYangBiaoViewController.m */,
-				1F9D6A0F1F0BA0C000F3035F /* HZIllustrateViewController1.h */,
-				1F9D6A101F0BA0C000F3035F /* HZIllustrateViewController1.m */,
+				1FF89EB61DFE9B1F007A4597 /* demo.css */,
+				1FF89EB71DFE9B1F007A4597 /* demo.html */,
+				1FF89EB81DFE9B1F007A4597 /* iconfont.css */,
+				1FF89EB91DFE9B1F007A4597 /* iconfont.eot */,
+				1FF89EBA1DFE9B1F007A4597 /* iconfont.svg */,
+				1FF89EBB1DFE9B1F007A4597 /* iconfont.ttf */,
+				1FF89EBC1DFE9B1F007A4597 /* iconfont.woff */,
 			);
-			name = "在线办事";
-			sourceTree = "<group>";
-		};
-		1F8C15E21ECDA76400B3E022 /* 办事指南 */ = {
-			isa = PBXGroup;
-			children = (
-				1FCDC0131DFA5C60005E5587 /* HZBanShiViewController.h */,
-				1FCDC0141DFA5C60005E5587 /* HZBanShiViewController.m */,
-				1FCDC0151DFA5C60005E5587 /* HZBanShiViewController.xib */,
-				1F7926CD1ECC75F80022B7F2 /* HZBanShiContenViewController.h */,
-				1F7926CE1ECC75F80022B7F2 /* HZBanShiContenViewController.m */,
-				1F7E527D1ED7DBC100ABBA6A /* HZBanShiContenWebViewViewController.h */,
-				1F7E527E1ED7DBC100ABBA6A /* HZBanShiContenWebViewViewController.m */,
-			);
-			name = "办事指南";
-			sourceTree = "<group>";
-		};
-		1F8EDB2B1F1CB884009FF377 /* 获取数据 */ = {
-			isa = PBXGroup;
-			children = (
-				1F980C411ED6E7E9005B8A4F /* HZBanShiService.h */,
-				1F980C421ED6E7E9005B8A4F /* HZBanShiService.m */,
-			);
-			name = "获取数据";
+			name = iconfont;
 			sourceTree = "<group>";
 		};
 		1FF89EA81DFE4EC7007A4597 /* 预约 */ = {
@@ -624,6 +703,10 @@
 				1FF89EAA1DFE4EF4007A4597 /* HAYuYueDetailViewController.m */,
 				1FDADE311E5B0A53001036DF /* HZYuYueDetailItemCell.h */,
 				1FDADE321E5B0A53001036DF /* HZYuYueDetailItemCell.m */,
+				1F9AF8461F288E57003E309E /* HZZiXunDetailViewController.h */,
+				1F9AF8471F288E57003E309E /* HZZiXunDetailViewController.m */,
+				1F9AF8491F28A08E003E309E /* HZZiXunReViewController.h */,
+				1F9AF84A1F28A08E003E309E /* HZZiXunReViewController.m */,
 				1F9A9CBD1E20DA4100E56AFF /* HZYuYueReViewController.h */,
 				1F9A9CBE1E20DA4100E56AFF /* HZYuYueReViewController.m */,
 				1FF89EAC1DFE6E80007A4597 /* HZYuYueDetailCell.h */,
@@ -699,6 +782,11 @@
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = 43588WFG92;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -734,6 +822,7 @@
 				1F340C9A1DF80746003937DF /* icon_banshizhinan@2x.png in Resources */,
 				1FF89EC31DFE9B1F007A4597 /* iconfont.woff in Resources */,
 				1F340C9D1DF80746003937DF /* icon_gerenzhongxin@2x.png in Resources */,
+				1F8B40061F2737ED00CF557A /* HZRegisterCell.xib in Resources */,
 				1F340CAF1DF80746003937DF /* icon_xiaoxitongzhi@2x.png in Resources */,
 				1F8B89271DF6A02500087C6B /* LaunchScreen.storyboard in Resources */,
 				1F340CA41DF80746003937DF /* icon_guochengshangbao@3x.png in Resources */,
@@ -754,6 +843,7 @@
 				1FF89EBD1DFE9B1F007A4597 /* demo.css in Resources */,
 				1FF89EBE1DFE9B1F007A4597 /* demo.html in Resources */,
 				1FA926101E038F1E004F6ED5 /* icon_yj.png in Resources */,
+				1F9AF8421F284166003E309E /* BottomMenuItems2.plist in Resources */,
 				1F340CC21DF808F9003937DF /* bg_top@3x.png in Resources */,
 				1FECFD291E02524000872544 /* addBtn_photo@2x.png in Resources */,
 				1F340CBA1DF80746003937DF /* user.png in Resources */,
@@ -794,6 +884,7 @@
 				1FCDC0211DFA5C85005E5587 /* HZNewsViewController.xib in Resources */,
 				1F717A2A1DFFA58A00833463 /* HZNoticeDetailViewController.xib in Resources */,
 				1F340CA21DF80746003937DF /* icon_guochengshangbao.png in Resources */,
+				1F5154F81F1E12AE00B4A5F8 /* must_pic.png in Resources */,
 				1F340C9F1DF80746003937DF /* icon_gongshidengji.png in Resources */,
 				1F340CA01DF80746003937DF /* icon_gongshidengji@2x.png in Resources */,
 				1F49E4191E24FC600019E664 /* img_default.png in Resources */,
@@ -878,13 +969,16 @@
 				1FF89EC91DFEB7D9007A4597 /* NoticeCell.m in Sources */,
 				1F8B891F1DF6A02500087C6B /* ViewController.mm in Sources */,
 				1F8B891C1DF6A02500087C6B /* AppDelegate.m in Sources */,
+				1F9AF8481F288E57003E309E /* HZZiXunDetailViewController.m in Sources */,
 				1FCDC01B1DFA5C73005E5587 /* HZNoticeViewController.m in Sources */,
 				1F73AEF11EC1BA5B00A1BE7E /* HZLocateDetailViewController.m in Sources */,
 				1FECFD251E02369400872544 /* HZNewsDetailViewController.m in Sources */,
 				1FF89EC61DFEACF3007A4597 /* HZChangePwViewController.m in Sources */,
 				1FCDC0021DFA5C1D005E5587 /* HZYuYueViewController.m in Sources */,
+				1F8B40011F2733A700CF557A /* HZRegistCell.m in Sources */,
 				1FCDC00C1DFA5C3F005E5587 /* HZShangBaoViewController.m in Sources */,
 				1F980C431ED6E7E9005B8A4F /* HZBanShiService.m in Sources */,
+				1F8B40051F2737ED00CF557A /* HZRegisterCell.m in Sources */,
 				1F34A6231E029367003462B8 /* HZJingDuDetailViewController.m in Sources */,
 				1F8B89191DF6A02500087C6B /* main.m in Sources */,
 				1F73AEED1EC1A91F00A1BE7E /* HZLocateViewController.m in Sources */,
@@ -903,20 +997,25 @@
 				1F7926D21ECC76700022B7F2 /* HZMapServiceViewController.m in Sources */,
 				1FCDC0251DFA5CB7005E5587 /* HZPersonalViewController.m in Sources */,
 				1F2EAED41EE16D7900B5F8B8 /* HZIllustrateViewController.m in Sources */,
+				1F8B3FFD1F27270100CF557A /* UITextView+PlaceHolder.m in Sources */,
 				1F9A9CBF1E20DA4100E56AFF /* HZYuYueReViewController.m in Sources */,
 				1FF89EAF1DFE6E80007A4597 /* HZYuYueDetailCell.m in Sources */,
 				1F9D6A0E1F0B451C00F3035F /* HZYangBiaoViewController.m in Sources */,
 				1FB1538E1E2DBFE600A24C07 /* UIView+Toast.m in Sources */,
 				1F34A6261E02CACA003462B8 /* GongShiListCell.m in Sources */,
 				1F9D6A0B1F0B44D000F3035F /* HZZaiXianTianXieViewController.m in Sources */,
+				1F8B3FF41F26EF7500CF557A /* HZRegisterViewController.m in Sources */,
 				1FDADE331E5B0A53001036DF /* HZYuYueDetailItemCell.m in Sources */,
 				1F8B89401DF6CB0100087C6B /* HZHomeViewController.m in Sources */,
+				1F9AF84B1F28A08E003E309E /* HZZiXunReViewController.m in Sources */,
 				1F7E527F1ED7DBC100ABBA6A /* HZBanShiContenWebViewViewController.m in Sources */,
 				1FCDC0111DFA5C52005E5587 /* HZGongShiViewController.m in Sources */,
 				1F717A2D1E0009EE00833463 /* HZProjectViewController.m in Sources */,
 				1FF89EAB1DFE4EF4007A4597 /* HAYuYueDetailViewController.m in Sources */,
 				1FF89EA71DFE4EB2007A4597 /* HZIYuYueViewController.m in Sources */,
 				1F340CC51DF8144C003937DF /* HZLoginService.m in Sources */,
+				1F8B3FFE1F27270100CF557A /* UITextView+Select.m in Sources */,
+				1F8B3FFC1F27270100CF557A /* UITextView+PinchZoom.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1041,6 +1140,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
+				CODE_SIGN_ENTITLEMENTS = HZGHJ/HZGHJ.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 43588WFG92;
 				ENABLE_BITCODE = NO;
@@ -1066,6 +1166,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
+				CODE_SIGN_ENTITLEMENTS = HZGHJ/HZGHJ.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = 43588WFG92;
 				ENABLE_BITCODE = NO;

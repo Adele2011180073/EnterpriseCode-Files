@@ -12,6 +12,8 @@
 #import "MBProgressHUD.h"
 #import "HZLoginService.h"
 #import "UIView+Toast.h"
+#import "HZLoginViewController.h"
+
 @interface HZNewsViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     UITableView *tableview;
@@ -28,6 +30,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
      self.navigationController.navigationBarHidden=NO;
+     self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStyleBordered target:nil action:nil];
     self.view.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
     self.title=@"消息公告";
     dataList=[[NSMutableArray alloc]init];
@@ -78,7 +81,12 @@
             
         }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
             UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            UIAlertAction *okAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                HZLoginViewController *login=[[HZLoginViewController alloc]init];
+                [self.navigationController pushViewController:login animated:YES];
+            }];
+            [alert addAction:okAlert];
+            UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             }];
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];

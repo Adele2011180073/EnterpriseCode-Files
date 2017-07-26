@@ -12,6 +12,8 @@
 #import "HZLoginService.h"
 #import "HZHomeViewController.h"
 #import "UIView+Toast.h"
+#import "HZRegisterViewController.h"
+
 @interface HZLoginViewController ()
 {
     BOOL isRemember;
@@ -27,21 +29,7 @@
     self.view.backgroundColor=[UIColor colorWithRed:247/255.0 green:247/255.0 blue:247/255.0 alpha:1.0];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
      self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor], NSForegroundColorAttributeName, nil];
-    NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
-    if ([def boolForKey:@"remember"]==YES) {
-        isRemember=YES;
-        NSString *username=[def objectForKey:@"username"];
-        NSString *passwd=[def objectForKey:@"passwd"];
-        self.userText.userInteractionEnabled=NO;
-        self.passwdText.userInteractionEnabled=NO;
-        self.userText.textColor=[UIColor grayColor];
-        self.passwdText.textColor=[UIColor grayColor];
-        self.userText.text=[NSString stringWithFormat:@"%@",username];
-        self.passwdText.text=[NSString stringWithFormat:@"%@",passwd];
-        [self.rememberBtn setBackgroundImage:[UIImage imageNamed:@"checkbox_fill"] forState:UIControlStateNormal];
-    }else{
-        [self.rememberBtn setBackgroundImage:[UIImage imageNamed:@"checkbox"] forState:UIControlStateNormal];
-    }
+
 }
 
 - (IBAction)remember:(id)sender {
@@ -71,6 +59,22 @@
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden=YES;
+    NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
+    if ([def boolForKey:@"remember"]==YES) {
+        isRemember=YES;
+        NSString *username=[def objectForKey:@"username"];
+        NSString *passwd=[def objectForKey:@"passwd"];
+        self.userText.userInteractionEnabled=NO;
+        self.passwdText.userInteractionEnabled=NO;
+        self.userText.textColor=[UIColor grayColor];
+        self.passwdText.textColor=[UIColor grayColor];
+        self.userText.text=[NSString stringWithFormat:@"%@",username];
+        self.passwdText.text=[NSString stringWithFormat:@"%@",passwd];
+        [self.rememberBtn setBackgroundImage:[UIImage imageNamed:@"checkbox_fill"] forState:UIControlStateNormal];
+    }else{
+        [self.rememberBtn setBackgroundImage:[UIImage imageNamed:@"checkbox"] forState:UIControlStateNormal];
+    }
+
 }
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     [self.view endEditing:YES];
@@ -97,6 +101,7 @@
             [ def setObject:[[returnDic objectForKey:@"obj"]objectForKey:@"userid"] forKey:@"userid"];
             [ def setObject:[[returnDic objectForKey:@"obj"]objectForKey:@"userid"] forKey:@"phone"];
            [def setObject:[[[returnDic objectForKey:@"obj"]objectForKey:@"dbAConstructionunit"]objectForKey:@"name"]  forKey:@"department"];
+                 [def setObject:[[[returnDic objectForKey:@"obj"]objectForKey:@"dbAConstructionunit"]objectForKey:@"id"]  forKey:@"companyid"];
                 NSData *data =    [NSJSONSerialization dataWithJSONObject:returnDic options:NSJSONWritingPrettyPrinted error:nil];
                 [def setObject:data forKey:@"info"];
                 [def synchronize];
@@ -122,6 +127,10 @@
             [self.view makeToast:@"登录超时"];
         }
     }];
+}
+- (IBAction)regist:(id)sender {
+    HZRegisterViewController  *regist=[[HZRegisterViewController alloc]init];
+    [self.navigationController pushViewController:regist animated:YES];
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

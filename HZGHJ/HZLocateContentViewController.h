@@ -10,4 +10,7 @@
 
 @interface HZLocateContentViewController : UIViewController
 @property(nonatomic,strong)UITableView *bgtableview;
+@property(nonatomic,retain)NSString *qlsxcode;
+@property(nonatomic,assign)int PCODE;
+
 @end

@@ -20,6 +20,7 @@
     UITableView *tableview;
     UIView *_searchView;//查询页面
     UISegmentedControl *segmented;
+    NSArray *qlsxcodeArray;
     
    }
 
@@ -37,6 +38,7 @@
     self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStyleBordered target:nil action:nil];
     self.title=@"在线办事";
     
+    qlsxcodeArray=[[NSArray alloc]initWithObjects:@"EAF31D8225045AE8CFA4E04C961F5D86",@"1FE087B8241745F16C0133ABB4832B8C",@"06C6B52BF5142FB69BA0113DFD08C77B",@"0496B51F3AB9B5135F85F31B8F255857",@"716c0ebb-d774-42f5-84da-54b0b143bc06",@"c0865333-0cbd-4440-86da-3386defefdba",@"0ef7e0ce-bb77-4979-8cc3-166d08712b96",@"b8e6c1ea-6f89-4a2d-af17-78183b3e8a9f", nil];
      dataList=[[NSMutableArray alloc]initWithObjects:@"建设项目选址审批：一般建设项目新建、基本变更（选址位置、用地规模、建设规模）",@"建设项目选址审批：一般建设项目证书失效重新核发",@"建设项目选址审批：一般建设项目简易变更（项目名称、建设单位）",@"建设项目选址审批：一般建设项目延期", @"建设用地规划许可",@"临时建设用地规划许可",@"规划条件审定",@"规划条件变更审批",nil];
     NSArray *titleArray=@[@"在线申请",@"进度查询"];
     segmented=[[UISegmentedControl alloc]initWithItems:titleArray];
@@ -58,9 +60,7 @@
     [self.view addSubview:tableview];
 }
 -(void)getResourceData{
-    [HZLoginService BanShiWithAndBlock:^(NSDictionary *returnDic, NSError *error) {
-        
-    }];
+  
 }
 //MARK:分段选择
 -(void)choseSeg:(UISegmentedControl *)segmented{
@@ -96,7 +96,8 @@
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     HZOptionViewController *details=[[HZOptionViewController alloc]init];
-   
+    details.qlsxcode=[qlsxcodeArray objectAtIndex:indexPath.row];
+    details.PCODE=indexPath.row;
     [self.navigationController pushViewController:details animated:YES];
 }
 

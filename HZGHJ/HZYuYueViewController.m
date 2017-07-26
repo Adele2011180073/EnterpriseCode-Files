@@ -15,6 +15,9 @@
 #import "HAYuYueDetailViewController.h"
 #import "HZYuYueDetailCell.h"
 #import "UIView+Toast.h"
+#import "HZLoginViewController.h"
+#import "HZZiXunDetailViewController.h"
+
 
 @interface HZYuYueViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -35,11 +38,11 @@
     self.navigationController.navigationBarHidden=NO;
     self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStyleBordered target:nil action:nil];
     self.view.backgroundColor=[UIColor colorWithRed:247/255.0 green:247/255.0 blue:247/255.0 alpha:1.0];
-    self.title=@"在线预约";
+    self.title=@"咨询预约";
     pos = [[UIButton alloc] initWithFrame                                                                      :CGRectMake(15, 5, 80, 20)];
     [pos setTitleColor: [UIColor whiteColor] forState:UIControlStateNormal];
     [pos addTarget:self action:@selector(IYuYue) forControlEvents:UIControlEventTouchUpInside];
-    [pos setTitle:@"我要预约" forState:UIControlStateNormal];
+    [pos setTitle:@"办理" forState:UIControlStateNormal];
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:pos];
     self.navigationItem.rightBarButtonItem = leftItem;
 
@@ -48,14 +51,14 @@
     tableview=[[UITableView alloc]initWithFrame:CGRectMake(0, 55, Width, Height-44-55)];
     [tableview registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     tableview.rowHeight=160;
-    tableview.backgroundColor=[UIColor whiteColor];
+    tableview.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
     tableview.delegate=self;
     tableview.separatorColor=[UIColor clearColor];
     tableview.dataSource=self;
     tableview.tableFooterView = [[UIView alloc] init];
     [self.view addSubview:tableview];
     [self getDataSource];
-    NSArray *titleArray=@[@"在线预约",@"我的预约"];
+    NSArray *titleArray=@[@"咨询预约",@"我的咨询预约"];
     segmented=[[UISegmentedControl alloc]initWithItems:titleArray];
     segmented.frame=CGRectMake(5, 5, Width-10, 40);
     segmented.selectedSegmentIndex=0;
@@ -107,11 +110,16 @@
             NSData *data =    [NSJSONSerialization dataWithJSONObject:returnDic options:NSJSONWritingPrettyPrinted error:nil];
             NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
             [tableview reloadData];
-            NSLog(@"预约列表    %@  %@",str,returnDic);
+            printf("预约列表 %s\n",[[NSString stringWithFormat:@"%@",str]UTF8String]);
 
         }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
             UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            UIAlertAction *okAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                HZLoginViewController *login=[[HZLoginViewController alloc]init];
+                [self.navigationController pushViewController:login animated:YES];
+            }];
+            [alert addAction:okAlert];
+            UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             }];
             [alert addAction:cancelAlert];
             [self presentViewController:alert animated:YES completion:nil];
@@ -137,7 +145,12 @@
 
             }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
                 UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                UIAlertAction *okAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    HZLoginViewController *login=[[HZLoginViewController alloc]init];
+                    [self.navigationController pushViewController:login animated:YES];
+                }];
+                [alert addAction:okAlert];
+                UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 }];
                 [alert addAction:cancelAlert];
                 [self presentViewController:alert animated:YES completion:nil];
@@ -163,9 +176,10 @@
         cell=[[UITableViewCell alloc]init];
     }
     cell.selectionStyle=UITableViewCellSelectionStyleNone;
+    cell.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
     UIView* bgView=[[UIView alloc]initWithFrame:CGRectMake(10, 5, Width-20, 150)];
-    bgView.backgroundColor=[UIColor colorWithRed:247/255.0 green:247/255.0 blue:247/255.0 alpha:1];
-    bgView.layer.borderWidth=1;
+    bgView.backgroundColor=[UIColor whiteColor];
+    bgView.layer.borderWidth=0.5;
     bgView.layer.cornerRadius=5;
     bgView.layer.borderColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1].CGColor;
     [cell.contentView addSubview:bgView];
@@ -195,12 +209,12 @@
    timeTitle.textAlignment=NSTextAlignmentLeft;
    timeTitle.font=[UIFont systemFontOfSize:15];
     [bgView addSubview:timeTitle];
-   UILabel*statusLabel=[[UILabel alloc]initWithFrame:CGRectMake(110, 116, 80, 20)];
+   UILabel*statusLabel=[[UILabel alloc]initWithFrame:CGRectMake(90, 116, 100, 20)];
    statusLabel.textAlignment=NSTextAlignmentLeft;
    statusLabel.font=[UIFont systemFontOfSize:15];
    statusLabel.textColor=[UIColor colorWithRed:34/255.0 green:164/255.0 blue:255/255.0 alpha:1];
    [bgView addSubview:statusLabel];
-   UILabel*subLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, 116, 100, 20)];
+   UILabel*subLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, 116, 80, 20)];
    subLabel.text=@"预约状态";
     subLabel.textColor=[UIColor darkGrayColor];
    subLabel.textAlignment=NSTextAlignmentLeft;
@@ -208,27 +222,58 @@
     [bgView addSubview:subLabel];
     
     NSDictionary *dic=[dataList objectAtIndex:indexPath.row];
+    if ([[dic objectForKey:@"constructionounitid"]isEqualToString:@"zzabcdef123456"]) {
+        titleLabel.text=[NSString stringWithFormat:@"咨询项目  %@",[dic objectForKey:@"projectName"]];
+        subTitle.text=[NSString stringWithFormat:@"提交分局  %@",[dic objectForKey:@"hostdepartment"]];
+        nameTitle.frame=CGRectMake(10, 65, Width-40, 25);
+        timeTitle.frame=CGRectMake(10, 90, Width-40, 25);
+        nameTitle.text=[NSString stringWithFormat:@"提交人  %@",[dic objectForKey:@"username"]];
+            NSString*str=[dic objectForKey:@"createtime"];//时间戳
+            NSDate*detaildate=[NSDate dateWithTimeIntervalSince1970:[str integerValue]/1000];
+            //实例化一个NSDateFormatter对象
+            NSDateFormatter*dateFormatter = [[NSDateFormatter alloc]init];
+            //设定时间格式,这里可以设置成自己需要的格式
+            [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+            NSString*currentDateStr = [dateFormatter stringFromDate:detaildate];
+        timeTitle.text=[NSString stringWithFormat:@"提交时间  %@",currentDateStr];
+        subLabel.text=@"状态";
+        statusLabel.text=[NSString stringWithFormat:@"%@",[dic objectForKey:@"status"]];
+    }else{
     titleLabel.text=[NSString stringWithFormat:@"预约项目  %@",[dic objectForKey:@"projectName"]];
     subTitle.text=[NSString stringWithFormat:@"办理事项  %@",[dic objectForKey:@"nodeName"]];
     nameTitle.text=[NSString stringWithFormat:@"预约人  %@",[dic objectForKey:@"username"]];
     phoneLabel.text=[NSString stringWithFormat:@"电话  %@",[dic objectForKey:@"userphone"]];
     timeTitle.text=[NSString stringWithFormat:@"预约时间  %@",[dic objectForKey:@"timeofappointment"]];
     statusLabel.text=[NSString stringWithFormat:@"%@",[dic objectForKey:@"status"]];
+    }
     
     return cell;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSDictionary *dic=[dataList objectAtIndex:indexPath.row];
-    HAYuYueDetailViewController *details=[[HAYuYueDetailViewController alloc]init];
-    details.reservationId=[dic objectForKey:@"id"];
-    details.detailData=dic;
-    if (segmented.selectedSegmentIndex==1) {
-        details.isMy=YES;
+       if ([[dic objectForKey:@"constructionounitid"]isEqualToString:@"zzabcdef123456"]) {
+        HZZiXunDetailViewController*details=[[HZZiXunDetailViewController alloc]init];
+           details.reservationId=[dic objectForKey:@"id"];
+           details.detailData=dic;
+           if (segmented.selectedSegmentIndex==1) {
+               details.isMy=YES;
+           }else{
+               details.isMy=NO;
+           }
+           
+           [self.navigationController pushViewController:details animated:YES];
     }else{
-        details.isMy=NO;
-    }
-    //    NSLog(@"%@",dic);
+        HAYuYueDetailViewController *details=[[HAYuYueDetailViewController alloc]init];
+        details.reservationId=[dic objectForKey:@"id"];
+        details.detailData=dic;
+        if (segmented.selectedSegmentIndex==1) {
+            details.isMy=YES;
+        }else{
+            details.isMy=NO;
+        }
+
     [self.navigationController pushViewController:details animated:YES];
+    }
 }
 
 - (void)didReceiveMemoryWarning {

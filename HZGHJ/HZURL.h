@@ -16,6 +16,10 @@ static NSString * const kDemoBaseURL                = @"http://220.191.210.76:80
 
 //登录
 static NSString * const kLoginURL                = @"/servicesweb/login/login.action";
+//判断
+static NSString * const kqueryStatusURL                = @"/servicesweb/login/queryStatus.action";
+//注册
+static NSString * const kRegistURL                = @"/servicesweb/login/regist.action";
 /*在线预约*/
 //在线预约列表
 static NSString * const kHistorytaskURL                = @"/servicesweb/reservation/historytask.action";
@@ -33,6 +37,10 @@ static NSString * const kCompleTaskURL                = @"/servicesweb/reservati
 static NSString * const kFindPremiseConditionURL                = @"/servicesweb/reservation/findPremiseCondition.action";
 //取消预约
 static NSString * const kCancelURL                = @"/servicesweb/reservation/cancel.action";
+//MARK:咨询
+static NSString * const kZiXunURL                = @"/servicesweb/reservation/compleAdvisoryTask.action";
+//MARK:咨询提交
+static NSString * const kZiXunCommitURL                = @"/servicesweb/reservation/advisory.action";
 
 //获取单位联系人
 static NSString * const kUserByComanyURL                = @"/servicesweb/login/getUserByComany.action";

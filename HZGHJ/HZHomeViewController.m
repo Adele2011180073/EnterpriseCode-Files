@@ -13,6 +13,7 @@
 #import "CollectionViewCell.h"
 #import "HZLoginService.h"
 #import "HZNoticeViewController.h"
+#import "HZLoginViewController.h"
 #import <UserNotifications/UserNotifications.h>
 #define KEY_NOTIFICATION @"this is a key for notification"
 
@@ -59,14 +60,15 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStyleBordered target:nil action:nil];
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor], NSForegroundColorAttributeName, nil];
     [self.navigationController                                                                                                                                                                                                                                                                                                                                                                                         .navigationBar setBackgroundImage:[UIImage imageNamed:@"title_bgg.png"] forBarMetrics:UIBarMetricsDefault];
     self.view.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
-    self.userName.text=[NSString stringWithFormat:@"欢迎您，%@",[[self.dic objectForKey:@"obj"]objectForKey:@"name"]];
+  
     //UNNotificationSettings,新的替代类,但是目前里面的属性都是readOnly
     UIUserNotificationSettings *setting = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeBadge | UIUserNotificationTypeAlert | UIUserNotificationTypeSound categories:nil];
     [[UIApplication sharedApplication]registerUserNotificationSettings:setting];
     self.delegate=self;
-     [self getDataSource];
     
     UICollectionViewFlowLayout *layout=[[UICollectionViewFlowLayout alloc]init];
     [layout setScrollDirection:UICollectionViewScrollDirectionVertical];
@@ -78,6 +80,24 @@
     collectionview.showsVerticalScrollIndicator=NO;
     collectionview.showsHorizontalScrollIndicator=NO;
     [self.view addSubview:collectionview];
+    
+    NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
+    NSString *username;
+    if ([def boolForKey:@"remember"]==YES) {
+        username=[def objectForKey:@"username"];
+        [self getDataSource];
+        
+    }else{
+        username=@"";
+        NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"BottomMenuItems2" ofType:@"plist"];
+        NSArray* dataArray = [[NSArray alloc] initWithContentsOfFile:plistPath];
+        dataSourceArray=[NSMutableArray arrayWithArray:dataArray];
+        
+        //    NSLog(@"datasourcearray   %@",dataSourceArray);
+        
+        [collectionview reloadData];
+    }
+    self.userName.text=[NSString stringWithFormat:@"欢迎您，%@",username];
 }
 -(void)getNoti{
     //3
@@ -152,13 +172,37 @@
     _timer=nil;
 }
 -(void)getDataSource{
-    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"BottomMenuItems" ofType:@"plist"];
-     NSArray* dataArray = [[NSArray alloc] initWithContentsOfFile:plistPath];
-    dataSourceArray=[NSMutableArray arrayWithArray:dataArray];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [HZLoginService CheckWithUserName:@"" andBlock:^(NSDictionary *returnDic, NSError *error) {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        NSDictionary *obj=[returnDic objectForKey:@"obj"];
+        if ([[obj objectForKey:@"useable"]intValue]==1&&[[obj objectForKey:@"registerstatus"]intValue]==2) {
+            NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"BottomMenuItems" ofType:@"plist"];
+            NSArray* dataArray = [[NSArray alloc] initWithContentsOfFile:plistPath];
+            dataSourceArray=[NSMutableArray arrayWithArray:dataArray];
+            
+            //    NSLog(@"datasourcearray   %@",dataSourceArray);
+            
+            [collectionview reloadData];
+        }else  if ([[obj objectForKey:@"useable"]intValue]==2) {
+            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"remember"];
+            [[NSUserDefaults standardUserDefaults]synchronize];
+            UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被禁用，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                HZLoginViewController *login=[[HZLoginViewController alloc]init];
+                [self.navigationController pushViewController:login animated:YES];
+            }];
+            [alert addAction:cancelAlert];
+            [self presentViewController:alert animated:YES completion:nil];
+        }else  if ([[obj objectForKey:@"useable"]intValue]==1&&[[obj objectForKey:@"registerstatus"]intValue]==1) {
+            NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"BottomMenuItems1" ofType:@"plist"];
+            NSArray* dataArray = [[NSArray alloc] initWithContentsOfFile:plistPath];
+            dataSourceArray=[NSMutableArray arrayWithArray:dataArray];
+            //    NSLog(@"datasourcearray   %@",dataSourceArray);
+            [collectionview reloadData];
+        }
+    }];
     
-//    NSLog(@"datasourcearray   %@",dataSourceArray);
-    
-    [collectionview reloadData];
 
 }
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -199,9 +243,10 @@
     
 }
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
-    
     NSDictionary *dic=[dataSourceArray objectAtIndex:indexPath.row];
-    if ([[dic objectForKey:@"controller"]isEqualToString:@""]) {
+    NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
+    if ([def boolForKey:@"remember"]==YES) {
+     if ([[dic objectForKey:@"controller"]isEqualToString:@""]) {
         UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"确定退出吗？" message:nil preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *okAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             exit(0);
@@ -229,7 +274,29 @@
     controller = [[clazz alloc] init];
     [self.navigationController pushViewController:controller animated:YES];
     }
-    
+        
+    }else{
+        if ([[dic objectForKey:@"title"]isEqualToString:@"在线办事"]){
+        HZLoginViewController *login=[[HZLoginViewController alloc]init];
+        [self.navigationController pushViewController:login animated:YES];
+    }else if ([[dic objectForKey:@"controller"]isEqualToString:@""]) {
+        UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"确定退出吗？" message:nil preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *okAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            exit(0);
+        }];
+        [alert addAction:okAlert];
+        UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        }];
+        [alert addAction:cancelAlert];
+        [self presentViewController:alert animated:YES completion:nil];
+    }else{
+        Class clazz = NSClassFromString([dic objectForKey:@"controller"]);
+        if (!clazz) clazz = NSClassFromString([dic objectForKey:@"controller"]);
+        UIViewController *controller = nil;
+        controller = [[clazz alloc] init];
+        [self.navigationController pushViewController:controller animated:YES];
+    }
+    }
 }
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification{
     //判断应用程序状态来决定是否弹框

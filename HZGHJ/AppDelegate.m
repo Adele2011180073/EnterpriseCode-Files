@@ -42,7 +42,7 @@ static NSString *BaiDuAK=@"P5OwjL02LUfDGEIslEMDGREsGkK9MtZI";
     [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
         
     }];
-    HZLoginViewController *home=[[HZLoginViewController alloc]init];
+    HZHomeViewController *home=[[HZHomeViewController alloc]init];
     UINavigationController *nav=[[UINavigationController alloc]initWithRootViewController:home];
     [nav.navigationController.navigationBar setBarTintColor:[UIColor whiteColor]];
        [nav.navigationController.navigationBar setTitleTextAttributes:

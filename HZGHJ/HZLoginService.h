@@ -11,8 +11,12 @@
 @interface HZLoginService : NSObject
 typedef void (^ReturnData)(NSDictionary *returnDic, NSError *error);
 
+//MARK:判定
++(void)CheckWithUserName:(NSString *)username andBlock:(ReturnData)CheckBlock;
 //登录
 +(void)LoginWithUserName:(NSString *)username passwd:(NSString*)passwd andBlock:(ReturnData)LoginBlock;
+//MARK:注册
++(void)RegistWithUserName:(NSString *)username userid:(NSString*)userid  passwd:(NSString*)passwd phone:(NSString*)phone position:(NSString*)position companyname:(NSString*)companyname companyaddress:(NSString*)companyaddress companyperson:(NSString*)companyperson companyphone:(NSString*)companyphone  andBlock:(ReturnData)RegistBlock;
 
 //预约
 //在线预约
@@ -29,6 +33,12 @@ typedef void (^ReturnData)(NSDictionary *returnDic, NSError *error);
 +(void)YuYueRefreshWithTaskId:(NSString *)taskId Status:(NSString*)status timeofappointment:(NSString*)timeofappointment andBlock:(ReturnData)YuYueBlock;
 //取消预约
 +(void)YuYueCancelWithId:(NSString*)Id andBlock:(ReturnData)YuYueBlock;
+//MARK:再次咨询
++(void)ZiXunRefreshWithTaskId:(NSString *)taskId details:(NSString*)details andBlock:(ReturnData)YuYueBlock;
+//MARK:取消咨询
++(void)ZiXunCancelWithTaskId:(NSString *)taskId andBlock:(ReturnData)YuYueBlock;
+//提交咨询
++(void)ZiXunCommitToken:(NSString *)token orgid:(NSString*)orgid details:(NSString*)details companymissionid:(NSString*)companymissionid  andBlock:(ReturnData)YuYueBlock;
 
 //获取我要预约数据
 +(void)WoDeYuYueDataWithToken:(NSString *)token andBlock:(ReturnData)YuYueBlock;
@@ -80,6 +90,4 @@ typedef void (^ReturnData)(NSDictionary *returnDic, NSError *error);
 //更换密码
 +(void)PWWithNSw:(NSString *)opsw NSW:(NSString*)npsw andBlock:(ReturnData)NewSWBlock;
 
-//在线办事
-+(void)BanShiWithAndBlock:(ReturnData)BanShiBlock;
 @end

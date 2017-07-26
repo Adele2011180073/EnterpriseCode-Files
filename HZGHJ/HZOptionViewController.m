@@ -10,7 +10,7 @@
 #import "MBProgressHUD.h"
 #import "UIViewController+BackButtonHandler.h"
 #import "HZLocateDetailViewController.h"
-#import "HZLoginService.h"
+#import "HZBanShiService.h"
 
 @interface HZOptionViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -62,7 +62,7 @@
     [self.view addSubview:commit];
 }
 -(void)getResourceData{
-    [HZLoginService BanShiWithAndBlock:^(NSDictionary *returnDic, NSError *error) {
+    [HZBanShiService BanShiWithAndBlock:^(NSDictionary *returnDic, NSError *error) {
         if (returnDic) {
             NSArray *obj=[returnDic objectForKey:@"obj"];
             _dataList=[NSMutableArray arrayWithArray:obj];
@@ -99,7 +99,8 @@
 }
 -(void)commit{
     HZLocateDetailViewController *details=[[HZLocateDetailViewController alloc]init];
-    
+    details.qlsxcode=self.qlsxcode;
+    details.PCODE=self.PCODE;
     [self.navigationController pushViewController:details animated:YES];
 }
 

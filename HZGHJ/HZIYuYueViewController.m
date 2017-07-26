@@ -10,14 +10,18 @@
 #import "MBProgressHUD.h"
 #import "HZLoginService.h"
 #import "UIView+Toast.h"
+#import "HZBanShiService.h"
 #import "BSRegexValidate.h"
+#import "HZLoginViewController.h"
 @interface HZIYuYueViewController ()<UIGestureRecognizerDelegate,UITextFieldDelegate>{
     UIScrollView *bgScrollView;
     NSMutableArray *projectNameArray;
     NSMutableArray *reservationserviceArray;
+    NSMutableArray *_ZhuBanKeShiArray;//主办科室数组
     NSDictionary *returnData;
     UILabel *projectName;
     UILabel *nodeName;
+    UILabel *_zhubankeshiLabel;
     UIScrollView *bgBigClassView;
     BOOL isBigClass;
     NSInteger projectNum;
@@ -36,7 +40,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
-    self.title=@"材料报送预约";
+    self.title=@"办理咨询预约";
      returnData=[[NSDictionary alloc]init];
     projectNum=0;
     nodeNum=0;
@@ -52,8 +56,23 @@
     projectNameArray=[[NSMutableArray alloc]init];
     
     reservationserviceArray=[[NSMutableArray alloc]init];
-    [self getResourceData];
-//    [self addSubviews];
+    
+    [self getZhuBanKeShiArray];
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        // 处理耗时操作的代码块...
+        [self getResourceData];
+    });
+
+}
+//获取科室数组
+-(void)getZhuBanKeShiArray{
+    [HZBanShiService BanShiWithAndBlock:^(NSDictionary *returnDic, NSError *error) {
+        if (returnDic) {
+            NSArray *obj=[returnDic objectForKey:@"obj"];
+            _ZhuBanKeShiArray=[NSMutableArray arrayWithArray:obj];
+        }
+    }];
+
 }
 -(void)getResourceData{
     MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -69,9 +88,7 @@
                     for (int i=0; i<list.count; i++) {
                         NSDictionary *listDic=[list objectAtIndex:i];
                         NSArray*nodelist=[listDic objectForKey:@"nodelist"];
-                        if (![nodelist isEqual:[NSNull null]]&&nodelist!=NULL&&nodelist.count>0) {
                             [projectNameArray addObject:listDic];
-                        }
                     }
                 }else{
                     [self.view makeToast:@"您的账户暂时无数据"];
@@ -85,7 +102,12 @@
 
             }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
                 UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                UIAlertAction *okAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    HZLoginViewController *login=[[HZLoginViewController alloc]init];
+                    [self.navigationController pushViewController:login animated:YES];
+                }];
+                [alert addAction:okAlert];
+                UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 }];
                 [alert addAction:cancelAlert];
                 [self presentViewController:alert animated:YES completion:nil];
@@ -147,6 +169,12 @@
     tap.accessibilityValue=[NSString stringWithFormat:@"nameList"];
     [bgView addGestureRecognizer:tap];
 
+    [self addYuYueView];
+    [self addZiXunView];
+
+}
+//MARK:原来预约页面
+-(void)addYuYueView{
     NSArray *labelArray1=@[@"申请内容",@"预约时间",@"主办科室"];
     NSDictionary *messageDic=[projectNameArray objectAtIndex:projectNum];
     NSString *str1;
@@ -154,65 +182,65 @@
     if (nodelistArray!=NULL&&![nodelistArray isEqual:[NSNull null]]&&nodelistArray!=nil&&nodelistArray.count>0) {
         str1=[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"value"];
     }else{
-       str1=@"方案咨询";
+        str1=@"方案咨询";
     }
     NSString *str2=@"请选择时间";
     NSString *str3=[messageDic objectForKey:@"hostdepartment"];
     NSArray *textArray=@[str1,str2,str3];
-     for (int i=0; i<3; i++) {
-    UIView* bgView1=[[UIView alloc]initWithFrame:CGRectMake(0, 100+40*i, Width, 40)];
-    bgView1.backgroundColor=[UIColor whiteColor];
-    bgView1.userInteractionEnabled=YES;
-    [bgScrollView addSubview:bgView1];
-//    bgView1.frame=CGRectMake(0, 100, Width, 40);
-    UILabel *label1=[[UILabel alloc]initWithFrame:CGRectMake(0, 10, 99, 20)];
-    label1.textAlignment=NSTextAlignmentCenter;
-    label1.text=[labelArray1 objectAtIndex:i];
-    label1.font=[UIFont systemFontOfSize:15];
-    [bgView1 addSubview:label1];
-    
-    UILabel *line=[[UILabel alloc]initWithFrame:CGRectMake(100, 10, 1, 20)];
-    line.backgroundColor=[UIColor colorWithRed:227/255.0 green:227/255.0 blue:227/255.0 alpha:1.0];
-    [bgView1 addSubview:line];
-    
-    UILabel *text=[[UILabel alloc]initWithFrame:CGRectMake(110, 10, Width -120, 20)];
-    text.textAlignment=NSTextAlignmentLeft;
-    text.text=[textArray objectAtIndex:i];
-    text.font=[UIFont systemFontOfSize:15];
-    [bgView1 addSubview:text];
-         
-         if (i==1) {
-             text.textColor=[UIColor grayColor];
-             text.tag=30;
-             text.userInteractionEnabled=YES;
-             UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
-             tap.delegate=self;
-             tap.accessibilityValue=[NSString stringWithFormat:@"timePicker"];
-             [text addGestureRecognizer:tap];
-         }else if (i==0){
-             [nodeName removeFromSuperview];
-             nodeName=[[UILabel alloc]initWithFrame:CGRectMake(110, 10, Width -150, 20)];
-             nodeName.textAlignment=NSTextAlignmentLeft;
-             nodeName.text=[textArray objectAtIndex:i];
-             nodeName.font=[UIFont systemFontOfSize:15];
-             [bgView1 addSubview:nodeName];
-             
-             UILabel *imageTitle=[[UILabel alloc]initWithFrame:CGRectMake(Width-30, 5, 20, 20)];
-             imageTitle.textColor=blueCyan;
-             imageTitle.text=@"\U0000e62e";
-             imageTitle.font=[UIFont fontWithName:@"iconfont" size:16];
-             [bgView1 addSubview:imageTitle];
-             UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
-             tap.delegate=self;
-             tap.accessibilityValue=[NSString stringWithFormat:@"nodelist"];
-             [bgView1 addGestureRecognizer:tap];
-         }
-     }
+    for (int i=0; i<3; i++) {
+        UIView* bgView1=[[UIView alloc]initWithFrame:CGRectMake(0, 100+40*i, Width, 40)];
+        bgView1.backgroundColor=[UIColor whiteColor];
+        bgView1.userInteractionEnabled=YES;
+        [bgScrollView addSubview:bgView1];
+        //    bgView1.frame=CGRectMake(0, 100, Width, 40);
+        UILabel *label1=[[UILabel alloc]initWithFrame:CGRectMake(0, 10, 99, 20)];
+        label1.textAlignment=NSTextAlignmentCenter;
+        label1.text=[labelArray1 objectAtIndex:i];
+        label1.font=[UIFont systemFontOfSize:15];
+        [bgView1 addSubview:label1];
+        
+        UILabel *line=[[UILabel alloc]initWithFrame:CGRectMake(100, 10, 1, 20)];
+        line.backgroundColor=[UIColor colorWithRed:227/255.0 green:227/255.0 blue:227/255.0 alpha:1.0];
+        [bgView1 addSubview:line];
+        
+        UILabel *text=[[UILabel alloc]initWithFrame:CGRectMake(110, 10, Width -120, 20)];
+        text.textAlignment=NSTextAlignmentLeft;
+        text.text=[textArray objectAtIndex:i];
+        text.font=[UIFont systemFontOfSize:15];
+        [bgView1 addSubview:text];
+        
+        if (i==1) {
+            text.textColor=[UIColor grayColor];
+            text.tag=30;
+            text.userInteractionEnabled=YES;
+            UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
+            tap.delegate=self;
+            tap.accessibilityValue=[NSString stringWithFormat:@"timePicker"];
+            [text addGestureRecognizer:tap];
+        }else if (i==0){
+            [nodeName removeFromSuperview];
+            nodeName=[[UILabel alloc]initWithFrame:CGRectMake(110, 10, Width -150, 20)];
+            nodeName.textAlignment=NSTextAlignmentLeft;
+            nodeName.text=[textArray objectAtIndex:i];
+            nodeName.font=[UIFont systemFontOfSize:15];
+            [bgView1 addSubview:nodeName];
+            
+            UILabel *imageTitle=[[UILabel alloc]initWithFrame:CGRectMake(Width-30, 5, 20, 20)];
+            imageTitle.textColor=blueCyan;
+            imageTitle.text=@"\U0000e62e";
+            imageTitle.font=[UIFont fontWithName:@"iconfont" size:16];
+            [bgView1 addSubview:imageTitle];
+            UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
+            tap.delegate=self;
+            tap.accessibilityValue=[NSString stringWithFormat:@"nodelist"];
+            [bgView1 addGestureRecognizer:tap];
+        }
+    }
     
     for (int i=0; i<2; i++) {
         UIView* bgView1=[[UIView alloc]initWithFrame:CGRectMake(20, 240+40*i, Width-40, 100)];
         bgView1.backgroundColor=[UIColor colorWithRed:100/255.0 green:220/255.0 blue:247/255.0 alpha:1];
-//        bgView1.alpha=0.5;
+        //        bgView1.alpha=0.5;
         bgView1.layer.cornerRadius=10;
         bgView1.clipsToBounds=YES;
         bgView1.layer.borderWidth=1;
@@ -239,87 +267,134 @@
         }else{
             bgView1.frame=CGRectMake(20, 350, Width-40, 70*reservationserviceArray.count);
             NSLog(@"reservationserviceArray   %@",reservationserviceArray);
-          if (reservationserviceArray.count >0){
-            for (int j=0; j<reservationserviceArray.count; j++) {
-                UIButton *image=[[UIButton alloc]initWithFrame:CGRectMake(10, 25+60*j, 60, 60)];
-                [image addTarget:self action:@selector(check:) forControlEvents:UIControlEventTouchUpInside];
-                image.tag=20+j;
-                [image setImage:[UIImage imageNamed:@"checkbox"] forState:UIControlStateNormal];
-                 [image setImage:[UIImage imageNamed:@"checkbox_fill"] forState:UIControlStateSelected];
-                [bgView1 addSubview:image];
-                
-                UILabel *label2=[[UILabel alloc]initWithFrame:CGRectMake(60, 20+60*j, Width-40-80, 70)];
-                label2.textAlignment=NSTextAlignmentLeft;
-                NSDictionary *dic=[reservationserviceArray objectAtIndex:j];
-                label2.text=[dic objectForKey:@"name"];
-                label2.numberOfLines=3;
-                label2.font=[UIFont systemFontOfSize:15];
-                [bgView1 addSubview:label2];
+            if (reservationserviceArray.count >0){
+                for (int j=0; j<reservationserviceArray.count; j++) {
+                    UIButton *image=[[UIButton alloc]initWithFrame:CGRectMake(10, 25+60*j, 60, 60)];
+                    [image addTarget:self action:@selector(check:) forControlEvents:UIControlEventTouchUpInside];
+                    image.tag=20+j;
+                    [image setImage:[UIImage imageNamed:@"checkbox"] forState:UIControlStateNormal];
+                    [image setImage:[UIImage imageNamed:@"checkbox_fill"] forState:UIControlStateSelected];
+                    [bgView1 addSubview:image];
+                    
+                    UILabel *label2=[[UILabel alloc]initWithFrame:CGRectMake(60, 20+60*j, Width-40-80, 70)];
+                    label2.textAlignment=NSTextAlignmentLeft;
+                    NSDictionary *dic=[reservationserviceArray objectAtIndex:j];
+                    label2.text=[dic objectForKey:@"name"];
+                    label2.numberOfLines=3;
+                    label2.font=[UIFont systemFontOfSize:15];
+                    [bgView1 addSubview:label2];
+                }
             }
-        }
         }
     }
     
     NSArray *labelArray2=@[@"经办人",@"联系电话"];
-     if (projectNameArray != nil && ![projectNameArray isKindOfClass:[NSNull class]] && projectNameArray.count != 0){
-         NSDictionary *dic=[projectNameArray objectAtIndex:projectNum];
-         NSString *adminName=[dic objectForKey:@"adminName"];
-         NSString *adminPhone=[dic objectForKey:@"adminPhone"];
-         NSArray *textArray=@[adminName,adminPhone];
-    for (int i=0; i<2; i++) {
-        
-        UIView* bgView1=[[UIView alloc]initWithFrame:CGRectMake(0, 360+80*reservationserviceArray.count+40*i, Width, 40)];
-        bgView1.backgroundColor=[UIColor whiteColor];
-        bgView1.userInteractionEnabled=YES;
-        [bgScrollView addSubview:bgView1];
-        //    bgView1.frame=CGRectMake(0, 100, Width, 40);
-        UILabel *label1=[[UILabel alloc]initWithFrame:CGRectMake(0, 10, 99, 20)];
-        label1.textAlignment=NSTextAlignmentCenter;
-        label1.text=[labelArray2 objectAtIndex:i];
-        label1.font=[UIFont systemFontOfSize:15];
-        [bgView1 addSubview:label1];
-        
-        UILabel *line=[[UILabel alloc]initWithFrame:CGRectMake(100, 10, 1, 20)];
-        line.backgroundColor=[UIColor colorWithRed:227/255.0 green:227/255.0 blue:227/255.0 alpha:1.0];
-        [bgView1 addSubview:line];
-        
-        UILabel *text=[[UILabel alloc]initWithFrame:CGRectMake(110, 10, Width -120, 20)];
-        text.textAlignment=NSTextAlignmentLeft;
-        text.text=[textArray objectAtIndex:i];
-        text.font=[UIFont systemFontOfSize:15];
-        [bgView1 addSubview:text];
+    if (projectNameArray != nil && ![projectNameArray isKindOfClass:[NSNull class]] && projectNameArray.count != 0){
+        NSDictionary *dic=[projectNameArray objectAtIndex:projectNum];
+        NSString *adminName=[dic objectForKey:@"adminName"];
+        NSString *adminPhone=[dic objectForKey:@"adminPhone"];
+        NSArray *textArray=@[adminName,adminPhone];
+        for (int i=0; i<2; i++) {
+            
+            UIView* bgView1=[[UIView alloc]initWithFrame:CGRectMake(0, 360+80*reservationserviceArray.count+40*i, Width, 40)];
+            bgView1.backgroundColor=[UIColor whiteColor];
+            bgView1.userInteractionEnabled=YES;
+            [bgScrollView addSubview:bgView1];
+            //    bgView1.frame=CGRectMake(0, 100, Width, 40);
+            UILabel *label1=[[UILabel alloc]initWithFrame:CGRectMake(0, 10, 99, 20)];
+            label1.textAlignment=NSTextAlignmentCenter;
+            label1.text=[labelArray2 objectAtIndex:i];
+            label1.font=[UIFont systemFontOfSize:15];
+            [bgView1 addSubview:label1];
+            
+            UILabel *line=[[UILabel alloc]initWithFrame:CGRectMake(100, 10, 1, 20)];
+            line.backgroundColor=[UIColor colorWithRed:227/255.0 green:227/255.0 blue:227/255.0 alpha:1.0];
+            [bgView1 addSubview:line];
+            
+            UILabel *text=[[UILabel alloc]initWithFrame:CGRectMake(110, 10, Width -120, 20)];
+            text.textAlignment=NSTextAlignmentLeft;
+            text.text=[textArray objectAtIndex:i];
+            text.font=[UIFont systemFontOfSize:15];
+            [bgView1 addSubview:text];
+        }
     }
-     }
     NSArray *labelArray3=@[@"设计院联系人",@"设计院联系电话"];
     NSArray *placeholderArray=@[@"请输入设计院联系人",@"请输入设计院联系电话"];
-      if (projectNameArray != nil && ![projectNameArray isKindOfClass:[NSNull class]] && projectNameArray.count != 0){
-    for (int i=0; i<2; i++) {
-        UIView* bgView1=[[UIView alloc]initWithFrame:CGRectMake(0, 380+80*reservationserviceArray.count+40*2+40*i, Width, 40)];
-        bgView1.backgroundColor=[UIColor whiteColor];
-        bgView1.userInteractionEnabled=YES;
-        [bgScrollView addSubview:bgView1];
-        //    bgView1.frame=CGRectMake(0, 100, Width, 40);
-        UILabel *label1=[[UILabel alloc]initWithFrame:CGRectMake(0, 10, 119, 20)];
-        label1.textAlignment=NSTextAlignmentCenter;
-        label1.text=[labelArray3 objectAtIndex:i];
-        label1.font=[UIFont systemFontOfSize:15];
-        [bgView1 addSubview:label1];
-        
-        UILabel *line=[[UILabel alloc]initWithFrame:CGRectMake(120, 10, 1, 20)];
-        line.backgroundColor=[UIColor colorWithRed:227/255.0 green:227/255.0 blue:227/255.0 alpha:1.0];
-        [bgView1 addSubview:line];
-        
-        UITextField *text=[[UITextField alloc]initWithFrame:CGRectMake(130, 10, Width -150, 20)];
-        text.tag=10+i;
-        if (i==1) {
-            text.keyboardType = UIKeyboardTypeNumberPad;
+    if (projectNameArray != nil && ![projectNameArray isKindOfClass:[NSNull class]] && projectNameArray.count != 0){
+        for (int i=0; i<2; i++) {
+            UIView* bgView1=[[UIView alloc]initWithFrame:CGRectMake(0, 380+80*reservationserviceArray.count+40*2+40*i, Width, 40)];
+            bgView1.backgroundColor=[UIColor whiteColor];
+            bgView1.userInteractionEnabled=YES;
+            [bgScrollView addSubview:bgView1];
+            //    bgView1.frame=CGRectMake(0, 100, Width, 40);
+            UILabel *label1=[[UILabel alloc]initWithFrame:CGRectMake(0, 10, 119, 20)];
+            label1.textAlignment=NSTextAlignmentCenter;
+            label1.text=[labelArray3 objectAtIndex:i];
+            label1.font=[UIFont systemFontOfSize:15];
+            [bgView1 addSubview:label1];
+            
+            UILabel *line=[[UILabel alloc]initWithFrame:CGRectMake(120, 10, 1, 20)];
+            line.backgroundColor=[UIColor colorWithRed:227/255.0 green:227/255.0 blue:227/255.0 alpha:1.0];
+            [bgView1 addSubview:line];
+            
+            UITextField *text=[[UITextField alloc]initWithFrame:CGRectMake(130, 10, Width -150, 20)];
+            text.tag=10+i;
+            if (i==1) {
+                text.keyboardType = UIKeyboardTypeNumberPad;
+            }
+            text.delegate=self;
+            text.placeholder=[placeholderArray objectAtIndex:i];
+            text.font=[UIFont systemFontOfSize:15];
+            [bgView1 addSubview:text];
         }
-        text.delegate=self;
-        text.placeholder=[placeholderArray objectAtIndex:i];
-        text.font=[UIFont systemFontOfSize:15];
-        [bgView1 addSubview:text];
     }
-      }
+    UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(40, 380+80*reservationserviceArray.count+40*2+40*2+30,Width-80, 40)];
+    [button setTitle:@"提交" forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    button.backgroundColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1];
+    [button addTarget:self action:@selector(commit) forControlEvents:UIControlEventTouchUpInside];
+    
+    [bgScrollView addSubview:button];
+    
+    bgScrollView.contentSize=CGSizeMake(Width, 360+80*reservationserviceArray.count+40*2+40*3+120);
+
+}
+//MARK:咨询页面
+-(void)addZiXunView{
+    if (_ZhuBanKeShiArray.count>0) {
+    UIView* bgView1=[[UIView alloc]initWithFrame:CGRectMake(0, 100i, Width, 40)];
+    bgView1.backgroundColor=[UIColor whiteColor];
+    bgView1.userInteractionEnabled=YES;
+    [bgScrollView addSubview:bgView1];
+    //    bgView1.frame=CGRectMake(0, 100, Width, 40);
+    UILabel *label1=[[UILabel alloc]initWithFrame:CGRectMake(0, 10, 99, 20)];
+    label1.textAlignment=NSTextAlignmentCenter;
+    label1.text=@"主办科室";
+    label1.font=[UIFont systemFontOfSize:15];
+    [bgView1 addSubview:label1];
+    
+    UILabel *line=[[UILabel alloc]initWithFrame:CGRectMake(100, 10, 1, 20)];
+    line.backgroundColor=[UIColor colorWithRed:227/255.0 green:227/255.0 blue:227/255.0 alpha:1.0];
+    [bgView1 addSubview:line];
+    
+        [_zhubankeshiLabel removeFromSuperview];
+        _zhubankeshiLabel=[[UILabel alloc]initWithFrame:CGRectMake(110, 10, Width -150, 20)];
+        _zhubankeshiLabel.textAlignment=NSTextAlignmentLeft;
+        _zhubankeshiLabel.text=[_ZhuBanKeShiArray objectAtIndex:0];
+        _zhubankeshiLabel.font=[UIFont systemFontOfSize:15];
+        [bgView1 addSubview:_zhubankeshiLabel];
+        
+        UILabel *imageTitle=[[UILabel alloc]initWithFrame:CGRectMake(Width-30, 5, 20, 20)];
+        imageTitle.textColor=blueCyan;
+        imageTitle.text=@"\U0000e62e";
+        imageTitle.font=[UIFont fontWithName:@"iconfont" size:16];
+        [bgView1 addSubview:imageTitle];
+        UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
+        tap.delegate=self;
+        tap.accessibilityValue=[NSString stringWithFormat:@"zhubankeshi"];
+        [bgView1 addGestureRecognizer:tap];
+    }
+    
     UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(40, 380+80*reservationserviceArray.count+40*2+40*2+30,Width-80, 40)];
     [button setTitle:@"提交" forState:UIControlStateNormal];
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -484,7 +559,43 @@
             [bgBigClassView removeFromSuperview];
         }
         
-    }else if ([tap.accessibilityValue isEqualToString:@"timePicker"]){
+    }//MARK:咨询主办科室页面
+    else if ([tap.accessibilityValue isEqualToString:@"zhubankeshi"]) {
+        isBigClass=!isBigClass;
+        if (isBigClass==YES) {
+            bgBigClassView=[[UIScrollView alloc]init];
+            bgBigClassView.frame=CGRectMake(150, 140, Width-180, 50*_ZhuBanKeShiArray.count);
+            bgBigClassView.layer.borderColor=blueCyan.CGColor;
+            bgBigClassView.layer.borderWidth=1;
+            bgBigClassView.userInteractionEnabled=YES;
+            bgBigClassView.backgroundColor=[UIColor whiteColor];
+            [bgScrollView addSubview:bgBigClassView];
+            for (int i=0; i<_ZhuBanKeShiArray.count; i++) {
+                NSDictionary *dic=[_ZhuBanKeShiArray objectAtIndex:i];
+                UIButton *button=[UIButton buttonWithType:UIButtonTypeCustom];
+                button.frame=CGRectMake(0,50*i, Width-180, 50);
+                button.tag=50+i;
+                button.titleLabel.textAlignment=NSTextAlignmentCenter;
+                button.titleLabel.font=[UIFont systemFontOfSize:16];
+                [button setTitle:[dic objectForKey:@"orgName"] forState:UIControlStateNormal];
+                [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                button.adjustsImageWhenHighlighted=YES;
+                [button addTarget:self action:@selector(listBtn:) forControlEvents:UIControlEventTouchUpInside];
+                [bgBigClassView addSubview:button];
+                
+                UILabel *lineLabel=[[UILabel alloc]initWithFrame:CGRectMake(0,49*i, Width, 1)];
+                lineLabel.backgroundColor=[UIColor colorWithRed:180/255.0 green:180/255.0 blue:180/255.0 alpha:1.0];
+                [bgBigClassView addSubview:lineLabel];
+            }
+        } else{
+            for (UIView *view in bgBigClassView.subviews) {
+                [view removeFromSuperview];
+            }
+            [bgBigClassView removeFromSuperview];
+        }
+        
+    }
+    else if ([tap.accessibilityValue isEqualToString:@"timePicker"]){
             picker.frame=CGRectMake(0, 40, Width-40, 180);
             picker.datePickerMode=UIDatePickerModeDate;
             [picker addTarget:self action:@selector(timeSelect:) forControlEvents:UIControlEventValueChanged];

@@ -10,6 +10,34 @@
 #import "AFNetworking.h"
 #import "HZURL.h"
 @implementation HZLoginService
+//MARK:判定
++(void)CheckWithUserName:(NSString *)username andBlock:(ReturnData)CheckBlock{
+    NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
+    NSString *userName=nil;
+    if ([def boolForKey:@"remember"]==YES) {
+        userName=[def objectForKey:@"username"];
+    }else{
+        userName=@"";
+    }
+    AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
+    NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kqueryStatusURL];
+    session.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"text/html",@"application/json", @"text/json", nil];
+    session.responseSerializer = [AFHTTPResponseSerializer serializer];
+    session.requestSerializer.timeoutInterval=10.f;
+    NSMutableDictionary *parameters=[NSMutableDictionary dictionary];
+    [parameters setObject:userName forKey:@"accout"];
+    [session POST:serviceURLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
+        NSData *data =    [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
+        NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+        NSLog(@"成功  %@",str);
+        CheckBlock(dic,nil);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"失败%@",error);
+        CheckBlock(nil,error);
+    }];
+
+}
 +(void)LoginWithUserName:(NSString *)username passwd:(NSString*)passwd andBlock:(ReturnData)LoginBlock{
     AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
     NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kLoginURL];
@@ -28,6 +56,36 @@
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"失败%@",error);
         LoginBlock(nil,error);
+    }];
+
+}
+//MARK:注册
++(void)RegistWithUserName:(NSString *)username userid:(NSString*)userid  passwd:(NSString*)passwd phone:(NSString*)phone position:(NSString*)position companyname:(NSString*)companyname companyaddress:(NSString*)companyaddress companyperson:(NSString*)companyperson companyphone:(NSString*)companyphone  andBlock:(ReturnData)RegistBlock{
+    AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
+    NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kRegistURL];
+    session.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"text/html",@"application/json", @"text/json", nil];
+    session.responseSerializer = [AFHTTPResponseSerializer serializer];
+    session.requestSerializer.timeoutInterval=10.f;
+    NSMutableDictionary *parameters=[NSMutableDictionary dictionary];
+    [parameters setObject:userid forKey:@"userid"];
+    [parameters setObject:username forKey:@"name"];
+    [parameters setObject:passwd forKey:@"password"];
+    [parameters setObject:phone forKey:@"phone"];
+    [parameters setObject:position forKey:@"position"];
+    [parameters setObject:companyname forKey:@"companyname"];
+    [parameters setObject:companyaddress forKey:@"companyaddress"];
+    [parameters setObject:companyperson forKey:@"companyperson"];
+     [parameters setObject:companyphone forKey:@"companyphone"];
+    
+    [session POST:serviceURLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
+        NSData *data =    [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
+        NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+        NSLog(@"成功  %@",str);
+        RegistBlock(dic,nil);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"失败%@",error);
+        RegistBlock(nil,error);
     }];
 
 }
@@ -92,7 +150,7 @@
         NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
         NSData *data =    [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
         NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-        NSLog(@"预约详情成功  %@",str);
+//        printf("预约详情成功 %s\n",[[NSString stringWithFormat:@"%@",str]UTF8String]);
         YuYueBlock(dic,nil);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"失败%@",error);
@@ -113,7 +171,7 @@
         NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
         NSData *data =    [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
         NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-        NSLog(@"成功  %@",str);
+        printf("预约详情成功 %s\n",[[NSString stringWithFormat:@"%@",str]UTF8String]);
         YuYueBlock(dic,nil);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"失败%@",error);
@@ -239,7 +297,73 @@
     }];
 
 }
+//MARK:再次咨询
++(void)ZiXunRefreshWithTaskId:(NSString *)taskId details:(NSString*)details andBlock:(ReturnData)YuYueBlock{
+    AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
+    NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kZiXunURL];
+    session.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"text/html",@"application/json", @"text/json", nil];
+    session.responseSerializer = [AFHTTPResponseSerializer serializer];
+    session.requestSerializer.timeoutInterval=10.f;
+    NSMutableDictionary *parameters=[NSMutableDictionary dictionary];
+    [parameters setObject:taskId forKey:@"taskId"];
+     [parameters setObject:@"0" forKey:@"status"];
+    [parameters setObject:details forKey:@"detail"];
+    [session POST:serviceURLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
+        NSData *data =    [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
+        NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+        NSLog(@"成功  %@",str);
+        YuYueBlock(dic,nil);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"失败%@",error);
+        YuYueBlock(nil,error);
+    }];
+}
+//MARK:取消咨询
++(void)ZiXunCancelWithTaskId:(NSString *)taskId andBlock:(ReturnData)YuYueBlock{
+    AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
+    NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kZiXunURL];
+    session.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"text/html",@"application/json", @"text/json", nil];
+    session.responseSerializer = [AFHTTPResponseSerializer serializer];
+    session.requestSerializer.timeoutInterval=10.f;
+    NSMutableDictionary *parameters=[NSMutableDictionary dictionary];
+    [parameters setObject:taskId forKey:@"taskId"];
+    [parameters setObject:@"2" forKey:@"status"];
+    [session POST:serviceURLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
+        NSData *data =    [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
+        NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+        NSLog(@"成功  %@",str);
+        YuYueBlock(dic,nil);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"失败%@",error);
+        YuYueBlock(nil,error);
+    }];
+}
+//提交咨询
++(void)ZiXunCommitToken:(NSString *)token orgid:(NSString*)orgid details:(NSString*)details companymissionid:(NSString*)companymissionid  andBlock:(ReturnData)YuYueBlock{
+    AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
+    NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kZiXunCommitURL];
+    session.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"text/html",@"application/json", @"text/json", nil];
+    session.responseSerializer = [AFHTTPResponseSerializer serializer];
+    session.requestSerializer.timeoutInterval=10.f;
+    NSMutableDictionary *parameters=[NSMutableDictionary dictionary];
+    [parameters setObject:token forKey:@"token"];
+    [parameters setObject:orgid forKey:@"orgid"];
+    [parameters setObject:details forKey:@"detail"];
+     [parameters setObject:companymissionid forKey:@"companymissionid"];
+    [session POST:serviceURLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
+        NSData *data =    [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
+        NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+        NSLog(@"成功  %@",str);
+        YuYueBlock(dic,nil);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"失败%@",error);
+        YuYueBlock(nil,error);
+    }];
 
+}
 
 //消息通知列表
 +(void)NoticeWithToken:(NSString *)token pageIndex:(int)pageindex andBlock:(ReturnData)NoticeBlock{
@@ -640,23 +764,4 @@
     }];
 }
 
-//MARK:在线办事
-+(void)BanShiWithAndBlock:(ReturnData)BanShiBlock{
-    AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
-    NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kQueryOrgURL];
-    session.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"text/html",@"application/json", @"text/json", nil];
-    session.responseSerializer = [AFHTTPResponseSerializer serializer];
-    session.requestSerializer.timeoutInterval=10.f;
-    [session POST:serviceURLString parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
-        NSString *str=[[NSString alloc]initWithData:responseObject encoding:NSUTF8StringEncoding];
-                NSLog(@"成功  %@",str);
-        BanShiBlock(dic,nil);
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        NSLog(@"失败%@",error);
-        BanShiBlock(nil,error);
-    }];
-    
-
-}
 @end

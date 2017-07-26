@@ -9,14 +9,18 @@
 #import "HZZaiXianTianXieViewController.h"
 #import "HZIllustrateViewController1.h"
 #import "MBProgressHUD.h"
+#import "UIView+Toast.h"
+#import "BSRegexValidate.h"
 
-@interface HZZaiXianTianXieViewController ()<UITextViewDelegate,UITextFieldDelegate>
+@interface HZZaiXianTianXieViewController ()<UITextViewDelegate,UITextFieldDelegate,UIGestureRecognizerDelegate>
 {
     UIButton *_rightBarBtn;
     UIScrollView *_mainBgView;//整个scrollview
      UIScrollView *_mainListView;//网格scrollview
      UITextView *_detailText1;
      UITextView *_detailText2;
+    
+    NSString* _isCheck;
 }
 @end
 
@@ -30,6 +34,9 @@
     self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStyleBordered target:nil action:nil];
     self.title=@"选址申请表填写";
     
+    UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(downKeyboard)];
+    tap.delegate=self;
+    [_mainBgView addGestureRecognizer:tap];
     _rightBarBtn = [[UIButton alloc] initWithFrame                                                                      :CGRectMake(15, 5, 80, 20)];
     [_rightBarBtn setTitleColor: [UIColor whiteColor] forState:UIControlStateNormal];
     [_rightBarBtn addTarget:self action:@selector(illustrate) forControlEvents:UIControlEventTouchUpInside];
@@ -69,6 +76,11 @@
         nameLabelView1.layer.borderWidth=1;
         [_mainListView addSubview:nameLabelView1];
         
+        if (i<5) {
+            UIImageView *imageview=[[UIImageView alloc]initWithFrame:CGRectMake(0, 15, 20, 20)];
+            imageview.image=[UIImage imageNamed:@"must_pic.png"];
+            [nameLabelView1 addSubview:imageview];
+        }
         UILabel  *label1=[[UILabel alloc]initWithFrame:CGRectMake(20,  0, 100, 50)];
         label1.textAlignment=NSTextAlignmentLeft;
         label1.numberOfLines=2;
@@ -91,6 +103,7 @@
     textBgView.layer.borderWidth=1;
     textBgView.userInteractionEnabled=YES;
     [_mainListView addSubview:textBgView];
+        
         UILabel  *label1=[[UILabel alloc]initWithFrame:CGRectMake(20,  10, 200, 20)];
         label1.textAlignment=NSTextAlignmentLeft;
         label1.font=[UIFont systemFontOfSize:15];
@@ -117,6 +130,9 @@
             
             [_detailText1 addSubview:self.placehoderLabel1];
         }else{
+            UIImageView *imageview=[[UIImageView alloc]initWithFrame:CGRectMake(0, 10, 20, 20)];
+            imageview.image=[UIImage imageNamed:@"must_pic.png"];
+            [textBgView addSubview:imageview];
             _detailText2=[[UITextView alloc]initWithFrame:CGRectMake(5, 40, Width-20, 115)];
             _detailText2.layer.borderWidth=1;
             _detailText2.layer.borderColor=blueCyan.CGColor;
@@ -149,7 +165,10 @@
         textBgView.layer.borderWidth=1;
         textBgView.userInteractionEnabled=YES;
         [_mainListView addSubview:textBgView];
-        
+            UIImageView *imageview=[[UIImageView alloc]initWithFrame:CGRectMake(0, 15, 20, 20)];
+            imageview.image=[UIImage imageNamed:@"must_pic.png"];
+            [textBgView addSubview:imageview];
+
         UILabel  *label1=[[UILabel alloc]initWithFrame:CGRectMake(20,  15, 120, 20)];
         label1.textAlignment=NSTextAlignmentLeft;
         label1.font=[UIFont systemFontOfSize:15];
@@ -209,7 +228,17 @@
     
 }
 -(void)checkBox:(UIButton *)sender{
-    
+    UIButton *button1=[self.view viewWithTag:30];
+    UIButton *button2=[self.view viewWithTag:31];
+    if ([button1 isEqual:sender]) {
+        button1.selected=YES;
+        button2.selected=NO;
+        _isCheck=@"1";
+    }else{
+        button2.selected=YES;
+        button1.selected=NO;
+         _isCheck=@"0";
+    }
 }
 -(void)illustrate{
     HZIllustrateViewController1 *illustrate=[[HZIllustrateViewController1 alloc]init];
@@ -220,7 +249,7 @@
     if ([textView isEqual:_detailText1]) {
          _mainBgView.contentOffset=CGPointMake(0, 160);
     }else{
-         _mainBgView.contentOffset=CGPointMake(0, 660);
+         _mainBgView.contentOffset=CGPointMake(0, 560);
     }
    
 }
@@ -235,11 +264,14 @@
 }
 -(void)textViewDidEndEditing:(UITextView *)textView{
     _mainBgView.contentOffset=CGPointMake(0, 0);
+     [self.view endEditing:YES];
     
-    if (textView.text==NULL||[textView.text isEqualToString:@""]||[textView isEqual:_detailText1]) {
-        self.placehoderLabel1.hidden=NO;
-    }else if (textView.text==NULL||[textView.text isEqualToString:@""]||[textView isEqual:_detailText2]) {
-        self.placehoderLabel2.hidden=NO;
+    if (textView.text==NULL||[textView.text isEqualToString:@""]) {
+        if ([textView isEqual:_detailText1]) {
+             self.placehoderLabel1.hidden=NO;
+        }else if ([textView isEqual:_detailText2]){
+            self.placehoderLabel2.hidden=NO;
+        }
     }
 }
 -(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
@@ -256,12 +288,88 @@
 }
 
 -(void)commit{
-    MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.label.text=@"数据加载中，请稍候...";
+    UITextField *textfield1=[self.view viewWithTag:10];
+    UITextField *textfield2=[self.view viewWithTag:11];
+    UITextField *textfield3=[self.view viewWithTag:12];
+    UITextField *textfield4=[self.view viewWithTag:13];
+    UITextField *textfield5=[self.view viewWithTag:14];
+    UITextField *textfield6=[self.view viewWithTag:15];
     
+    UITextField *textfield21=[self.view viewWithTag:20];//区
+    UITextField *textfield22=[self.view viewWithTag:21];//路
+    
+    UITextField *textfield41=[self.view viewWithTag:40];//东
+    UITextField *textfield42=[self.view viewWithTag:41];//南
+    UITextField *textfield43=[self.view viewWithTag:42];//西
+    UITextField *textfield44=[self.view viewWithTag:43];//北
+    
+    if (textfield1.text==NULL||textfield2.text==NULL||textfield3.text==NULL||textfield4.text==NULL||textfield5.text==NULL||_detailText2.text==NULL||_isCheck==NULL) {
+        [self.view makeToast:@"请把带*标记的必填项目填写完整" duration:2 position:CSToastPositionCenter];
+        return;
+    }
+    if ([BSRegexValidate stringContainsEmoji:_detailText1.text]||[BSRegexValidate stringContainsEmoji:_detailText2.text]) {
+         [self.view makeToast:@"不能输入表情" duration:2 position:CSToastPositionCenter];
+        return;
+    }
+    if ([BSRegexValidate validateTelephone:textfield4.text]) {
+        [self.view makeToast:@"手机号码格式不正确" duration:2 position:CSToastPositionCenter];
+        return;
+    }
+       NSMutableDictionary *dic=[[NSMutableDictionary alloc]init];
+    [dic setObject:textfield1.text forKey:@"sqr"];
+    [dic setObject:textfield2.text forKey:@"fddbr"];
+    [dic setObject:textfield3.text forKey:@"wtr"];
+    [dic setObject:textfield4.text forKey:@"sjh"];
+    [dic setObject:textfield5.text forKey:@"xmmc"];
+     [dic setObject:textfield21.text forKey:@"jsdzq"];
+     [dic setObject:textfield22.text forKey:@"jsdzl"];
+    [dic setObject:_isCheck forKey:@"lzbg"];
+    [dic setObject:_detailText2.text forKey:@"xmsmqk"];
+    if (textfield6.text==NULL) {
+        [dic setObject:@" " forKey:@"lxdh"];
+    }else{
+        [dic setObject:textfield6.text forKey:@"lxdh"];
+    }
+    if (_detailText1.text==NULL) {
+        [dic setObject:@" " forKey:@"jsnrjgm"];
+    }else{
+        [dic setObject:_detailText1.text forKey:@"jsnrjgm"];
+    }
+    if (textfield41.text==NULL) {
+        [dic setObject:@" " forKey:@"zbdz"];
+    }else{
+        [dic setObject:textfield41.text forKey:@"zbdz"];
+    }
+    if (textfield42.text==NULL) {
+        [dic setObject:@" " forKey:@"zbnz"];
+    }else{
+        [dic setObject:textfield42.text forKey:@"zbnz"];
+    }
+    if (textfield43.text==NULL) {
+        [dic setObject:@" " forKey:@"zbxz"];
+    }else{
+        [dic setObject:textfield43.text forKey:@"zbxz"];
+    }
+    if (textfield44.text==NULL) {
+        [dic setObject:@" " forKey:@"zbbz"];
+    }else{
+        [dic setObject:textfield44.text forKey:@"zbbz"];
+    }
+    UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"保存成功" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [[NSUserDefaults standardUserDefaults]setObject:dic forKey:@"saveDic"];
+        [[NSUserDefaults standardUserDefaults]synchronize];
+    }];
+    [alert addAction:cancelAlert];
+    [self presentViewController:alert animated:YES completion:nil];
+       NSLog(@"saveDic   %@",[[NSUserDefaults standardUserDefaults]objectForKey:@"saveDic"]);
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    [self.view endEditing:YES];
+}
+-(void)downKeyboard{
     [self.view endEditing:YES];
 }
 -(BOOL)textFieldShouldReturn:(UITextField *)textField{

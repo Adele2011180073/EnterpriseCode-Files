@@ -20,14 +20,6 @@
 	</dict>
 	<dict>
 		<key>title</key>
-		<string>个人中心</string>
-		<key>image</key>
-		<string>icon_gerenzhongxin</string>
-		<key>controller</key>
-		<string>HZPersonalViewController</string>
-	</dict>
-	<dict>
-		<key>title</key>
 		<string>退出</string>
 		<key>image</key>
 		<string>icon_quit</string>
