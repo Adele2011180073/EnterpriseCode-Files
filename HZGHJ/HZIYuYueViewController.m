@@ -13,7 +13,10 @@
 #import "HZBanShiService.h"
 #import "BSRegexValidate.h"
 #import "HZLoginViewController.h"
-@interface HZIYuYueViewController ()<UIGestureRecognizerDelegate,UITextFieldDelegate>{
+#import "HZBanShiViewController.h"
+
+
+@interface HZIYuYueViewController ()<UIGestureRecognizerDelegate,UITextFieldDelegate,UITextViewDelegate>{
     UIScrollView *bgScrollView;
     NSMutableArray *projectNameArray;
     NSMutableArray *reservationserviceArray;
@@ -21,11 +24,11 @@
     NSDictionary *returnData;
     UILabel *projectName;
     UILabel *nodeName;
-    UILabel *_zhubankeshiLabel;
     UIScrollView *bgBigClassView;
     BOOL isBigClass;
-    NSInteger projectNum;
+    NSInteger projectNum;//当前项目所在顺序
       NSInteger nodeNum;
+    UITextView *_detailText;//资讯内容描述
     
     UIView *pickerView;
     UILabel *timeLabel;
@@ -41,6 +44,7 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
     self.title=@"办理咨询预约";
+    self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStyleBordered target:nil action:nil];
      returnData=[[NSDictionary alloc]init];
     projectNum=0;
     nodeNum=0;
@@ -75,11 +79,11 @@
 
 }
 -(void)getResourceData{
-    MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.label.text=@"数据加载中，请稍候...";
+//    MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    hud.label.text=@"数据加载中，请稍候...";
     NSString *token=[[NSUserDefaults standardUserDefaults]objectForKey:@"token"];
     [HZLoginService WoDeYuYueDataWithToken:token andBlock:^(NSDictionary *returnDic, NSError *error) {
-           [hud hideAnimated:YES];
+//           [hud hideAnimated:YES];
             if ([[returnDic objectForKey:@"code"]integerValue]==0) {
                 NSData *data =    [NSJSONSerialization dataWithJSONObject:returnDic options:NSJSONWritingPrettyPrinted error:nil];
                 NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
@@ -98,7 +102,7 @@
                 reservationserviceArray=[NSMutableArray arrayWithArray:[dic objectForKey:@"childList"]];
                 [self addSubviews];
 
-                NSLog(@"预约数据    %@  ",reservationserviceArray);
+//                NSLog(@"预约数据    %@  ",reservationserviceArray);
 
             }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
                 UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
@@ -140,7 +144,7 @@
     label.font=[UIFont systemFontOfSize:16];
     [bgScrollView addSubview:label];
     
-    UIView* bgView=[[UIView alloc]initWithFrame:CGRectMake(0, 40, Width, 40)];
+    UIView* bgView=[[UIView alloc]initWithFrame:CGRectMake(0, 40, Width, 50)];
     bgView.backgroundColor=[UIColor whiteColor];
     bgView.userInteractionEnabled=YES;
     [bgScrollView addSubview:bgView];
@@ -151,7 +155,7 @@
         [self.navigationController popViewControllerAnimated:YES];
         return;
     }
-    projectName=[[UILabel alloc]initWithFrame:CGRectMake(10, 0, Width-50, 40)];
+    projectName=[[UILabel alloc]initWithFrame:CGRectMake(10, 0, Width-50, 50)];
     projectName.textAlignment=NSTextAlignmentLeft;
     projectName.numberOfLines=2;
     NSDictionary *projectNameDic=[projectNameArray objectAtIndex:projectNum];
@@ -159,7 +163,7 @@
     projectName.text=projectNameStr;
     projectName.font=[UIFont systemFontOfSize:16];
     [bgView addSubview:projectName];
-    UILabel *imageTitle=[[UILabel alloc]initWithFrame:CGRectMake(Width-30, 5, 20, 20)];
+    UILabel *imageTitle=[[UILabel alloc]initWithFrame:CGRectMake(Width-30, 10, 20, 20)];
     imageTitle.textColor=blueCyan;
     imageTitle.text=@"\U0000e62e";
     imageTitle.font=[UIFont fontWithName:@"iconfont" size:16];
@@ -169,8 +173,11 @@
     tap.accessibilityValue=[NSString stringWithFormat:@"nameList"];
     [bgView addGestureRecognizer:tap];
 
+    if ([[projectNameDic objectForKey:@"companyid"]isEqualToString:@"zzabcdef123456"]) {
+        [self addZiXunView];
+    }else{
     [self addYuYueView];
-    [self addZiXunView];
+    }
 
 }
 //MARK:原来预约页面
@@ -352,8 +359,8 @@
     [button setTitle:@"提交" forState:UIControlStateNormal];
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     button.backgroundColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1];
-    [button addTarget:self action:@selector(commit) forControlEvents:UIControlEventTouchUpInside];
-    
+    [button addTarget:self action:@selector(commit:) forControlEvents:UIControlEventTouchUpInside];
+    button.tag=1000;
     [bgScrollView addSubview:button];
     
     bgScrollView.contentSize=CGSizeMake(Width, 360+80*reservationserviceArray.count+40*2+40*3+120);
@@ -362,7 +369,7 @@
 //MARK:咨询页面
 -(void)addZiXunView{
     if (_ZhuBanKeShiArray.count>0) {
-    UIView* bgView1=[[UIView alloc]initWithFrame:CGRectMake(0, 100i, Width, 40)];
+    UIView* bgView1=[[UIView alloc]initWithFrame:CGRectMake(0, 100, Width, 40)];
     bgView1.backgroundColor=[UIColor whiteColor];
     bgView1.userInteractionEnabled=YES;
     [bgScrollView addSubview:bgView1];
@@ -377,12 +384,13 @@
     line.backgroundColor=[UIColor colorWithRed:227/255.0 green:227/255.0 blue:227/255.0 alpha:1.0];
     [bgView1 addSubview:line];
     
-        [_zhubankeshiLabel removeFromSuperview];
-        _zhubankeshiLabel=[[UILabel alloc]initWithFrame:CGRectMake(110, 10, Width -150, 20)];
-        _zhubankeshiLabel.textAlignment=NSTextAlignmentLeft;
-        _zhubankeshiLabel.text=[_ZhuBanKeShiArray objectAtIndex:0];
-        _zhubankeshiLabel.font=[UIFont systemFontOfSize:15];
-        [bgView1 addSubview:_zhubankeshiLabel];
+        [nodeName removeFromSuperview];
+        nodeName=[[UILabel alloc]initWithFrame:CGRectMake(110, 10, Width -150, 20)];
+        nodeName.textAlignment=NSTextAlignmentLeft;
+        NSDictionary *dic=[_ZhuBanKeShiArray objectAtIndex:nodeNum];
+        nodeName.text=[dic objectForKey:@"orgName"];
+        nodeName.font=[UIFont systemFontOfSize:15];
+        [bgView1 addSubview:nodeName];
         
         UILabel *imageTitle=[[UILabel alloc]initWithFrame:CGRectMake(Width-30, 5, 20, 20)];
         imageTitle.textColor=blueCyan;
@@ -394,91 +402,185 @@
         tap.accessibilityValue=[NSString stringWithFormat:@"zhubankeshi"];
         [bgView1 addGestureRecognizer:tap];
     }
+    UILabel  *label2=[[UILabel alloc]initWithFrame:CGRectMake(10,  150, Width-20, 100)];
+    label2.textAlignment=NSTextAlignmentLeft;
+    label2.numberOfLines=10;
+    label2.textColor=[UIColor grayColor];
+    label2.font=[UIFont systemFontOfSize:16];
+    NSDictionary *projectNameDic=[projectNameArray objectAtIndex:projectNum];
+    label2.text=[NSString stringWithFormat:@"      您选择的是咨询%@事项，如您需要了解具体办事流程，以及需要提交的材料信息，可通过办事指南查看，如需要与杭州规划局工作人员进行沟通，可继续填写咨询的问题。",[projectNameDic objectForKey:@"projectname"]];
+    [bgScrollView  addSubview:label2];
     
-    UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(40, 380+80*reservationserviceArray.count+40*2+40*2+30,Width-80, 40)];
+    UIButton *mapBtn=[[UIButton alloc]initWithFrame:CGRectMake(20,250, 100, 30)];
+    [mapBtn addTarget:self action:@selector(banshizhinan) forControlEvents:UIControlEventTouchUpInside];
+    mapBtn.backgroundColor=blueCyan;
+    mapBtn.titleLabel.font=[UIFont systemFontOfSize:16];
+    [mapBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [mapBtn setTitle:@"转办事指南" forState:UIControlStateNormal];
+    [bgScrollView addSubview:mapBtn];
+    
+    UILabel *label=[[UILabel alloc]initWithFrame:CGRectMake(20, 300, 140, 20)];
+    label.textAlignment=NSTextAlignmentLeft;
+    label.text=@"咨询内容描述：";
+    label.font=[UIFont systemFontOfSize:16];
+    [bgScrollView addSubview:label];
+    
+    _detailText=[[UITextView alloc]initWithFrame:CGRectMake(0, 330, Width, 150)];
+    _detailText.delegate=self;
+    [_detailText resignFirstResponder];
+    _detailText.clearsOnInsertion=YES;
+    _detailText.font=[UIFont systemFontOfSize:15];
+    [bgScrollView addSubview:_detailText];
+    self.placehoderLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, _detailText.frame.size.width-40, 30)];
+    
+    self.placehoderLabel.backgroundColor = [UIColor whiteColor];
+    
+    self.placehoderLabel.text = @"请输入咨询内容(不得超过200字)";
+    self.placehoderLabel.textColor=[UIColor grayColor];
+    
+    self.placehoderLabel.font = [UIFont systemFontOfSize:15.0];
+    
+    [_detailText addSubview:self.placehoderLabel];
+    self.numLabel = [[UILabel alloc] initWithFrame:CGRectMake(_detailText.frame.size.width-90, _detailText.frame.size.height-30, 60, 20)];
+    
+    self.numLabel.backgroundColor = [UIColor whiteColor];
+    self.numLabel.textColor=[UIColor grayColor];
+    
+    self.numLabel.text = @"0/200";
+    
+    self.numLabel.font = [UIFont systemFontOfSize:15.0];
+    
+    [_detailText addSubview:self.numLabel];
+    UILabel *label3=[[UILabel alloc]initWithFrame:CGRectMake(10, 480, Width-20, 60)];
+    label3.textAlignment=NSTextAlignmentLeft;
+    label3.numberOfLines=4;
+    label3.textColor=[UIColor grayColor];
+    label3.text=@"提示：您咨询的事项，会指派专人进行回复，提交咨询后，感谢您的耐心等待，谢谢！";
+    label3.font=[UIFont systemFontOfSize:16];
+    [bgScrollView addSubview:label3];
+    
+    UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(40, 580,Width-80, 40)];
     [button setTitle:@"提交" forState:UIControlStateNormal];
+    button.tag=1001;
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     button.backgroundColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1];
-    [button addTarget:self action:@selector(commit) forControlEvents:UIControlEventTouchUpInside];
-    
+    [button addTarget:self action:@selector(commit:) forControlEvents:UIControlEventTouchUpInside];
+    button.clipsToBounds=YES;
+    button.layer.cornerRadius=8;
     [bgScrollView addSubview:button];
     
-    bgScrollView.contentSize=CGSizeMake(Width, 360+80*reservationserviceArray.count+40*2+40*3+120);
+    bgScrollView.contentSize=CGSizeMake(Width, 620);
 }
--(void)commit{
+//MARK:提交数据
+-(void)commit:(UIButton *)sender{
     NSString *token=[[NSUserDefaults standardUserDefaults]objectForKey:@"token"];
     NSString *username=[[NSUserDefaults standardUserDefaults]objectForKey:@"username"];
      NSString *phone=[[NSUserDefaults standardUserDefaults]objectForKey:@"phone"];
-    UITextField *text1=[self.view viewWithTag:10];
-     UITextField *text2=[self.view viewWithTag:11];
-    UILabel *time=[self.view viewWithTag:30];
-
-    if ([time.text isEqualToString:@""]||[time.text isEqualToString:@"请选择时间"]) {
-        [self.view makeToast:@"请选择时间" duration:2 position:CSToastPositionCenter];
-        return;
-    }
-    if ([text1.text length]<3&&[text1.text length]>16) {
-           [self.view makeToast:@"设计院联系人输入不合法,请重新输入" duration:2 position:CSToastPositionCenter];
-        return;
-    }
-    if (![BSRegexValidate validateTelephone:text2.text]) {
-        [self.view makeToast:@"联系电话输入不合法,请重新输入" duration:2 position:CSToastPositionCenter];
-        return;
-    }
-    if ([BSRegexValidate stringContainsEmoji:text1.text]) {
-        [self.view makeToast:@"请不要输入表情" duration:2 position:CSToastPositionCenter];
-        return;
-    }
-
-    NSDictionary *messageDic=[projectNameArray objectAtIndex:projectNum];
-    NSString *str3=[messageDic objectForKey:@"hostdepartment"];
-    NSString *str2=[messageDic objectForKey:@"id"];
-    NSString *str1;
-    NSArray *nodelist=[messageDic objectForKey:@"nodelist"];
-    if (![nodelist isEqual:[NSNull null]]&&nodelist.count>0) {
-        str1=[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"];
-    }else{
-        str1=@"100";
-    }
-    
-    if (reservationserviceArray != nil && ![reservationserviceArray isKindOfClass:[NSNull class]] && reservationserviceArray.count != 0){
-        for (int j=0; j<reservationserviceArray.count; j++) {
-            UIButton *button=[self.view viewWithTag:20+j];
-            if (button.selected==NO) {
-                UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"请把方案提示信息全部选中" message:nil preferredStyle:UIAlertControllerStyleAlert];
+    if (sender.tag==1000) {
+        UITextField *text1=[self.view viewWithTag:10];
+        UITextField *text2=[self.view viewWithTag:11];
+        UILabel *time=[self.view viewWithTag:30];
+        
+        if ([time.text isEqualToString:@""]||[time.text isEqualToString:@"请选择时间"]) {
+            [self.view makeToast:@"请选择时间" duration:2 position:CSToastPositionCenter];
+            return;
+        }
+        if ([text1.text length]<3&&[text1.text length]>16) {
+            [self.view makeToast:@"设计院联系人输入不合法,请重新输入" duration:2 position:CSToastPositionCenter];
+            return;
+        }
+        if (![BSRegexValidate validateTelephone:text2.text]) {
+            [self.view makeToast:@"联系电话输入不合法,请重新输入" duration:2 position:CSToastPositionCenter];
+            return;
+        }
+        if ([BSRegexValidate stringContainsEmoji:text1.text]) {
+            [self.view makeToast:@"请不要输入表情" duration:2 position:CSToastPositionCenter];
+            return;
+        }
+        
+        NSDictionary *messageDic=[projectNameArray objectAtIndex:projectNum];
+        NSString *str3=[messageDic objectForKey:@"hostdepartment"];
+        NSString *str2=[messageDic objectForKey:@"id"];
+        NSString *str1;
+        NSArray *nodelist=[messageDic objectForKey:@"nodelist"];
+        if (![nodelist isEqual:[NSNull null]]&&nodelist.count>0) {
+            str1=[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"];
+        }else{
+            str1=@"100";
+        }
+        
+        if (reservationserviceArray != nil && ![reservationserviceArray isKindOfClass:[NSNull class]] && reservationserviceArray.count != 0){
+            for (int j=0; j<reservationserviceArray.count; j++) {
+                UIButton *button=[self.view viewWithTag:20+j];
+                if (button.selected==NO) {
+                    UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"请把方案提示信息全部选中" message:nil preferredStyle:UIAlertControllerStyleAlert];
+                    UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    }];
+                    [alert addAction:cancelAlert];
+                    [self presentViewController:alert animated:YES completion:nil];
+                    return;
+                }
+            }
+        }
+        NSString *str=[messageDic objectForKey:@"projectid"];
+        MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.label.text=@"数据提交中，请稍候...";
+        [HZLoginService YuYueWithToken:token unitcontact:username unitcontactphone:phone timeofappointment:time.text designInstitutename:text1.text designInstitutephone:text2.text hostdepartment:str3 companymisstionid:str2 projectid:str nodeId:str1 andBlock:^(NSDictionary *returnDic, NSError *error) {
+            [hud hideAnimated:YES];
+            if ([[returnDic objectForKey:@"code"]integerValue]==0) {
+                UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    [self.navigationController popViewControllerAnimated:YES];
+                }];
+                [alert addAction:cancelAlert];
+                [self presentViewController:alert animated:YES completion:nil];
+            }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
+                UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 }];
                 [alert addAction:cancelAlert];
                 [self presentViewController:alert animated:YES completion:nil];
-                return;
+            }else   if ([[returnDic objectForKey:@"code"]integerValue]==1000) {
+                [self.view makeToast:[returnDic objectForKey:@"desc"]];
+            }else{
+                [self.view makeToast:@"请求不成功，请重新尝试" duration:2 position:CSToastPositionCenter];
             }
+            
+        }];
+    }else{
+        NSLog(@"_detailText.text  %@",_detailText.text);
+        if (_detailText.text ==NULL||[_detailText.text isEqualToString:@""]) {
+            [self.view makeToast:@"请输入咨询内容" duration:2 position:CSToastPositionCenter];
+            return;
         }
-    }
-   NSString *str=[messageDic objectForKey:@"projectid"];
-    MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    hud.label.text=@"数据加载中，请稍候...";
-    [HZLoginService YuYueWithToken:token unitcontact:username unitcontactphone:phone timeofappointment:time.text designInstitutename:text1.text designInstitutephone:text2.text hostdepartment:str3 companymisstionid:str2 projectid:str nodeId:str1 andBlock:^(NSDictionary *returnDic, NSError *error) {
-        [hud hideAnimated:YES];
-        if ([[returnDic objectForKey:@"code"]integerValue]==0) {
-            UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [self.navigationController popViewControllerAnimated:YES];
-            }];
-            [alert addAction:cancelAlert];
-            [self presentViewController:alert animated:YES completion:nil];
-        }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
-            UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            }];
-            [alert addAction:cancelAlert];
-            [self presentViewController:alert animated:YES completion:nil];
-        }else   if ([[returnDic objectForKey:@"code"]integerValue]==1000) {
-            [self.view makeToast:[returnDic objectForKey:@"desc"]];
-        }else{
-             [self.view makeToast:@"请求不成功，请重新尝试" duration:2 position:CSToastPositionCenter];
-        }
+        MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.label.text=@"数据提交中，请稍候...";
+        NSDictionary *dic=[_ZhuBanKeShiArray objectAtIndex:nodeNum];
+        NSDictionary *messageDic=[projectNameArray objectAtIndex:projectNum];
+        NSString *companymissionid=[messageDic objectForKey:@"id"];
+        [HZLoginService ZiXunCommitToken:token orgid:[dic objectForKey:@"orgId"] details:_detailText.text companymissionid:companymissionid andBlock:^(NSDictionary *returnDic, NSError *error) {
+             [hud hideAnimated:YES];
+            if ([[returnDic objectForKey:@"code"]integerValue]==0) {
+                UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    [self.navigationController popViewControllerAnimated:YES];
+                }];
+                [alert addAction:cancelAlert];
+                [self presentViewController:alert animated:YES completion:nil];
+            }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
+                UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                }];
+                [alert addAction:cancelAlert];
+                [self presentViewController:alert animated:YES completion:nil];
+            }else   if ([[returnDic objectForKey:@"code"]integerValue]==1000) {
+                [self.view makeToast:[returnDic objectForKey:@"desc"]];
+            }else{
+                [self.view makeToast:@"请求不成功，请重新尝试" duration:2 position:CSToastPositionCenter];
+            }
 
-    }];
+        }];
+    }
 }
 -(void)tap:(UITapGestureRecognizer*)tap{
     if ([tap.accessibilityValue isEqualToString:@"resign"]) {
@@ -642,15 +744,25 @@
         projectNum=button.tag-60;
         NSDictionary *dic=[projectNameArray objectAtIndex:button.tag-60];
         projectName.text=[dic objectForKey:@"projectname"];
+        nodeNum=0;
         [self addSubviews];
     }else if(button.tag>49&&button.tag<60){
         [bgBigClassView removeFromSuperview];
-        nodeNum=button.tag-50;
-        NSDictionary *dic=[projectNameArray objectAtIndex:projectNum];
-        NSArray *nodelist=[dic objectForKey:@"nodelist"];
-        NSDictionary *nodelistdic=[nodelist objectAtIndex:button.tag-50];
-        nodeName.backgroundColor=[UIColor whiteColor];
-        nodeName.text=[nodelistdic objectForKey:@"value"];
+        NSDictionary *projectNameDic=[projectNameArray objectAtIndex:projectNum];
+        if ([[projectNameDic objectForKey:@"companyid"]isEqualToString:@"zzabcdef123456"]) {
+            nodeNum=button.tag-50;
+            NSDictionary *dic=[_ZhuBanKeShiArray objectAtIndex:button.tag-50];
+            nodeName.backgroundColor=[UIColor whiteColor];
+            nodeName.text=[dic objectForKey:@"orgName"];
+        }else{
+            nodeNum=button.tag-50;
+            NSDictionary *dic=[projectNameArray objectAtIndex:projectNum];
+            NSArray *nodelist=[dic objectForKey:@"nodelist"];
+            NSDictionary *nodelistdic=[nodelist objectAtIndex:button.tag-50];
+            nodeName.backgroundColor=[UIColor whiteColor];
+            nodeName.text=[nodelistdic objectForKey:@"value"];
+        }
+        
     }
    
 }
@@ -672,6 +784,38 @@
     time.text=timeLabel.text;
 //    self . birthdayField . text = date;
 }
+//MARK:转办事指南
+-(void)banshizhinan{
+    HZBanShiViewController *banshizhinan=[[HZBanShiViewController alloc]init];
+    [self.navigationController pushViewController:banshizhinan animated:YES];
+}
+-(void)textViewDidChange:(UITextView *)textView{
+    self.placehoderLabel.hidden=YES;
+}
+-(void)textViewDidEndEditing:(UITextView *)textView{
+    [self.view endEditing:YES];
+    self.numLabel.text =[NSString stringWithFormat:@"%d/200",(int)[textView.text length]];
+    if (textView.text==NULL||[textView.text isEqualToString:@""]) {
+        self.placehoderLabel.hidden=NO;
+    }
+}
+-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
+    if ([textView.text length]>=200)
+    {
+        textView.text = [textView.text substringToIndex:199];
+    }
+    else
+    {
+        self.numLabel.text =[NSString stringWithFormat:@"%d/200",(int)[textView.text length]];
+        return YES;
+    }
+    
+    return YES;
+}
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    [self.view endEditing:YES];
+}
+
 -(BOOL)textFieldShouldReturn:(UITextField *)textField{
     [self.view endEditing:YES];
     return YES;

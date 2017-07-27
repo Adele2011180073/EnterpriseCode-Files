@@ -10,4 +10,7 @@
 
 @interface HZIYuYueViewController : UIViewController
 @property(nonatomic,strong)NSDictionary*returnData;
+
+@property(nonatomic,strong)UILabel *placehoderLabel;
+@property(nonatomic,strong)UILabel *numLabel;
 @end

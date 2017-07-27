@@ -9,8 +9,8 @@
 #import <UIKit/UIKit.h>
 
 @interface HZLocateContentViewController : UIViewController
-@property(nonatomic,strong)UITableView *bgtableview;
 @property(nonatomic,retain)NSString *qlsxcode;
 @property(nonatomic,assign)int PCODE;
+@property(nonatomic,strong)NSDictionary *orgDic;
 
 @end

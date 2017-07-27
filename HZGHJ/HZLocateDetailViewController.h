@@ -10,6 +10,7 @@
 
 @interface HZLocateDetailViewController : UIViewController
 @property(nonatomic,retain)NSString *qlsxcode;
+@property(nonatomic,strong)NSDictionary *orgDic;
 @property(nonatomic,assign)int PCODE;
 
 @end

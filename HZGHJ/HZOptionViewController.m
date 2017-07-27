@@ -20,6 +20,7 @@
     NSMutableArray *_dataList;
     UIScrollView *_scrollCheckView;
     NSMutableArray *_checkBoxArray;
+    NSInteger checkNum;
 }
 
 
@@ -95,11 +96,14 @@
         UIButton *button=[_checkBoxArray objectAtIndex:i];
         button.selected=NO;
     }
+    checkNum=sender.tag;
     sender.selected=YES;
 }
 -(void)commit{
+    NSDictionary *orgDic=[_dataList objectAtIndex:checkNum];
     HZLocateDetailViewController *details=[[HZLocateDetailViewController alloc]init];
     details.qlsxcode=self.qlsxcode;
+    details.orgDic=orgDic;
     details.PCODE=self.PCODE;
     [self.navigationController pushViewController:details animated:YES];
 }

@@ -62,7 +62,7 @@
     [self.view addSubview:button];
 }
 -(void)commit{
-    if (_detailText.text ==NULL) {
+      if (_detailText.text ==NULL||[_detailText.text isEqualToString:@""]) {
         [self.view makeToast:@"请输入咨询内容" duration:2 position:CSToastPositionCenter];
         return;
     }

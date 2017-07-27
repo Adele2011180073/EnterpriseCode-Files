@@ -111,6 +111,7 @@
         [view removeFromSuperview];
     }
     NSArray *titleArray=@[@"咨询项目：",@"经办人：",@"联系电话：",@"所属分局："];
+
     NSArray *contentArray=@[[_totalDic objectForKey:@"projectName"],[_totalDic objectForKey:@"adminName"],[_totalDic objectForKey:@"adminPhone"],[_totalDic objectForKey:@"hostdepartment"]];
     UIView *wrapperView=[[UIView alloc]initWithFrame:CGRectMake(10, 10, Width-20, 120)];
     wrapperView.backgroundColor=[UIColor whiteColor];
