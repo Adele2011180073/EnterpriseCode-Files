@@ -124,11 +124,15 @@
         label.text=[NSString stringWithFormat:@"%@",[titleArray objectAtIndex:i]];
         [wrapperView addSubview:label];
         
+        NSString *contentStr=[contentArray objectAtIndex:i];
+        if (contentStr==NULL||contentStr==nil||[contentStr isEqual:[NSNull null]]) {
+            contentStr=@"";
+        }
         UILabel *content=[[UILabel alloc]initWithFrame:CGRectMake(110, 30*i, Width-130, 30)];
         content.textAlignment=NSTextAlignmentLeft;
         content.font=[UIFont systemFontOfSize:16];
         content.textColor=[UIColor darkGrayColor];
-        content.text=[NSString stringWithFormat:@"%@",[contentArray objectAtIndex:i]];
+        content.text=[NSString stringWithFormat:@"%@", contentStr];
         [wrapperView addSubview:content];
     }
     NSMutableArray *detailArray=[[NSMutableArray alloc]init];
@@ -231,7 +235,7 @@
                                     attributes:@{NSFontAttributeName: font}//传人的字体字典
                                        context:nil];
     
-    return rect.size.height;
+    return rect.size.height+20;
 }
 
 -(void)commit:(UIButton*)sender{

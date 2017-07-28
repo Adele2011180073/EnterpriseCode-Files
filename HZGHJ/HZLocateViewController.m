@@ -49,7 +49,22 @@
     [self.view addSubview:segmented];
     
     [self getResourceData];
+    [self getInlineRequestView];
+}
+-(void)getResourceData{
+  
+}
+//MARK:分段选择
+-(void)choseSeg:(UISegmentedControl *)segmented{
+    if (segmented.selectedSegmentIndex==0) {
+        [self getInlineRequestView];
+    }else{
+        [self addSearchView];
+    }
+}
+-(void)getInlineRequestView{
     tableview=[[UITableView alloc]initWithFrame:CGRectMake(0, 50, Width, Height-44-55)];
+    tableview.tag=10;
     [tableview registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     tableview.rowHeight=120;
     tableview.backgroundColor=[UIColor whiteColor];
@@ -59,16 +74,24 @@
     tableview.tableFooterView = [[UIView alloc] init];
     [self.view addSubview:tableview];
 }
--(void)getResourceData{
-  
-}
-//MARK:分段选择
--(void)choseSeg:(UISegmentedControl *)segmented{
-}
 -(void)addSearchView{
-    
+    tableview=[[UITableView alloc]initWithFrame:CGRectMake(0, 50, Width, Height-44-55)];
+    tableview.tag=11;
+    [tableview registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
+//    tableview.rowHeight=120;
+    tableview.backgroundColor=[UIColor whiteColor];
+    tableview.delegate=self;
+    tableview.separatorColor=[UIColor clearColor];
+    tableview.dataSource=self;
+    tableview.tableFooterView = [[UIView alloc] init];
+    [self.view addSubview:tableview];
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    if (tableview.tag==10) {
+        return dataList.count;
+    }else{
+         return 0;
+    }
     return dataList.count;
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -76,6 +99,7 @@
     if (!cell) {
         cell=[[UITableViewCell alloc]init];
     }
+    if (tableview.tag==10) {
     cell.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1];
     cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
     cell.selectionStyle=UITableViewCellSelectionStyleNone;
@@ -91,14 +115,21 @@
     
     NSString *text=[dataList objectAtIndex:indexPath.row];
     titleLabel.text=[NSString stringWithFormat:@"%@",text];
-    
+    }
+    else{
+        
+    }
     return cell;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+     if (tableview.tag==10) {
     HZOptionViewController *details=[[HZOptionViewController alloc]init];
     details.qlsxcode=[qlsxcodeArray objectAtIndex:indexPath.row];
     details.PCODE=indexPath.row;
     [self.navigationController pushViewController:details animated:YES];
+     }else{
+         
+     }
 }
 
 - (void)didReceiveMemoryWarning {

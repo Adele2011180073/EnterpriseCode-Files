@@ -69,6 +69,7 @@
 //MARK:绘制主表格视图
 -(void)addMainListView{
     NSArray *nameLabelaArray=@[@"申请人(全称) :",@"法定代表人 :",@"受托人 :",@"手机 :",@"项目名称 :",@"电话 :"];
+    NSUserDefaults  *def=[NSUserDefaults standardUserDefaults];
     for (int i=0; i<6; i++) {
         UIView *nameLabelView1=[[UIView alloc]initWithFrame:CGRectMake(0, 50*i,Width-10, 50)];
         nameLabelView1.userInteractionEnabled=YES;
@@ -311,7 +312,7 @@
          [self.view makeToast:@"不能输入表情" duration:2 position:CSToastPositionCenter];
         return;
     }
-    if ([BSRegexValidate validateTelephone:textfield4.text]) {
+    if (![BSRegexValidate validateTelephone:textfield4.text]) {
         [self.view makeToast:@"手机号码格式不正确" duration:2 position:CSToastPositionCenter];
         return;
     }

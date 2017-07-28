@@ -17,6 +17,10 @@
 #import "HZBanShiService.h"
 #import "UIViewController+BackButtonHandler.h"
 #import "UIView+Toast.h"
+#import "HZLoginViewController.h"
+#import "HZLocateViewController.h"
+#import <BaiduMapAPI_Map/BMKMapComponent.h>//引入地图功能所有的头文件
+
 
 @interface HZLocateContentViewController ()<UIImagePickerControllerDelegate,UINavigationBarDelegate,UITextFieldDelegate>{
     UIButton *_rightBarBtn;
@@ -24,7 +28,7 @@
     UIScrollView *_mainListView;//网格scrollview
     NSMutableArray * _imageAllArray;//所有图片数组
     UITextField *_textfield;
-    NSMutableArray*_imageNameArray;
+    NSMutableArray*_imageNameArray;//提交上传图片名称数组
     NSMutableArray*_imageCommitArray;//提交上传图片数组
     NSMutableArray *_MATERArray;
     UIImagePickerController* _picker;
@@ -193,7 +197,7 @@
             if (i==6) {
                 _textfield=[[UITextField alloc]initWithFrame:CGRectMake(5, 5, Width-230, 30)];
                 _textfield.layer.borderColor=blueCyan.CGColor;
-                _textfield.layer.borderWidth=0.5;
+                _textfield.layer.borderWidth=1;
                 _textfield.placeholder=@"受理号或控规地块";
                 _textfield.delegate=self;
                 _textfield.font=[UIFont systemFontOfSize:15];
@@ -331,13 +335,13 @@
     NSTimeInterval interval = [[NSDate date] timeIntervalSince1970] * 1000;
     NSString *imagename=nil;
     if (imageBtnNum==202) {
-         imagename=[NSString stringWithFormat:@"%@_a$%1.0f",[_MATERArray objectAtIndex:imageBtnNum-201],interval];
+         imagename=[NSString stringWithFormat:@"%@_a$%1.0f.png",[_MATERArray objectAtIndex:imageBtnNum-201],interval];
     }else if (imageBtnNum==203) {
-        imagename=[NSString stringWithFormat:@"%@_b$%1.0f",[_MATERArray objectAtIndex:imageBtnNum-201],interval];
+        imagename=[NSString stringWithFormat:@"%@_b$%1.0f.png",[_MATERArray objectAtIndex:imageBtnNum-201],interval];
     }else if (imageBtnNum==204) {
-        imagename=[NSString stringWithFormat:@"%@_c$%1.0f",[_MATERArray objectAtIndex:imageBtnNum-201],interval];
+        imagename=[NSString stringWithFormat:@"%@_c$%1.0f.png",[_MATERArray objectAtIndex:imageBtnNum-201],interval];
     }else{
-        imagename=[NSString stringWithFormat:@"%@_%1.0f",[_MATERArray objectAtIndex:imageBtnNum-201],interval];
+        imagename=[NSString stringWithFormat:@"%@_%1.0f.png",[_MATERArray objectAtIndex:imageBtnNum-201],interval];
     }
     [_imageCommitArray addObject:scaleImage];
     [_imageNameArray addObject:imagename];
@@ -441,28 +445,75 @@
     NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
     NSString *companyid=[def objectForKey:@"companyid"];
     NSString *userid=[def objectForKey:@"userid"];
-    if ([def objectForKey:@"saveDic"]) {
+    if (![def objectForKey:@"saveDic"]) {
          [self.view makeToast:@"提交数据不完整" duration:2 position:CSToastPositionCenter];
         return;
     }
     for (int i=0; i<_imageAllArray.count; i++) {
         NSArray *imageArray=[_imageAllArray objectAtIndex:i];
-        if ((i==0&&imageArray==NULL)||(i==1&&imageArray==NULL)||(i==2&&imageArray==NULL)||(i==3&&imageArray==NULL)||(i==5&&imageArray==NULL)) {
-            [self.view makeToast:@"必要图片获取不够" duration:2 position:CSToastPositionCenter];
+        if (i<5&&imageArray==NULL) {
+            [self.view makeToast:[NSString stringWithFormat:@"第%d图片不能为空",i+1] duration:2 position:CSToastPositionCenter];
                     return;
         }
     }
-   //    if (_textfield.text==NULL) {
-//        [self.view makeToast:@"四号线受理号" duration:2 position:CSToastPositionCenter];
-//        return;
-//    }
+    NSArray *imageArray=[_imageAllArray objectAtIndex:5];
+       if (_textfield==NULL||[_textfield.text isEqual:[NSNull null]]||[_textfield.text isEqualToString:@""]||_textfield==nil) {
+           if (imageArray.count>0) {
+           }else{
+               if (self.posArray.count>0) {
+                   
+               }else{
+                    [self.view makeToast:@"拟建位置1/1000带规划控制线地形图至少上传一份文件" duration:2 position:CSToastPositionCenter];
+                   return;
+               }
+           }
+      
+    }
+    
+    NSString *linerange=nil;
+    if (self.posArray.count>0) {
+        NSMutableArray *array=[[NSMutableArray alloc]init];
+        for (int i=0; i<self.posArray.count; i++) {
+            BMKPointAnnotation* annotation=[self.posArray objectAtIndex:i];
+            NSString *str=[NSString stringWithFormat:@"{{\"x\":%f,\"y\":%f}",annotation.coordinate.latitude,annotation.coordinate.longitude];
+            [array addObject:str];
+        }
+        linerange=[NSString stringWithFormat:@"[%@]",[array componentsJoinedByString:@","]];
+    }else{
+        linerange=@"";//linerange=@"[{\"x\":121.37701930100381,\"y\":31.140224825867108},{\"x\":121.37444116419017,\"y\":31.13796078195631},{\"x\":121.37535743581036,\"y\":31.135735320409562},{\"x\":121.37839370843409,\"y\":31.1385789563597},{\"x\":121.37658811435902,\"y\":31.14232655155866},{\"x\":121.37330929924761,\"y\":31.13840895880445}]";
+    }
+   
     NSArray *modifiedTagArray=@[@"0",@"0",@"1",@"1",@"0",@"0",@"0",@"1"];
     NSArray *businessIdArray=@[@"25",@"25",@"25",@"25",@"1",@"1",@"25",@"25"];
     NSDictionary *saveDic=[def objectForKey:@"saveDic"];
 //    MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 //    hud.label.text=@"数据加载中，请稍候...";
-    [HZBanShiService BanShiWithCompanyid:companyid userid:userid qlsxcode:self.qlsxcode uuid:@"" uploadtime:@"" synctime:@"" linerange:@"[{\"x\":121.37701930100381,\"y\":31.140224825867108},{\"x\":121.37444116419017,\"y\":31.13796078195631},{\"x\":121.37535743581036,\"y\":31.135735320409562},{\"x\":121.37839370843409,\"y\":31.1385789563597},{\"x\":121.37658811435902,\"y\":31.14232655155866},{\"x\":121.37330929924761,\"y\":31.13840895880445}]" tzdm:@"" tdgyfs:@"" qlsxzx:@"" lxwh:@"" sqr:[saveDic objectForKey:@"sqr"] xmmc:[saveDic objectForKey:@"xmmc"] fddbr:[saveDic objectForKey:@"fddbr"] lxdh:[saveDic objectForKey:@"lxdh"] wtr:[saveDic objectForKey:@"wtr"] sjh:[saveDic objectForKey:@"sjh"] jsnrjgm:[saveDic objectForKey:@"jsnrjgm"] jsdzq:[saveDic objectForKey:@"jsdzq"] jsdzl:[saveDic objectForKey:@"jsdzl"] zbdz:[saveDic objectForKey:@"zbdz"] zbnz:[saveDic objectForKey:@"zbnz"] zbxz:[saveDic objectForKey:@"zbxz"] zbbz:[saveDic objectForKey:@"zbbz"] lzbg:[saveDic objectForKey:@"lzbg"] sxslh:@"" applysource:@"" xmsmqk:[saveDic objectForKey:@"xmsmqk"] filecode:@"" businessId:[businessIdArray objectAtIndex:self.PCODE] resuuid:@"" ydqsqk:@"" sfqdfapf:@"" sfghtjbg:@"" tdcb:@"" tznrjly:@"" modifiedTag:[modifiedTagArray objectAtIndex:self.PCODE] orgId:[self.orgDic objectForKey:@"orgId"] imageArray:_imageCommitArray imageNameArray:_imageNameArray AddBlock:^(NSDictionary *returnDic, NSError *error) {
-    
+    [HZBanShiService BanShiWithCompanyid:companyid userid:userid qlsxcode:self.qlsxcode uuid:@"" uploadtime:@"" synctime:@"" linerange:linerange tzdm:@"" tdgyfs:@"" qlsxzx:@"" lxwh:@"" sqr:[saveDic objectForKey:@"sqr"] xmmc:[saveDic objectForKey:@"xmmc"] fddbr:[saveDic objectForKey:@"fddbr"] lxdh:[saveDic objectForKey:@"lxdh"] wtr:[saveDic objectForKey:@"wtr"] sjh:[saveDic objectForKey:@"sjh"] jsnrjgm:[saveDic objectForKey:@"jsnrjgm"] jsdzq:[saveDic objectForKey:@"jsdzq"] jsdzl:[saveDic objectForKey:@"jsdzl"] zbdz:[saveDic objectForKey:@"zbdz"] zbnz:[saveDic objectForKey:@"zbnz"] zbxz:[saveDic objectForKey:@"zbxz"] zbbz:[saveDic objectForKey:@"zbbz"] lzbg:[saveDic objectForKey:@"lzbg"] sxslh:@"" applysource:@"" xmsmqk:[saveDic objectForKey:@"xmsmqk"] filecode:@"" businessId:[businessIdArray objectAtIndex:self.PCODE] resuuid:@"" ydqsqk:@"" sfqdfapf:@"" sfghtjbg:@"" tdcb:@"" tznrjly:@"" modifiedTag:[modifiedTagArray objectAtIndex:self.PCODE] orgId:[self.orgDic objectForKey:@"orgId"] imageArray:_imageCommitArray imageNameArray:_imageNameArray AddBlock:^(NSDictionary *returnDic, NSError *error) {
+        if ([[returnDic objectForKey:@"code"]integerValue]==0) {
+              [self.view makeToast:[returnDic objectForKey:@"desc"] duration:2 position:CSToastPositionCenter];
+            NSArray *vcArray = self.navigationController.viewControllers;
+            for(UIViewController *vc in vcArray)
+            {
+                if ([vc isKindOfClass:[HZLocateViewController class]])
+                {
+                    [self.navigationController popToViewController:vc animated:YES];
+                }  
+            }
+        }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
+            UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *okAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                HZLoginViewController *login=[[HZLoginViewController alloc]init];
+                [self.navigationController pushViewController:login animated:YES];
+            }];
+            [alert addAction:okAlert];
+            UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            }];
+            [alert addAction:cancelAlert];
+            [self presentViewController:alert animated:YES completion:nil];
+        }else{
+            [self.view makeToast:@"请求失败，请重新尝试" duration:2 position:CSToastPositionCenter];
+        }
+
     }];
 }
 -(void)textFieldDidEndEditing:(UITextField *)textField{

@@ -122,6 +122,8 @@
     UIButton *button3=[self.view viewWithTag:22];
     if (button1.selected==YES&&button2.selected==YES&&button3.selected==YES) {
         HZLocateContentViewController *content=[[HZLocateContentViewController alloc]init];
+        content.PCODE=self.PCODE;
+        content.orgDic=self.orgDic;
         content.qlsxcode=self.qlsxcode;
         [self.navigationController pushViewController:content animated:YES];
     }else{

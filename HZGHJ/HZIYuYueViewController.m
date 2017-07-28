@@ -91,18 +91,23 @@
                 if (![list isEqual:[NSNull null]]&&list.count>0) {
                     for (int i=0; i<list.count; i++) {
                         NSDictionary *listDic=[list objectAtIndex:i];
+                        if ([[listDic objectForKey:@"companyid"]isEqualToString:@"zzabcdef123456"]) {
+                           [projectNameArray addObject:listDic];
+                        }else{
                         NSArray*nodelist=[listDic objectForKey:@"nodelist"];
-                            [projectNameArray addObject:listDic];
+                            if (nodelist.count>0) {
+                                [projectNameArray addObject:listDic];
+                            }
+                        }
                     }
                 }else{
                     [self.view makeToast:@"您的账户暂时无数据"];
                 }
                 NSArray *array=[returnDic objectForKey:@"reservationservice"];
-                NSDictionary *dic=[array objectAtIndex:0];
-                reservationserviceArray=[NSMutableArray arrayWithArray:[dic objectForKey:@"childList"]];
+                reservationserviceArray=[NSMutableArray arrayWithArray:array];
                 [self addSubviews];
 
-//                NSLog(@"预约数据    %@  ",reservationserviceArray);
+//                NSLog(@"预约数据    %@  ",returnDic);
 
             }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
                 UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
@@ -244,8 +249,44 @@
         }
     }
     
+    _detailText=[[UITextView alloc]initWithFrame:CGRectMake(0, 240, Width, 150)];
+    _detailText.delegate=self;
+    [_detailText resignFirstResponder];
+    _detailText.clearsOnInsertion=YES;
+    _detailText.font=[UIFont systemFontOfSize:15];
+    [bgScrollView addSubview:_detailText];
+    self.placehoderLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, _detailText.frame.size.width-40, 30)];
+    
+    self.placehoderLabel.backgroundColor = [UIColor whiteColor];
+    
+    self.placehoderLabel.text = @"请输入咨询内容(不得超过200字)";
+    self.placehoderLabel.textColor=[UIColor grayColor];
+    
+    self.placehoderLabel.font = [UIFont systemFontOfSize:15.0];
+    
+    [_detailText addSubview:self.placehoderLabel];
+    self.numLabel = [[UILabel alloc] initWithFrame:CGRectMake(_detailText.frame.size.width-90, _detailText.frame.size.height-30, 60, 20)];
+    
+    self.numLabel.backgroundColor = [UIColor whiteColor];
+    self.numLabel.textColor=[UIColor grayColor];
+    
+    self.numLabel.text = @"0/200";
+    
+    self.numLabel.font = [UIFont systemFontOfSize:15.0];
+    
+    [_detailText addSubview:self.numLabel];
+    NSLog(@"reservationserviceArray   %@",reservationserviceArray);
+    NSMutableArray *checkList=[[NSMutableArray alloc]init];
+    for (int j=0; j<reservationserviceArray.count; j++) {
+        NSDictionary *dic=[reservationserviceArray objectAtIndex:j];
+        if ([[dic objectForKey:@"id"]intValue]==[[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"]intValue]) {
+            NSArray *childList=[dic objectForKey:@"childList"];
+            [checkList addObjectsFromArray:childList];
+        }
+    }
+    
     for (int i=0; i<2; i++) {
-        UIView* bgView1=[[UIView alloc]initWithFrame:CGRectMake(20, 240+40*i, Width-40, 100)];
+        UIView* bgView1=[[UIView alloc]initWithFrame:CGRectMake(20, 400+40*i, Width-40, 100)];
         bgView1.backgroundColor=[UIColor colorWithRed:100/255.0 green:220/255.0 blue:247/255.0 alpha:1];
         //        bgView1.alpha=0.5;
         bgView1.layer.cornerRadius=10;
@@ -255,13 +296,15 @@
         bgView1.backgroundColor=[UIColor whiteColor];
         bgView1.userInteractionEnabled=YES;
         [bgScrollView addSubview:bgView1];
-        
+        if ([[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"]intValue]==1||[[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"]intValue]==2) {
+            bgView1.frame=CGRectMake(20, 400+40*i, Width-40, 160);
+        }
         if (i==0) {
             UILabel *label1=[[UILabel alloc]initWithFrame:CGRectMake(60, 10, Width-40-80, 20)];
             label1.textAlignment=NSTextAlignmentLeft;
             label1.text=@"方案提示信息：";
             label1.textColor=blueCyan;
-            label1.font=[UIFont systemFontOfSize:15];
+            label1.font=[UIFont systemFontOfSize:16];
             [bgView1 addSubview:label1];
             
             UILabel *label2=[[UILabel alloc]initWithFrame:CGRectMake(60, 40, Width-40-80, 60)];
@@ -269,13 +312,22 @@
             label2.textAlignment=NSTextAlignmentLeft;
             label2.text=@"请在以下条件完备情况下进行预约，并在已完备的条件中选择打钩，否则预约将无法完成：";
             label2.numberOfLines=3;
-            label2.font=[UIFont systemFontOfSize:15];
+            label2.font=[UIFont systemFontOfSize:16];
             [bgView1 addSubview:label2];
+            UIButton *commit=[[UIButton alloc]initWithFrame:CGRectMake(60,105, 100, 40)];
+            [commit addTarget:self action:@selector(yangbiao) forControlEvents:UIControlEventTouchUpInside];
+            commit.backgroundColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1];
+            commit.clipsToBounds=YES;
+            commit.layer.cornerRadius=10;
+            [commit setTitle:@"查看样表" forState:UIControlStateNormal];
+            [bgView1 addSubview:commit];
         }else{
-            bgView1.frame=CGRectMake(20, 350, Width-40, 70*reservationserviceArray.count);
-            NSLog(@"reservationserviceArray   %@",reservationserviceArray);
-            if (reservationserviceArray.count >0){
-                for (int j=0; j<reservationserviceArray.count; j++) {
+            bgView1.frame=CGRectMake(20, 510, Width-40, 70*checkList.count);
+            if ([[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"]intValue]==1||[[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"]intValue]==2) {
+                bgView1.frame=CGRectMake(20, 570, Width-40, 70*checkList.count);
+            }
+                if (checkList.count >0){
+                for (int j=0; j<checkList.count; j++) {
                     UIButton *image=[[UIButton alloc]initWithFrame:CGRectMake(10, 25+60*j, 60, 60)];
                     [image addTarget:self action:@selector(check:) forControlEvents:UIControlEventTouchUpInside];
                     image.tag=20+j;
@@ -285,7 +337,7 @@
                     
                     UILabel *label2=[[UILabel alloc]initWithFrame:CGRectMake(60, 20+60*j, Width-40-80, 70)];
                     label2.textAlignment=NSTextAlignmentLeft;
-                    NSDictionary *dic=[reservationserviceArray objectAtIndex:j];
+                    NSDictionary *dic=[checkList objectAtIndex:j];
                     label2.text=[dic objectForKey:@"name"];
                     label2.numberOfLines=3;
                     label2.font=[UIFont systemFontOfSize:15];
@@ -302,8 +354,7 @@
         NSString *adminPhone=[dic objectForKey:@"adminPhone"];
         NSArray *textArray=@[adminName,adminPhone];
         for (int i=0; i<2; i++) {
-            
-            UIView* bgView1=[[UIView alloc]initWithFrame:CGRectMake(0, 360+80*reservationserviceArray.count+40*i, Width, 40)];
+            UIView* bgView1=[[UIView alloc]initWithFrame:CGRectMake(0, 540+80*checkList.count+40*i, Width, 40)];
             bgView1.backgroundColor=[UIColor whiteColor];
             bgView1.userInteractionEnabled=YES;
             [bgScrollView addSubview:bgView1];
@@ -325,11 +376,16 @@
             [bgView1 addSubview:text];
         }
     }
+    
+    //
+    if ([[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"]intValue]==1||[[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"]intValue]==2) {
+    
+    }else{
     NSArray *labelArray3=@[@"设计院联系人",@"设计院联系电话"];
     NSArray *placeholderArray=@[@"请输入设计院联系人",@"请输入设计院联系电话"];
     if (projectNameArray != nil && ![projectNameArray isKindOfClass:[NSNull class]] && projectNameArray.count != 0){
         for (int i=0; i<2; i++) {
-            UIView* bgView1=[[UIView alloc]initWithFrame:CGRectMake(0, 380+80*reservationserviceArray.count+40*2+40*i, Width, 40)];
+            UIView* bgView1=[[UIView alloc]initWithFrame:CGRectMake(0, 500+80*checkList.count+40*2+40*i, Width, 40)];
             bgView1.backgroundColor=[UIColor whiteColor];
             bgView1.userInteractionEnabled=YES;
             [bgScrollView addSubview:bgView1];
@@ -355,15 +411,23 @@
             [bgView1 addSubview:text];
         }
     }
-    UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(40, 380+80*reservationserviceArray.count+40*2+40*2+30,Width-80, 40)];
+    }
+    UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(40, 520+80*checkList.count+40*2+40*2+30,Width-80, 40)];
+    bgScrollView.contentSize=CGSizeMake(Width, 520+80*checkList.count+40*2+40*3+120);
+
+    if ([[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"]intValue]==1||[[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"]intValue]==2) {
+         button.frame=CGRectMake(40, 480+80*checkList.count+40*2+40*2+30,Width-80, 40);
+        bgScrollView.contentSize=CGSizeMake(Width, 480+80*checkList.count+40*2+40*3+120);
+    }
     [button setTitle:@"提交" forState:UIControlStateNormal];
+    button.clipsToBounds=YES;
+    button.layer.cornerRadius=5;
     [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     button.backgroundColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1];
     [button addTarget:self action:@selector(commit:) forControlEvents:UIControlEventTouchUpInside];
     button.tag=1000;
     [bgScrollView addSubview:button];
     
-    bgScrollView.contentSize=CGSizeMake(Width, 360+80*reservationserviceArray.count+40*2+40*3+120);
 
 }
 //MARK:咨询页面
@@ -482,14 +546,15 @@
         UILabel *time=[self.view viewWithTag:30];
         
         if ([time.text isEqualToString:@""]||[time.text isEqualToString:@"请选择时间"]) {
-            [self.view makeToast:@"请选择时间" duration:2 position:CSToastPositionCenter];
-            return;
+//            [self.view makeToast:@"请选择时间" duration:2 position:CSToastPositionCenter];
+//            return;
+            time.text=@"";
         }
-        if ([text1.text length]<3&&[text1.text length]>16) {
+        if (text1&&[text1.text length]<3&&[text1.text length]>16) {
             [self.view makeToast:@"设计院联系人输入不合法,请重新输入" duration:2 position:CSToastPositionCenter];
             return;
         }
-        if (![BSRegexValidate validateTelephone:text2.text]) {
+        if (text2&&![BSRegexValidate validateTelephone:text2.text]) {
             [self.view makeToast:@"联系电话输入不合法,请重新输入" duration:2 position:CSToastPositionCenter];
             return;
         }
@@ -497,7 +562,10 @@
             [self.view makeToast:@"请不要输入表情" duration:2 position:CSToastPositionCenter];
             return;
         }
-        
+        if (_detailText.text ==NULL||[_detailText.text isEqualToString:@""]) {
+            [self.view makeToast:@"请输入咨询内容" duration:2 position:CSToastPositionCenter];
+            return;
+        }
         NSDictionary *messageDic=[projectNameArray objectAtIndex:projectNum];
         NSString *str3=[messageDic objectForKey:@"hostdepartment"];
         NSString *str2=[messageDic objectForKey:@"id"];
@@ -525,7 +593,7 @@
         NSString *str=[messageDic objectForKey:@"projectid"];
         MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         hud.label.text=@"数据提交中，请稍候...";
-        [HZLoginService YuYueWithToken:token unitcontact:username unitcontactphone:phone timeofappointment:time.text designInstitutename:text1.text designInstitutephone:text2.text hostdepartment:str3 companymisstionid:str2 projectid:str nodeId:str1 andBlock:^(NSDictionary *returnDic, NSError *error) {
+        [HZLoginService YuYueWithToken:token unitcontact:username unitcontactphone:phone timeofappointment:time.text designInstitutename:text1.text designInstitutephone:text2.text hostdepartment:str3 companymisstionid:str2 projectid:str nodeId:str1 detail:_detailText.text andBlock:^(NSDictionary *returnDic, NSError *error) {
             [hud hideAnimated:YES];
             if ([[returnDic objectForKey:@"code"]integerValue]==0) {
                 UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
@@ -788,6 +856,17 @@
 -(void)banshizhinan{
     HZBanShiViewController *banshizhinan=[[HZBanShiViewController alloc]init];
     [self.navigationController pushViewController:banshizhinan animated:YES];
+}
+//MARK:转查看样表
+-(void)yangbiao{
+    NSDictionary *messageDic=[projectNameArray objectAtIndex:projectNum];
+    NSString *downloadybghyx;
+    if ([[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"]intValue]==1) {
+        downloadybghyx=@"http://220.191.210.76/ghyx.docx";
+    }else  if ([[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"]intValue]==2) {
+       downloadybghyx=@"http://220.191.210.76/jgghhs.docx";
+    }
+       [[UIApplication sharedApplication] openURL:[NSURL URLWithString:downloadybghyx]];
 }
 -(void)textViewDidChange:(UITextView *)textView{
     self.placehoderLabel.hidden=YES;

@@ -43,7 +43,7 @@ typedef void (^ReturnData)(NSDictionary *returnDic, NSError *error);
 //获取我要预约数据
 +(void)WoDeYuYueDataWithToken:(NSString *)token andBlock:(ReturnData)YuYueBlock;
 //预约提交
-+(void)YuYueWithToken:(NSString *)token unitcontact:(NSString*)unitcontact  unitcontactphone:(NSString*)unitcontactphone timeofappointment:(NSString*)timeofappointment designInstitutename:(NSString*)designInstitutename designInstitutephone:(NSString*)designInstitutephone hostdepartment:(NSString*)hostdepartment companymisstionid:(NSString*)companymisstionid projectid:(NSString*)projectid nodeId:(NSString*)nodeId andBlock:(ReturnData)YuYueBlock;
++(void)YuYueWithToken:(NSString *)token unitcontact:(NSString*)unitcontact  unitcontactphone:(NSString*)unitcontactphone timeofappointment:(NSString*)timeofappointment designInstitutename:(NSString*)designInstitutename designInstitutephone:(NSString*)designInstitutephone hostdepartment:(NSString*)hostdepartment companymisstionid:(NSString*)companymisstionid projectid:(NSString*)projectid nodeId:(NSString*)nodeId detail:(NSString*)detail andBlock:(ReturnData)YuYueBlock;
 
 //上报
 //过程上报

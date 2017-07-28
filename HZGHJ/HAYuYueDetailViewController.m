@@ -189,7 +189,7 @@
          NSArray *itemArray=[dic objectForKey:@"varibles"];
         NSDictionary *detailsDic=[itemArray objectAtIndex:1];
          NSString *str5=[detailsDic objectForKey:@"varibalevalue"];
-       if ([[dic objectForKey:@"whereuser"]integerValue]==2&&indexPath.row==4) {
+       if (indexPath.row==4) {
             CGSize sizeToFit = [str5 sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(Width-40, CGFLOAT_MAX) lineBreakMode:UILineBreakModeTailTruncation];//此处的换行类型（lineBreakMode）可根据自己的实际情况进行设置
            height=sizeToFit.height+30;
         }
@@ -214,11 +214,11 @@
     }
     if (section>1) {
         NSDictionary *dic=[dataList objectAtIndex:section-2];
-        if ([[dic objectForKey:@"whereuser"]integerValue]==1) {
-            number=3;
-        }else if ([[dic objectForKey:@"whereuser"]integerValue]==2) {
+//        if ([[dic objectForKey:@"whereuser"]integerValue]==1) {
+//            number=3;
+//        }else if ([[dic objectForKey:@"whereuser"]integerValue]==2) {
             number=5;
-        }
+//        }
 
     }
        return number;
@@ -294,7 +294,7 @@
     }else{
         NSDictionary *dic=[dataList objectAtIndex:indexPath.section-2];
         if ([[dic objectForKey:@"whereuser"]integerValue]==1) {
-            NSArray *subArray=@[@"提交时间",@"预约人",@"预约状态"];
+            NSArray *subArray=@[@"提交时间",@"预约人",@"预约状态",@"预约内容",@""];
             NSArray *itemArray=[dic objectForKey:@"varibles"];
             NSDictionary *timeDic=[itemArray objectAtIndex:0];
             NSDictionary *statusDic=[itemArray objectAtIndex:1];
@@ -304,9 +304,24 @@
             if (str1==NULL||str1==nil)  str1=@"";
             if (str2==NULL||str2==nil)  str2=@"";
             if (str3==NULL||str3==nil)  str3=@"";
-            NSArray *textArray=@[str1,str2,str3];
-            label.text=[subArray objectAtIndex:indexPath.row];
-            text.text=[textArray objectAtIndex:indexPath.row];
+            NSString *str4=@"";
+            NSString *str5=[timeDic objectForKey:@"varibalevalue"];
+            NSArray *textArray=@[str1,str2,str3,str4,str5];
+            if (indexPath.row==4) {
+                UILabel *details=[[UILabel alloc]initWithFrame:CGRectMake(30, 0, Width -40, cell.frame.size.height)];
+                details.backgroundColor=[UIColor whiteColor];
+                details.layer.cornerRadius=5;
+                details.numberOfLines=0;
+                details.text=str5;
+                details.layer.borderColor=[UIColor grayColor].CGColor;
+                details.layer.borderWidth=1;
+                details.textAlignment=NSTextAlignmentLeft;
+                details.font=[UIFont systemFontOfSize:15];
+                [cell.contentView addSubview:details];
+            }else{
+                label.text=[subArray objectAtIndex:indexPath.row];
+                text.text=[textArray objectAtIndex:indexPath.row];
+            }
         }else if ([[dic objectForKey:@"whereuser"]integerValue]==2) {
             NSArray *subArray=@[@"回复时间",@"办理人",@"回复状态",@"回复内容",@""];
             NSArray *itemArray=[dic objectForKey:@"varibles"];

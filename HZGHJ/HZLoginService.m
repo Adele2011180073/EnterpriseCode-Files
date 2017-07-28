@@ -150,7 +150,7 @@
         NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
         NSData *data =    [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
         NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-//        printf("预约详情成功 %s\n",[[NSString stringWithFormat:@"%@",str]UTF8String]);
+        printf("预约详情成功 %s\n",[[NSString stringWithFormat:@"%@",str]UTF8String]);
         YuYueBlock(dic,nil);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"失败%@",error);
@@ -180,7 +180,7 @@
 
 }
 //预约提交
-+(void)YuYueWithToken:(NSString *)token unitcontact:(NSString*)unitcontact  unitcontactphone:(NSString*)unitcontactphone timeofappointment:(NSString*)timeofappointment designInstitutename:(NSString*)designInstitutename designInstitutephone:(NSString*)designInstitutephone hostdepartment:(NSString*)hostdepartment companymisstionid:(NSString*)companymisstionid projectid:(NSString*)projectid nodeId:(NSString*)nodeId andBlock:(ReturnData)YuYueBlock{
++(void)YuYueWithToken:(NSString *)token unitcontact:(NSString*)unitcontact  unitcontactphone:(NSString*)unitcontactphone timeofappointment:(NSString*)timeofappointment designInstitutename:(NSString*)designInstitutename designInstitutephone:(NSString*)designInstitutephone hostdepartment:(NSString*)hostdepartment companymisstionid:(NSString*)companymisstionid projectid:(NSString*)projectid nodeId:(NSString*)nodeId detail:(NSString*)detail andBlock:(ReturnData)YuYueBlock{
     AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
     NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kReservationURL];
     session.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"text/html",@"application/json", @"text/json", nil];
@@ -198,6 +198,7 @@
      [parameters setObject:companymisstionid forKey:@"companymisstionid"];
      [parameters setObject:projectid forKey:@"projectid"];
      [parameters setObject:nodeId forKey:@"nodeId"];
+    [parameters setObject:detail forKey:@"detail"];
     NSLog(@"parameters    %@",parameters);
     [session POST:serviceURLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];

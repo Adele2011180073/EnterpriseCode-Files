@@ -100,10 +100,11 @@
     sender.selected=YES;
 }
 -(void)commit{
-    NSDictionary *orgDic=[_dataList objectAtIndex:checkNum];
+    NSDictionary *orgDic=[_dataList objectAtIndex:checkNum-10];
     HZLocateDetailViewController *details=[[HZLocateDetailViewController alloc]init];
     details.qlsxcode=self.qlsxcode;
     details.orgDic=orgDic;
+    NSLog(@"orgDic   %@",orgDic);
     details.PCODE=self.PCODE;
     [self.navigationController pushViewController:details animated:YES];
 }
