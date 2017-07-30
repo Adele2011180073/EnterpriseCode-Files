@@ -10,8 +10,11 @@
 #import <BaiduMapAPI_Location/BMKLocationComponent.h>//引入定位功能所有的头文件
 
 @interface HZLocateContentViewController : UIViewController
+@property(nonatomic,retain)NSString *uuid;//已提交
+@property(nonatomic,strong)NSDictionary *commitData;//已提交
+
 @property(nonatomic,retain)NSString *qlsxcode;
 @property(nonatomic,assign)int PCODE;
-@property(nonatomic,strong)NSDictionary *orgDic;
+@property(nonatomic,assign)int orgId;
 @property(nonatomic,strong)NSArray* posArray;
 @end

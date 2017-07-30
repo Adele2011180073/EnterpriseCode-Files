@@ -107,6 +107,7 @@
 		1F8C15CF1ECDA2CA00B3E022 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F8C15CE1ECDA2CA00B3E022 /* QuartzCore.framework */; };
 		1F8C15D11ECDA2DD00B3E022 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F8C15D01ECDA2DD00B3E022 /* Security.framework */; };
 		1F8C15D31ECDA2E400B3E022 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F8C15D21ECDA2E400B3E022 /* SystemConfiguration.framework */; };
+		1F8D727C1F2D929F0082A772 /* HZReasonWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8D727B1F2D929F0082A772 /* HZReasonWebViewController.m */; };
 		1F96414E1ED98E7700F900F1 /* icon_zaixianbanshi.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F96414B1ED98E7700F900F1 /* icon_zaixianbanshi.png */; };
 		1F96414F1ED98E7700F900F1 /* icon_zaixianbanshi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F96414C1ED98E7700F900F1 /* icon_zaixianbanshi@2x.png */; };
 		1F9641501ED98E7700F900F1 /* icon_zaixianbanshi@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F96414D1ED98E7700F900F1 /* icon_zaixianbanshi@3x.png */; };
@@ -300,6 +301,8 @@
 		1F8C15CE1ECDA2CA00B3E022 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		1F8C15D01ECDA2DD00B3E022 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		1F8C15D21ECDA2E400B3E022 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		1F8D727A1F2D929F0082A772 /* HZReasonWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZReasonWebViewController.h; sourceTree = "<group>"; };
+		1F8D727B1F2D929F0082A772 /* HZReasonWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZReasonWebViewController.m; sourceTree = "<group>"; };
 		1F96414B1ED98E7700F900F1 /* icon_zaixianbanshi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_zaixianbanshi.png; sourceTree = "<group>"; };
 		1F96414C1ED98E7700F900F1 /* icon_zaixianbanshi@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_zaixianbanshi@2x.png"; sourceTree = "<group>"; };
 		1F96414D1ED98E7700F900F1 /* icon_zaixianbanshi@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_zaixianbanshi@3x.png"; sourceTree = "<group>"; };
@@ -580,6 +583,8 @@
 				1F9D6A0D1F0B451C00F3035F /* HZYangBiaoViewController.m */,
 				1F9D6A0F1F0BA0C000F3035F /* HZIllustrateViewController1.h */,
 				1F9D6A101F0BA0C000F3035F /* HZIllustrateViewController1.m */,
+				1F8D727A1F2D929F0082A772 /* HZReasonWebViewController.h */,
+				1F8D727B1F2D929F0082A772 /* HZReasonWebViewController.m */,
 			);
 			name = "在线办事";
 			sourceTree = "<group>";
@@ -994,6 +999,7 @@
 				1FB1538B1E2DBCC100A24C07 /* BSRegexValidate.m in Sources */,
 				1F3CCE3F1E012F0D0032981B /* HZGongShiDetailViewController.m in Sources */,
 				1FF89EB51DFE97CB007A4597 /* UIViewController+BackButtonHandler.m in Sources */,
+				1F8D727C1F2D929F0082A772 /* HZReasonWebViewController.m in Sources */,
 				1FCDC0161DFA5C60005E5587 /* HZBanShiViewController.m in Sources */,
 				1FCDC0201DFA5C85005E5587 /* HZNewsViewController.m in Sources */,
 				1F7F9B011F03B3F50006F56C /* HZOptionViewController.m in Sources */,

@@ -12,17 +12,23 @@
 #import "UIViewController+BackButtonHandler.h"
 #import "HZLocateDetailViewController.h"
 #import "HZLoginService.h"
+#import "HZBanShiService.h"
 #import "HZOptionViewController.h"
-
+#import "SVPullToRefresh.h"
+#import "UIView+Toast.h"
+#import "HZLoginViewController.h"
+#import "HZReasonWebViewController.h"
+#import "HZLocateContentViewController.h"
 
 @interface HZLocateViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     UITableView *tableview;
-    UIView *_searchView;//查询页面
+    UIScrollView *_searchView;//查询页面
     UISegmentedControl *segmented;
     NSArray *qlsxcodeArray;
-    
-   }
+    int pageIndex;
+    NSMutableArray *_dataSearchArray;
+}
 
 
 @end
@@ -48,17 +54,57 @@
     [segmented addTarget:self action:@selector(choseSeg:) forControlEvents:UIControlEventValueChanged];
     [self.view addSubview:segmented];
     
-    [self getResourceData];
+     pageIndex=1;
+    _dataSearchArray=[[NSMutableArray alloc]init];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self getResourceData];
+         });
     [self getInlineRequestView];
 }
 -(void)getResourceData{
-  
+//    MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    hud.label.text=@"数据加载中，请稍候...";
+    [tableview.infiniteScrollingView stopAnimating];
+    [tableview.pullToRefreshView stopAnimating];
+    NSString *companyid=[[NSUserDefaults standardUserDefaults]objectForKey:@"companyid"];
+  [HZBanShiService BanShiWithCompanyid:companyid pageIndex:pageIndex AddBlock:^(NSDictionary *returnDic, NSError *error) {
+//       [hud hideAnimated:YES];
+      if ([[returnDic objectForKey:@"code"]integerValue]==0) {
+          NSArray *array=[returnDic objectForKey:@"obj"];
+          if (pageIndex==1) {
+              _dataSearchArray=[NSMutableArray                                                                                                                                                                                                                                                                                                                                           arrayWithArray:array];
+          }else{
+              [_dataSearchArray addObjectsFromArray:array];
+          }
+          if (_dataSearchArray.count<1||_dataSearchArray==NULL) {
+              [self.view makeToast:@"暂时没有数据" duration:2 position:CSToastPositionCenter];
+          }
+          if (segmented.selectedSegmentIndex==1) {
+              [tableview reloadData];
+          }
+      }else if ([[returnDic objectForKey:@"code"]integerValue]==900) {
+          UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
+          UIAlertAction *okAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+              HZLoginViewController *login=[[HZLoginViewController alloc]init];
+              [self.navigationController pushViewController:login animated:YES];
+          }];
+          [alert addAction:okAlert];
+          UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+          }];
+          [alert addAction:cancelAlert];
+          [self presentViewController:alert animated:YES completion:nil];
+      }else{
+          [self.view makeToast:[returnDic objectForKey:@"desc"] duration:2 position:CSToastPositionCenter];
+      }
+
+  }];
 }
 //MARK:分段选择
 -(void)choseSeg:(UISegmentedControl *)segmented{
     if (segmented.selectedSegmentIndex==0) {
         [self getInlineRequestView];
     }else{
+         pageIndex=1;
         [self addSearchView];
     }
 }
@@ -75,7 +121,33 @@
     [self.view addSubview:tableview];
 }
 -(void)addSearchView{
-    tableview=[[UITableView alloc]initWithFrame:CGRectMake(0, 50, Width, Height-44-55)];
+    _searchView=[[UIScrollView alloc]init];
+    _searchView.frame=CGRectMake(0, 60, Width, Height-64-60);
+    _searchView.backgroundColor=[UIColor whiteColor];
+//    _searchView.contentSize=CGSizeMake(Width, 1280);
+    _searchView.userInteractionEnabled=YES;
+    [self.view addSubview:_searchView];
+      NSArray *statusLabelArray=@[@"序号",@"项目名称",@"办理事项",@"提交时间",@"申请进度"];
+    UIView *nameLabelView1=[[UIView alloc]initWithFrame:CGRectMake(5, 10,Width-10, 40)];
+    nameLabelView1.userInteractionEnabled=YES;
+    nameLabelView1.layer.borderColor=blueCyan.CGColor;
+    nameLabelView1.layer.borderWidth=0.5;
+    [_searchView addSubview:nameLabelView1];
+    for (int i=0; i<statusLabelArray.count; i++) {
+        UILabel  *label1=[[UILabel alloc]initWithFrame:CGRectMake(50+(Width-60)/4*(i-1),  0, (Width-60)/4, 40)];
+        if (i==0) {
+            label1.frame=CGRectMake(0,  0, 50, 40);
+        }
+        label1.layer.borderColor=blueCyan.CGColor;
+        label1.layer.borderWidth=0.5;
+        label1.textAlignment=NSTextAlignmentCenter;
+        label1.numberOfLines=10;
+        label1.font=[UIFont systemFontOfSize:15];
+        label1.text=[NSString stringWithFormat:@"%@",[statusLabelArray objectAtIndex:i]] ;
+        [nameLabelView1  addSubview:label1];
+}
+    
+    tableview=[[UITableView alloc]initWithFrame:CGRectMake(0, 50, Width, Height-64-60)];
     tableview.tag=11;
     [tableview registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
 //    tableview.rowHeight=120;
@@ -84,15 +156,49 @@
     tableview.separatorColor=[UIColor clearColor];
     tableview.dataSource=self;
     tableview.tableFooterView = [[UIView alloc] init];
-    [self.view addSubview:tableview];
+    [_searchView addSubview:tableview];
+    __weak HZLocateViewController *locate=self;
+    [tableview addInfiniteScrollingWithActionHandler:^{
+        pageIndex=pageIndex+1;
+        [locate getResourceData];
+    }];
+    [tableview addPullToRefreshWithActionHandler:^{
+        pageIndex=1;
+        [locate getResourceData];
+    }];
+    [tableview.pullToRefreshView setTitle:@"下拉以刷新" forState:SVPullToRefreshStateTriggered];
+    [tableview.pullToRefreshView setTitle:@"刷新完了哟" forState:SVPullToRefreshStateStopped];
+    [tableview.pullToRefreshView setTitle:@"不要命的加载中..." forState:SVPullToRefreshStateLoading];
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if (tableview.tag==10) {
         return dataList.count;
     }else{
-         return 0;
+         return _dataSearchArray.count;
     }
     return dataList.count;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (tableview.tag==10) {
+        return 120;
+    }else{
+        NSDictionary *dic=[_dataSearchArray objectAtIndex:indexPath.row];
+        NSString *qlsxcode=[dic objectForKey:@"qlsxcode"];
+        NSInteger pcode=[qlsxcodeArray indexOfObject:qlsxcode];
+        NSString *qlsxcodeString=[dataList objectAtIndex:pcode];
+        CGFloat height1=[self sizeWithSt:qlsxcodeString font:[UIFont systemFontOfSize:15]];
+        CGFloat height2;
+        if ([[dic objectForKey:@"issync"]integerValue]==1) {
+            height2=90;
+        }else if ([[dic objectForKey:@"issync"]integerValue]==2) {
+            height2=130;
+        }else{
+            height2=50;
+        }
+        CGFloat height=height1>height2?height1:height2;
+        return height;
+    
+    }
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
@@ -117,10 +223,115 @@
     titleLabel.text=[NSString stringWithFormat:@"%@",text];
     }
     else{
+        if (!cell) {
+            cell=[[UITableViewCell alloc]init];
+        }else{
+            for (UIView *view in cell.contentView.subviews) {
+                [view removeFromSuperview];
+            }
+        }
+        cell.backgroundColor=[UIColor whiteColor];
+        cell.selectionStyle=UITableViewCellSelectionStyleNone;
         
+        NSDictionary *dic=[_dataSearchArray objectAtIndex:indexPath.row];
+        NSString *xmmc=[dic objectForKey:@"xmmc"];
+        NSString *qlsxcode=[dic objectForKey:@"qlsxcode"];
+        NSInteger pcode=[qlsxcodeArray indexOfObject:qlsxcode];
+        NSString *qlsxcodeString=[dataList objectAtIndex:pcode];
+        NSString*str=[dic objectForKey:@"uploadtime"];//时间戳
+        NSDate*detaildate=[NSDate dateWithTimeIntervalSince1970:[str integerValue]/1000];
+        //实例化一个NSDateFormatter对象
+        NSDateFormatter*dateFormatter = [[NSDateFormatter alloc]init];
+        //设定时间格式,这里可以设置成自己需要的格式
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        NSString*currentDateStr = [dateFormatter stringFromDate:detaildate];
+        NSArray *statusLabelArray=@[[NSString stringWithFormat:@"%d",indexPath.row],xmmc,qlsxcodeString,currentDateStr];
+        for (int i=0; i<statusLabelArray.count; i++) {
+            UILabel  *label1=[[UILabel alloc]initWithFrame:CGRectMake(55+(Width-60)/4*(i-1),  0, (Width-60)/4, cell.frame.size.height)];
+            if (i==0) {
+                label1.frame=CGRectMake(5,  0, 50, cell.frame.size.height);
+            }
+            label1.layer.borderColor=blueCyan.CGColor;
+            label1.layer.borderWidth=0.5;
+            label1.textAlignment=NSTextAlignmentCenter;
+            label1.numberOfLines=10;
+            label1.font=[UIFont systemFontOfSize:15];
+            label1.text=[statusLabelArray objectAtIndex:i];
+            [cell.contentView  addSubview:label1];
+        }
+        NSString *issync;
+        if ([[dic objectForKey:@"issync"]integerValue]==101) {
+            issync=@"提交中";
+        }else if ([[dic objectForKey:@"issync"]integerValue]==102) {
+           issync=@"提交完成";
+        }else if ([[dic objectForKey:@"issync"]integerValue]==103) {
+           issync=@"提交失败";
+        }else if ([[dic objectForKey:@"issync"]integerValue]==104) {
+            issync=@"提交失败";
+        }else if ([[dic objectForKey:@"issync"]integerValue]==0) {
+           issync=@"已受理";
+        }else if ([[dic objectForKey:@"issync"]integerValue]==1) {
+           issync=@"不予受理";
+        }else if ([[dic objectForKey:@"issync"]integerValue]==2) {
+            issync=@"补正";
+        }else{
+           issync=@"";
+        }
+        UIView *nameLabelView1=[[UIView alloc]initWithFrame:CGRectMake(55+(Width-60)/4*3, 0,(Width-60)/4, cell.frame.size.height)];
+        nameLabelView1.userInteractionEnabled=YES;
+        nameLabelView1.layer.borderColor=blueCyan.CGColor;
+        nameLabelView1.layer.borderWidth=0.5;
+        [cell.contentView addSubview:nameLabelView1];
+        UILabel  *label1=[[UILabel alloc]initWithFrame:CGRectMake(0,  5, (Width-60)/4, 30)];
+       label1.textAlignment=NSTextAlignmentCenter;
+        label1.font=[UIFont systemFontOfSize:15];
+        label1.text=[NSString stringWithFormat:@"%@",issync] ;
+        [nameLabelView1  addSubview:label1];
+        if ([[dic objectForKey:@"issync"]integerValue]==1) {
+            UIButton *imageBtn=[[UIButton alloc]initWithFrame:CGRectMake(5,40, (Width-60)/4-10, 30)];
+            imageBtn.titleLabel.font=[UIFont systemFontOfSize:15];
+            imageBtn.tag=20;
+            imageBtn.accessibilityValue=[NSString stringWithFormat:@"%@",[dic objectForKey:@"resuuid"]];
+            [imageBtn addTarget:self action:@selector(commit:) forControlEvents:UIControlEventTouchUpInside];
+            [imageBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            imageBtn.backgroundColor=blueCyan;
+            [imageBtn setTitle:@"查看原因" forState:UIControlStateNormal];
+            [nameLabelView1 addSubview:imageBtn];
+        }else if ([[dic objectForKey:@"issync"]integerValue]==2) {
+            UIButton *imageBtn=[[UIButton alloc]initWithFrame:CGRectMake(5,40, (Width-60)/4-10, 30)];
+            imageBtn.tag=20;
+            imageBtn.titleLabel.font=[UIFont systemFontOfSize:15];
+            imageBtn.accessibilityValue=[NSString stringWithFormat:@"%@",[dic objectForKey:@"resuuid"]];
+            [imageBtn addTarget:self action:@selector(commit:) forControlEvents:UIControlEventTouchUpInside];
+            [imageBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            imageBtn.backgroundColor=blueCyan;
+            [imageBtn setTitle:@"查看原因" forState:UIControlStateNormal];
+            [nameLabelView1 addSubview:imageBtn];
+            UIButton *imageBtn1=[[UIButton alloc]initWithFrame:CGRectMake(5,75, (Width-60)/4-10, 30)];
+            imageBtn1.tag=21;
+            imageBtn1.titleLabel.font=[UIFont systemFontOfSize:15];
+            imageBtn1.accessibilityValue=[NSString stringWithFormat:@"%@",[dic objectForKey:@"uuid"]];
+            [imageBtn1 addTarget:self action:@selector(commit:) forControlEvents:UIControlEventTouchUpInside];
+            [imageBtn1 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            imageBtn1.backgroundColor=blueCyan;
+            [imageBtn1 setTitle:@"再次提交" forState:UIControlStateNormal];
+            [nameLabelView1 addSubview:imageBtn1];
+
+        }
     }
     return cell;
 }
+//MARK:定义成方法方便多个label调用 增加代码的复用性
+- (CGFloat)sizeWithSt:(NSString *)string font:(UIFont *)font
+{
+    CGRect rect = [string boundingRectWithSize:CGSizeMake((Width-60)/4, 8000)//限制最大的宽度和高度
+                                       options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesFontLeading  |NSStringDrawingUsesLineFragmentOrigin//采用换行模式
+                                    attributes:@{NSFontAttributeName: font}//传人的字体字典
+                                       context:nil];
+    
+    return rect.size.height+24;
+}
+
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
      if (tableview.tag==10) {
     HZOptionViewController *details=[[HZOptionViewController alloc]init];
@@ -131,7 +342,23 @@
          
      }
 }
-
+-(void)commit:(UIButton *)sender{
+    if (sender.tag==20) {
+        HZReasonWebViewController *reason=[[HZReasonWebViewController alloc]init];
+        reason.resuuid=sender.accessibilityValue;
+        [self.navigationController pushViewController:reason animated:YES];
+    }else if (sender.tag==21) {
+        HZLocateContentViewController *content=[[HZLocateContentViewController alloc]init];
+        for (int i=0; i<_dataSearchArray.count; i++) {
+            NSDictionary *dic=[_dataSearchArray objectAtIndex:i];
+            if ([[dic objectForKey:@"uuid"]isEqualToString:sender.accessibilityValue]) {
+                content.commitData=dic;
+            }
+        }
+        content.uuid=sender.accessibilityValue;
+         [self.navigationController pushViewController:content animated:YES];
+    }
+}
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

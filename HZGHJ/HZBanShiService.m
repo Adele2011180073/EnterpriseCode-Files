@@ -60,7 +60,7 @@
     NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kQueryListURL];
     session.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"text/html",@"application/json", @"text/json", nil];
     session.responseSerializer = [AFHTTPResponseSerializer serializer];
-    session.requestSerializer.timeoutInterval=100.f;
+    session.requestSerializer.timeoutInterval=30.f;
     NSMutableDictionary *parameters=[NSMutableDictionary dictionary];
     [parameters setObject:companyid forKey:@"companyid"];
     [parameters setObject:[NSString stringWithFormat:@"%d",pageindex] forKey:@"pageindex"];
@@ -69,7 +69,7 @@
         NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
         NSData *data =    [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
         NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-        NSLog(@"成功  %@",str);
+//        printf("办事提交 %s \n",[[NSString stringWithFormat:@"%@",str]UTF8String]);
         GetCommitBlock(dic,nil);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"失败%@",error);
@@ -90,7 +90,7 @@
         NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
         NSData *data =    [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
         NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-        NSLog(@"成功  %@",str);
+        printf("办事提交 %s \n",[[NSString stringWithFormat:@"%@",str]UTF8String]);
         GetCommitBlock(dic,nil);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"失败%@",error);

@@ -110,24 +110,26 @@
     _mapView.centerCoordinate = userLocation.location.coordinate;
     
 }
-
--(void)mapView:(BMKMapView *)mapView onClickedMapPoi:(BMKMapPoi *)mapPoi{
-    NSLog(@"mapPoi.text   %@",mapPoi.text);
-    if (_posArray.count>8) {
+-(void)mapview:(BMKMapView *)mapView onLongClick:(CLLocationCoordinate2D)coordinate{
+    NSLog(@"_posArray   %@",_posArray);
+    if (_posArray.count>5) {
         
     }else{
-    //创建气球上面的位置显示框
-    BMKPointAnnotation* annotation = [[BMKPointAnnotation alloc]init];
-    annotation.coordinate = mapPoi.pt;
-    annotation.title = mapPoi.text;
-//    annotation.subtitle = @"this is a test!this is a test!";
-    [_mapView addAnnotation:annotation];
-    //关键代码 如下：
-    //这样就可以在初始化的时候将 气泡信息弹出
-    [_mapView selectAnnotation:annotation animated:YES];
+        //创建气球上面的位置显示框
+        BMKPointAnnotation* annotation = [[BMKPointAnnotation alloc]init];
+        annotation.coordinate = coordinate;
+        annotation.title = [NSString stringWithFormat:@"经度：%f   纬度：%f",coordinate.latitude,coordinate.longitude];
+        [_mapView addAnnotation:annotation];
+        //关键代码 如下：
+        //这样就可以在初始化的时候将 气泡信息弹出
+        [_mapView selectAnnotation:annotation animated:YES];
         [_posArray addObject:annotation];
     }
+
 }
+-(void)mapView:(BMKMapView *)mapView onClickedMapPoi:(BMKMapPoi *)mapPoi{
+    NSLog(@"mapPoi.text   %@",mapPoi.text);
+   }
 //当点击annotationview弹出的泡泡时，调用此接口
 - (void)mapView:(BMKMapView *)mapView  annotationViewForBubble:(BMKAnnotationView *)view
 {
@@ -145,7 +147,6 @@
     annotationView.animatesDrop = YES;
     // 设置可拖拽
     annotationView.draggable = YES;
-//    annotationView.leftCalloutAccessoryView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"pos.png"]];
     [annotationView setSelected:YES animated:YES];
     return annotationView;
 }

@@ -103,7 +103,7 @@
     NSDictionary *orgDic=[_dataList objectAtIndex:checkNum-10];
     HZLocateDetailViewController *details=[[HZLocateDetailViewController alloc]init];
     details.qlsxcode=self.qlsxcode;
-    details.orgDic=orgDic;
+    details.orgId=[[orgDic objectForKey:@"orgId"]intValue];
     NSLog(@"orgDic   %@",orgDic);
     details.PCODE=self.PCODE;
     [self.navigationController pushViewController:details animated:YES];
