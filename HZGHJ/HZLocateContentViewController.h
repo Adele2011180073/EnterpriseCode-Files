@@ -16,5 +16,7 @@
 @property(nonatomic,retain)NSString *qlsxcode;
 @property(nonatomic,assign)int PCODE;
 @property(nonatomic,assign)int orgId;
-@property(nonatomic,strong)NSArray* posArray;
+
+@property(nonatomic,strong)NSArray* posArray;//已返回
+@property(nonatomic,strong)NSDictionary *saveDic;
 @end

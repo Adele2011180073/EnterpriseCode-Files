@@ -352,11 +352,27 @@
         for (int i=0; i<_dataSearchArray.count; i++) {
             NSDictionary *dic=[_dataSearchArray objectAtIndex:i];
             if ([[dic objectForKey:@"uuid"]isEqualToString:sender.accessibilityValue]) {
-                content.commitData=dic;
+                NSArray * allkeys = [dic allKeys];
+                NSMutableDictionary *dicmutable=[[NSMutableDictionary alloc]init];
+                for (int i = 0; i < allkeys.count; i++)
+                {
+                    NSString * key = [allkeys objectAtIndex:i];
+                    //如果你的字典中存储的多种不同的类型,那么最好用id类型去接受它
+                    id obj  = [dic objectForKey:key];
+                    if (obj==nil||obj==NULL||[obj isEqual:[NSNull null]]) {
+                        obj=@"";
+                    }
+                    NSString *value=[NSString stringWithFormat:@"%@",obj];
+                    [dicmutable setObject:value forKey:key];
+                }
+                content.saveDic=[[NSDictionary alloc]initWithDictionary:dicmutable];
+                content.commitData=content.saveDic;
+//                        NSLog(@"content.saveDic  %@",content.saveDic);
+                content.uuid=sender.accessibilityValue;
+                [self.navigationController pushViewController:content animated:YES];
             }
         }
-        content.uuid=sender.accessibilityValue;
-         [self.navigationController pushViewController:content animated:YES];
+        
     }
 }
 - (void)didReceiveMemoryWarning {

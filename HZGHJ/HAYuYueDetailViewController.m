@@ -186,9 +186,16 @@
     }
     if (indexPath.section>1) {
         NSDictionary *dic=[dataList objectAtIndex:indexPath.section-2];
+        NSString *str5;
+         if ([[dic objectForKey:@"whereuser"]integerValue]==1) {
          NSArray *itemArray=[dic objectForKey:@"varibles"];
-        NSDictionary *detailsDic=[itemArray objectAtIndex:1];
-         NSString *str5=[detailsDic objectForKey:@"varibalevalue"];
+        NSDictionary *detailsDic=[itemArray objectAtIndex:0];
+         str5=[detailsDic objectForKey:@"varibalevalue"];
+         }else if ([[dic objectForKey:@"whereuser"]integerValue]==2) {
+             NSArray *itemArray=[dic objectForKey:@"varibles"];
+             NSDictionary *detailsDic=[itemArray objectAtIndex:1];
+             str5=[detailsDic objectForKey:@"varibalevalue"];
+         }
        if (indexPath.row==4) {
             CGSize sizeToFit = [str5 sizeWithFont:[UIFont systemFontOfSize:15] constrainedToSize:CGSizeMake(Width-40, CGFLOAT_MAX) lineBreakMode:UILineBreakModeTailTruncation];//此处的换行类型（lineBreakMode）可根据自己的实际情况进行设置
            height=sizeToFit.height+30;
@@ -276,7 +283,7 @@
         NSArray *subArray=@[@"预约人",@"联系电话",@"设计院联系人",@"联系电话",@"预约时间"];
 //        NSDictionary *unitUserInfo=[[returnData objectForKey:@"unitUserInfo"]objectAtIndex:0];
         NSString *str1=[returnData objectForKey:@"username"];
-        NSString *str2=[returnData objectForKey:@"adminPhone"];
+        NSString *str2=[returnData objectForKey:@"userphone"];
 //        NSString *str3=[unitUserInfo objectForKey:@"username"];
 //        NSString *str4=[unitUserInfo objectForKey:@"phone"];
         NSString *str3=[returnData objectForKey:@"designInstitutename"];
