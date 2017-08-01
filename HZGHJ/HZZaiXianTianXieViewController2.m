@@ -340,6 +340,7 @@
 //    UIButton *button2=[self.view viewWithTag:41];
     [_listView removeFromSuperview];
     _listView=[[UIScrollView alloc]init];
+    _listView.backgroundColor=littleGray;
     _listView.layer.borderColor=blueCyan.CGColor;
     _listView.layer.borderWidth=0.5;
     _listView.userInteractionEnabled=YES;
@@ -352,7 +353,7 @@
             text.tag=400+i;
             NSString *content=[_listArray objectAtIndex:i];
                 [text setTitle:content forState:UIControlStateNormal];
-              [text setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
+              [text setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
             [text addTarget:self action:@selector(listBtn:) forControlEvents:UIControlEventTouchUpInside];
             text.titleLabel.font=[UIFont systemFontOfSize:16];
             [_listView addSubview:text];
@@ -365,6 +366,7 @@
             text.tag=410+i;
             NSString *content=[_listArray objectAtIndex:i];
             [text setTitle:content forState:UIControlStateNormal];
+             [text setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
             [text addTarget:self action:@selector(listBtn:) forControlEvents:UIControlEventTouchUpInside];
             text.titleLabel.font=[UIFont systemFontOfSize:16];
             [_listView addSubview:text];
@@ -515,7 +517,6 @@
     [dic setObject:@"" forKey:@"zbnz"];
     [dic setObject:@"" forKey:@"zbxz"];
     [dic setObject:@"" forKey:@"zbbz"];
-    [dic setObject:@"" forKey:@"tdgyfs"];
     [dic setObject:@"" forKey:@"filecode"];
     [dic setObject:@"" forKey:@"resuuid"];
     [dic setObject:@"" forKey:@"sfghtjbg"];
@@ -586,7 +587,6 @@
     [dic setObject:@"" forKey:@"zbnz"];
     [dic setObject:@"" forKey:@"zbxz"];
     [dic setObject:@"" forKey:@"zbbz"];
-    [dic setObject:@"" forKey:@"tdgyfs"];
     [dic setObject:@"" forKey:@"filecode"];
     [dic setObject:@"" forKey:@"resuuid"];
     [dic setObject:@"" forKey:@"sfghtjbg"];

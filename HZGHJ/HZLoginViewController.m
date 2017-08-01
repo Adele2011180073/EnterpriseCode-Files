@@ -98,6 +98,8 @@
             home.dic=returnDic;
             NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
             [def setObject:[returnDic objectForKey:@"token"] forKey:@"token"];
+            [ def setObject:self.userText.text forKey:@"username"];
+            [ def setObject:self.passwdText.text forKey:@"passwd"];
             [ def setObject:[[returnDic objectForKey:@"obj"]objectForKey:@"userid"] forKey:@"userid"];
             [ def setObject:[[returnDic objectForKey:@"obj"]objectForKey:@"userid"] forKey:@"phone"];
            [def setObject:[[[returnDic objectForKey:@"obj"]objectForKey:@"dbAConstructionunit"]objectForKey:@"name"]  forKey:@"department"];

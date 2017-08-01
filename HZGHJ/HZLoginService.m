@@ -14,7 +14,7 @@
 +(void)CheckWithUserName:(NSString *)username andBlock:(ReturnData)CheckBlock{
     NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
     NSString *userName=nil;
-    if ([def boolForKey:@"remember"]==YES) {
+    if ([def objectForKey:@"username"]) {
         userName=[def objectForKey:@"username"];
     }else{
         userName=@"";

@@ -83,7 +83,7 @@
     
     NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
     NSString *username;
-    if ([def boolForKey:@"remember"]==YES) {
+    if ([def objectForKey:@"username"]) {
         username=[def objectForKey:@"username"];
         [self getDataSource];
         
@@ -181,8 +181,7 @@
             NSArray* dataArray = [[NSArray alloc] initWithContentsOfFile:plistPath];
             dataSourceArray=[NSMutableArray arrayWithArray:dataArray];
             
-            //    NSLog(@"datasourcearray   %@",dataSourceArray);
-            
+                NSLog(@"datasourcearray   %@",dataSourceArray);
             [collectionview reloadData];
         }else  if ([[obj objectForKey:@"useable"]intValue]==2) {
             [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"remember"];
@@ -245,7 +244,7 @@
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     NSDictionary *dic=[dataSourceArray objectAtIndex:indexPath.row];
     NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
-    if ([def boolForKey:@"remember"]==YES) {
+    if ([def objectForKey:@"username"]) {
      if ([[dic objectForKey:@"controller"]isEqualToString:@""]) {
         UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"确定退出吗？" message:nil preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *okAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -276,7 +275,7 @@
     }
         
     }else{
-        if ([[dic objectForKey:@"title"]isEqualToString:@"在线办事"]){
+        if ([[dic objectForKey:@"title"]isEqualToString:@"在线办理"]){
         HZLoginViewController *login=[[HZLoginViewController alloc]init];
         [self.navigationController pushViewController:login animated:YES];
     }else if ([[dic objectForKey:@"controller"]isEqualToString:@""]) {

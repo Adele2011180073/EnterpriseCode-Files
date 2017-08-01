@@ -75,19 +75,26 @@
      UITextView *textfield7=[self.view viewWithTag:16];
      UITextView *textfield8=[self.view viewWithTag:17];
     UITextView *textfield9=[self.view viewWithTag:18];
+    NSLog(@"textfield1.text  %@  %d   textfield2.text  %@ textfield3.text  %@  textfield4.text  %@   textfield5.text  %@   textfield6.text  %@  textfield7.text  %@  textfield8.text  %@ ",textfield1.text,[textfield1.text length],textfield2.text,textfield3.text,textfield4.text,textfield5.text,textfield6.text,textfield7.text,textfield8.text);
     if (textfield1.text==NULL||textfield2.text==NULL||textfield3.text==NULL||textfield4.text==NULL||textfield5.text==NULL||textfield6.text==NULL||textfield7.text==NULL||textfield8.text==NULL||textfield9.text==NULL) {
         [self.view makeToast:@"请填写完整" duration:2 position:CSToastPositionCenter];
         return;
     }
-    if ([BSRegexValidate validateUserName:textfield1.text]==NO) {
+    if ([textfield1.text length]<5||[textfield1.text length]>13) {
+        [self.view makeToast:@"账号请按要求填写完整" duration:2 position:CSToastPositionCenter];
+        return;
+    }else if ([textfield2.text length]<5||[textfield2.text length]>13) {
         [self.view makeToast:@"用户名请按要求填写完整" duration:2 position:CSToastPositionCenter];
         return;
-    }else if ([BSRegexValidate validateUserName:textfield3.text]==NO) {
+    }else if ([textfield3.text length]<5||[textfield3.text length]>                                                                                                                                                                                                                                                                                                                                                                                                                                                                13) {
         [self.view makeToast:@"密码请按要求填写完整" duration:2 position:CSToastPositionCenter];
         return;
+    }else if ([BSRegexValidate validateTelephone:textfield4.text]==NO) {
+        [self.view makeToast:@"联系方式请按要求填写完整" duration:2 position:CSToastPositionCenter];
+        return;
     }
-    if (![BSRegexValidate validateTelephone:textfield4.text]||![BSRegexValidate validateTelephone:textfield9.text]) {
-        [self.view makeToast:@"手机号码格式不正确" duration:2 position:CSToastPositionCenter];
+    if (![BSRegexValidate validateTelephone:textfield9.text]) {
+        [self.view makeToast:@"建设单位联系电话请按要求填写完整" duration:2 position:CSToastPositionCenter];
         return;
     }
         MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];

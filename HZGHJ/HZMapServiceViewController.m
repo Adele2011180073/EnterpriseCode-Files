@@ -31,6 +31,11 @@
     CLLocationCoordinate2D  _userLocation;
     
     NSMutableArray *_posArray;
+    
+    BMKPinAnnotationView * newAnnotationView;
+    BMKPolyline* polyline;/**<折线*/
+    NSMutableArray *annoArray;/**<大头针数组*/
+    NSMutableArray *piAnnoarray;/**<PinAnnotation数组*/
 }
 
 @end
@@ -55,6 +60,9 @@
     self.title=@"地图选址";
 
     _posArray=[[NSMutableArray alloc]init];
+    piAnnoarray = [[NSMutableArray alloc]init];
+    annoArray = [[NSMutableArray alloc]init];
+    
      _mapView = [[BMKMapView alloc]initWithFrame:CGRectMake(0, 0, Width, Height-44)];
     _mapView.delegate =self;
     //设置地图的显示样式
@@ -112,7 +120,7 @@
 }
 -(void)mapview:(BMKMapView *)mapView onLongClick:(CLLocationCoordinate2D)coordinate{
     NSLog(@"_posArray   %@",_posArray);
-    if (_posArray.count>5) {
+    if (_posArray.count>7) {
         
     }else{
         //创建气球上面的位置显示框
@@ -124,6 +132,7 @@
         //这样就可以在初始化的时候将 气泡信息弹出
         [_mapView selectAnnotation:annotation animated:YES];
         [_posArray addObject:annotation];
+        [self drawAnnotation];
     }
 
 }
@@ -138,17 +147,64 @@
 //这个代理方法能够修改定位大头针的样式以及自定义气泡弹出框的样式，可根据自己的需要进行自定义
 - (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation{
     NSString *AnnotationViewID = @"renameMark";
-    BMKPinAnnotationView *annotationView = (BMKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:AnnotationViewID];
-    annotationView = [[BMKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationViewID];
-    annotationView.image=[UIImage imageNamed:@"goto.png"];
-    // 设置颜色
-//    annotationView.pinColor = BMKPinAnnotationColorGreen;
-    // 从天上掉下效果
-    annotationView.animatesDrop = YES;
-    // 设置可拖拽
-    annotationView.draggable = YES;
-    [annotationView setSelected:YES animated:YES];
+//    BMKPinAnnotationView *annotationView = (BMKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:AnnotationViewID];
+//    annotationView = [[BMKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationViewID];
+//    annotationView.image=[UIImage imageNamed:@"goto.png"];
+//    // 设置颜色
+////    annotationView.pinColor = BMKPinAnnotationColorGreen;
+//    // 从天上掉下效果
+////    annotationView.animatesDrop = YES;
+//    // 设置可拖拽
+////    annotationView.draggable = YES;
+//    [annotationView setSelected:NO animated:YES];
+    
+    BMKPointAnnotation *annotationView=(BMKPointAnnotation *)[mapView dequeueReusableAnnotationViewWithIdentifier:AnnotationViewID];
+    //    annotationView = [[BMKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationViewID];
+//        annotationView.image=[UIImage imageNamed:@"goto.png"];
+    //    // 设置颜色
+    ////    annotationView.pinColor = BMKPinAnnotationColorGreen;
+    //    // 从天上掉下效果
+    ////    annotationView.animatesDrop = YES;
+    //    // 设置可拖拽
+    ////    annotationView.draggable = YES;
+//        [annotationView setSelected:NO animated:YES];
     return annotationView;
+}
+//MARK:Override 折线
+-(void)drawAnnotation
+{
+//    [piAnnoarray removeAllObjects];
+//    [annoArray removeAllObjects];
+//    
+//    [_posArray removeAllObjects];
+    float tripArrayCount = [_posArray count];
+    
+    // 添加折线覆盖物 声明coors 用来放置不确定个数的折点 <span style="font-family: Arial, Helvetica, sans-serif;">tripArray中存放着我的数据</span>
+    
+    CLLocationCoordinate2D * coors = (CLLocationCoordinate2D *)malloc(tripArrayCount * sizeof(CLLocationCoordinate2D));
+    
+    for (int i = 0; i<tripArrayCount; i++) {
+        
+        BMKPointAnnotation *pointAnnotation1 = [_posArray objectAtIndex:i];
+            [_mapView addAnnotation:pointAnnotation1];
+        // 添加折线覆盖物
+        coors[i].latitude =  pointAnnotation1.coordinate.latitude;
+        coors[i].longitude = pointAnnotation1.coordinate.longitude;
+    }
+    
+    polyline = [BMKPolyline polylineWithCoordinates:coors count:tripArrayCount];
+    [_mapView addOverlay:polyline];
+    
+}
+- (BMKOverlayView *)mapView:(BMKMapView *)mapView viewForOverlay:(id <BMKOverlay>)overlay{
+    if ([overlay isKindOfClass:[BMKPolyline class]]){
+        BMKPolylineView* polylineView = [[BMKPolylineView alloc] initWithOverlay:overlay];
+        polylineView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:1];//颜色
+        polylineView.lineWidth = 1.0;//宽度
+        
+        return polylineView;
+    }
+    return nil;
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

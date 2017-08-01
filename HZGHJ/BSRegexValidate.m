@@ -76,7 +76,7 @@
  */
 + (BOOL)validateRealName:(NSString *)realName
 {
-    NSString *patternStr = [NSString stringWithFormat:@"^$|^([a-zA-Z]{1,20}|[\u4e00-\u9fa5]{1,10})[\\s.]{0,1}([a-zA-Z]{1,20}|[\u4e00-\u9fa5]{1,10})$"];
+    NSString *patternStr = [NSString stringWithFormat:@"^$|^([a-zA-Z]{1,20}|[\u4e00-\u9fa5]{1,10})[\\s.]{0,1}([a-zA-Z]{1,20}|[\u4e00-\u9fa5]{5,12})$"];
     NSRegularExpression *regularexpression = [[NSRegularExpression alloc]
                                               initWithPattern:patternStr
                                               options:NSRegularExpressionCaseInsensitive
