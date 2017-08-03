@@ -112,6 +112,7 @@
 		1F8C15D11ECDA2DD00B3E022 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F8C15D01ECDA2DD00B3E022 /* Security.framework */; };
 		1F8C15D31ECDA2E400B3E022 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F8C15D21ECDA2E400B3E022 /* SystemConfiguration.framework */; };
 		1F8D727C1F2D929F0082A772 /* HZReasonWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8D727B1F2D929F0082A772 /* HZReasonWebViewController.m */; };
+		1F93AD6C1F307310004D0F61 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F93AD6B1F307310004D0F61 /* MapKit.framework */; };
 		1F96414E1ED98E7700F900F1 /* icon_zaixianbanshi.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F96414B1ED98E7700F900F1 /* icon_zaixianbanshi.png */; };
 		1F96414F1ED98E7700F900F1 /* icon_zaixianbanshi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F96414C1ED98E7700F900F1 /* icon_zaixianbanshi@2x.png */; };
 		1F9641501ED98E7700F900F1 /* icon_zaixianbanshi@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F96414D1ED98E7700F900F1 /* icon_zaixianbanshi@3x.png */; };
@@ -314,6 +315,7 @@
 		1F8C15D21ECDA2E400B3E022 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		1F8D727A1F2D929F0082A772 /* HZReasonWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZReasonWebViewController.h; sourceTree = "<group>"; };
 		1F8D727B1F2D929F0082A772 /* HZReasonWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZReasonWebViewController.m; sourceTree = "<group>"; };
+		1F93AD6B1F307310004D0F61 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		1F96414B1ED98E7700F900F1 /* icon_zaixianbanshi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_zaixianbanshi.png; sourceTree = "<group>"; };
 		1F96414C1ED98E7700F900F1 /* icon_zaixianbanshi@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_zaixianbanshi@2x.png"; sourceTree = "<group>"; };
 		1F96414D1ED98E7700F900F1 /* icon_zaixianbanshi@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_zaixianbanshi@3x.png"; sourceTree = "<group>"; };
@@ -412,6 +414,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F93AD6C1F307310004D0F61 /* MapKit.framework in Frameworks */,
 				1F7ED60D1EF7A96100B87395 /* MBProgressHUD.framework in Frameworks */,
 				1F733B4E1EDECA8300F8141C /* BaiduMapAPI_Base.framework in Frameworks */,
 				1F733B4C1EDEC89E00F8141C /* libstdc++.6.0.9.tbd in Frameworks */,
@@ -744,6 +747,7 @@
 		A1B6B412F65A02D835F9D217 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1F93AD6B1F307310004D0F61 /* MapKit.framework */,
 				1F7ED60C1EF7A96100B87395 /* MBProgressHUD.framework */,
 				1F733B4D1EDECA8300F8141C /* BaiduMapAPI_Base.framework */,
 				1F733B4B1EDEC89E00F8141C /* libstdc++.6.0.9.tbd */,

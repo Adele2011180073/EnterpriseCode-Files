@@ -874,14 +874,20 @@
            uuid=self.uuid;
        }
     if (self.saveDic==NULL||self.saveDic==nil) {
-         [self.view makeToast:@"提交数据不完整" duration:2 position:CSToastPositionCenter];
+        NSArray *array=@[@"选址申请表",@"选址失效申请表",@"选址建议变更申请表",@"选址延期申请表",@"用地申请表",@"临时用地申请表",@"规划条件申请表",@"规划条件变更申请表"];
+        NSString *str=[array objectAtIndex:self.PCODE];
+         [self.view makeToast:[NSString stringWithFormat:@"请进入%@页面，把表格填写完整",str] duration:2 position:CSToastPositionCenter];
         return;
     }
     for (int i=0; i<_imageAllArray.count; i++) {
         NSArray *imageArray=[_imageAllArray objectAtIndex:i];
-        if (i<5&&imageArray==NULL) {
+        if (i<5) {
+            if (imageArray.count>0) {
+                
+            }else{
             [self.view makeToast:[NSString stringWithFormat:@"第%d图片不能为空",i+1] duration:2 position:CSToastPositionCenter];
                     return;
+            }
         }
     }
     NSArray *imageArray=[_imageAllArray objectAtIndex:5];
@@ -903,7 +909,7 @@
         NSMutableArray *array=[[NSMutableArray alloc]init];
         for (int i=0; i<self.posArray.count; i++) {
             BMKPointAnnotation* annotation=[self.posArray objectAtIndex:i];
-            NSString *str=[NSString stringWithFormat:@"{{\"x\":%f,\"y\":%f}",annotation.coordinate.latitude,annotation.coordinate.longitude];
+            NSString *str=[NSString stringWithFormat:@"{\"x\":%f,\"y\":%f}",annotation.coordinate.latitude,annotation.coordinate.longitude];
             [array addObject:str];
         }
         linerange=[NSString stringWithFormat:@"[%@]",[array componentsJoinedByString:@","]];

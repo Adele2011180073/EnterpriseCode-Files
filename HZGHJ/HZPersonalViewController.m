@@ -205,7 +205,9 @@
       
     }
     else if (indexPath.section==2&&indexPath.row==3){
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"remember"];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"username"];
+         [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"passwd"];
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"remember"];
         [[NSUserDefaults standardUserDefaults]synchronize];
         UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您确定要注销用户吗？" message:nil preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *okAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {

@@ -32,7 +32,6 @@
     
     NSMutableArray *_posArray;
     
-    BMKPinAnnotationView * newAnnotationView;
     BMKPolyline* polyline;/**<折线*/
     NSMutableArray *annoArray;/**<大头针数组*/
     NSMutableArray *piAnnoarray;/**<PinAnnotation数组*/
@@ -78,11 +77,18 @@
 //    _mapView.showMapPoi = YES;
     //在手机上当前可使用的级别为3-21级
    _mapView.zoomLevel = 18;
-    _mapView.showsUserLocation = YES;//显示定位图层
+    [_mapView showsUserLocation];//显示定位图层
     //设定地图View能否支持旋转
     _mapView.rotateEnabled = NO;
     //设定地图View能否支持用户移动地图
     _mapView.scrollEnabled = YES;
+    BMKLocationViewDisplayParam *displayParam = [[BMKLocationViewDisplayParam alloc]init];
+    displayParam.isRotateAngleValid = true;//跟随态旋转角度是否生效
+    displayParam.isAccuracyCircleShow = false;//精度圈是否显示
+    displayParam.locationViewImgName= @"icon";//定位图标名称
+    displayParam.locationViewOffsetX = 0;//定位偏移量(经度)
+    displayParam.locationViewOffsetY = 0;//定位偏移量（纬度）
+    [_mapView updateLocationViewWithParam:displayParam];
     [self.view addSubview:_mapView];
    
     UIButton *commit=[[UIButton alloc]initWithFrame:CGRectMake(20,Height-64-60, Width-40, 45)];
@@ -96,9 +102,16 @@
 //MARK:确认选址
 -(void)commit{
     if (_posArray.count>0) {
-        HZLocateContentViewController *content=[[HZLocateContentViewController alloc]init];
-        content.posArray=_posArray;
-        [self.navigationController pushViewController:content animated:YES];
+        NSArray *vcArray = self.navigationController.viewControllers;
+        for(UIViewController *vc in vcArray)
+        {
+            if ([vc isKindOfClass:[HZLocateContentViewController class]])
+            {
+                HZLocateContentViewController *content=(HZLocateContentViewController *)vc;
+                content.posArray=_posArray;
+                [self.navigationController popToViewController:vc animated:YES];
+            }
+        }
     }else{
         [self.view makeToast:@"请选取点位地址" duration:2 position:CSToastPositionCenter];
     }
@@ -123,67 +136,87 @@
     if (_posArray.count>7) {
         
     }else{
-        //创建气球上面的位置显示框
+//        //创建气球上面的位置显示框
         BMKPointAnnotation* annotation = [[BMKPointAnnotation alloc]init];
         annotation.coordinate = coordinate;
-        annotation.title = [NSString stringWithFormat:@"经度：%f   纬度：%f",coordinate.latitude,coordinate.longitude];
+//        annotation.title = [NSString stringWithFormat:@"经度：%f   纬度：%f",coordinate.latitude,coordinate.longitude];
         [_mapView addAnnotation:annotation];
         //关键代码 如下：
         //这样就可以在初始化的时候将 气泡信息弹出
         [_mapView selectAnnotation:annotation animated:YES];
         [_posArray addObject:annotation];
         [self drawAnnotation];
+        
     }
 
 }
 -(void)mapView:(BMKMapView *)mapView onClickedMapPoi:(BMKMapPoi *)mapPoi{
     NSLog(@"mapPoi.text   %@",mapPoi.text);
    }
-//当点击annotationview弹出的泡泡时，调用此接口
-- (void)mapView:(BMKMapView *)mapView  annotationViewForBubble:(BMKAnnotationView *)view
-{
-    NSLog(@"点击annotation view弹出的泡泡");
-}
 //这个代理方法能够修改定位大头针的样式以及自定义气泡弹出框的样式，可根据自己的需要进行自定义
 - (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation{
     NSString *AnnotationViewID = @"renameMark";
-//    BMKPinAnnotationView *annotationView = (BMKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:AnnotationViewID];
-//    annotationView = [[BMKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationViewID];
-//    annotationView.image=[UIImage imageNamed:@"goto.png"];
-//    // 设置颜色
-////    annotationView.pinColor = BMKPinAnnotationColorGreen;
-//    // 从天上掉下效果
-////    annotationView.animatesDrop = YES;
-//    // 设置可拖拽
-////    annotationView.draggable = YES;
-//    [annotationView setSelected:NO animated:YES];
+    BMKAnnotationView *annotationView = (BMKAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:AnnotationViewID];
+    annotationView = [[BMKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationViewID];
+    annotationView.image=[UIImage imageNamed:@"goto.png"];
+    // 设置颜色
+//    annotationView.pinColor = BMKPinAnnotationColorGreen;
+    // 从天上掉下效果
+//    annotationView.animatesDrop = YES;
+    // 设置可拖拽
+//    annotationView.draggable = YES;
+    [annotationView setSelected:NO animated:YES];
     
-    BMKPointAnnotation *annotationView=(BMKPointAnnotation *)[mapView dequeueReusableAnnotationViewWithIdentifier:AnnotationViewID];
-    //    annotationView = [[BMKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationViewID];
-//        annotationView.image=[UIImage imageNamed:@"goto.png"];
-    //    // 设置颜色
-    ////    annotationView.pinColor = BMKPinAnnotationColorGreen;
-    //    // 从天上掉下效果
-    ////    annotationView.animatesDrop = YES;
-    //    // 设置可拖拽
-    ////    annotationView.draggable = YES;
-//        [annotationView setSelected:NO animated:YES];
+    //自定义内容气泡
+    UIView *areaPaoView=[[UIView alloc]initWithFrame:CGRectMake(20, 0, 200, 60)];
+    //这张图片是做好的半透明的
+    areaPaoView.backgroundColor = [blueCyan colorWithAlphaComponent:1];//颜色
+    areaPaoView.userInteractionEnabled=YES;
+    areaPaoView.layer.cornerRadius=10;
+    areaPaoView.clipsToBounds=YES;
+    UILabel  *contentLabel=[[UILabel alloc]initWithFrame:CGRectMake(10,  0, 150, 60)];
+        contentLabel.textAlignment=NSTextAlignmentLeft;
+    contentLabel.textColor=[UIColor whiteColor];
+    contentLabel.numberOfLines=5;
+        contentLabel.font=[UIFont systemFontOfSize:15];
+        contentLabel.text=[NSString stringWithFormat:@"地点 经度：%f\n 纬度：%f",annotation.coordinate.latitude,annotation.coordinate.longitude];
+        [areaPaoView  addSubview:contentLabel];
+    
+            UIButton *mapBtn=[[UIButton alloc]initWithFrame:CGRectMake(160,15, 40, 30)];
+          NSString* title =[NSString stringWithFormat:@"%f_%f",annotation.coordinate.latitude,annotation.coordinate.longitude];
+            mapBtn.accessibilityValue=[NSString stringWithFormat:@"%@",title];
+            [mapBtn addTarget:self action:@selector(delete:) forControlEvents:UIControlEventTouchUpInside];
+            mapBtn.titleLabel.font=[UIFont fontWithName:@"iconfont" size:32];
+            [mapBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [mapBtn setTitle:@"\U0000e617" forState:UIControlStateNormal];
+            [areaPaoView addSubview:mapBtn];
+
+    BMKActionPaopaoView *paopao=[[BMKActionPaopaoView alloc]initWithCustomView:areaPaoView];
+    annotationView.paopaoView = paopao;
     return annotationView;
 }
+//当点击annotationview弹出的泡泡时，调用此接口
+-(void)delete:(UIButton *)sender{
+    [_mapView removeOverlays:_mapView.overlays];
+
+    for (int i=0; i<_posArray.count; i++) {
+          BMKPointAnnotation *pointAnnotation1 = [_posArray objectAtIndex:i];
+        NSString* title =[NSString stringWithFormat:@"%f_%f",pointAnnotation1.coordinate.latitude,pointAnnotation1.coordinate.longitude];
+        if ([title isEqualToString:sender.accessibilityValue]) {
+            [_posArray removeObject:pointAnnotation1];
+            [_mapView removeAnnotation:pointAnnotation1];
+        }
+    }
+    [self drawAnnotation];
+}
+
 //MARK:Override 折线
 -(void)drawAnnotation
 {
-//    [piAnnoarray removeAllObjects];
-//    [annoArray removeAllObjects];
-//    
-//    [_posArray removeAllObjects];
-    float tripArrayCount = [_posArray count];
+    // 添加折线覆盖物 声明coors 用来放置不确定个数的折点 <
+    CLLocationCoordinate2D * coors = (CLLocationCoordinate2D *)malloc(_posArray.count * sizeof(CLLocationCoordinate2D));
     
-    // 添加折线覆盖物 声明coors 用来放置不确定个数的折点 <span style="font-family: Arial, Helvetica, sans-serif;">tripArray中存放着我的数据</span>
-    
-    CLLocationCoordinate2D * coors = (CLLocationCoordinate2D *)malloc(tripArrayCount * sizeof(CLLocationCoordinate2D));
-    
-    for (int i = 0; i<tripArrayCount; i++) {
+    for (int i = 0; i<_posArray.count; i++) {
         
         BMKPointAnnotation *pointAnnotation1 = [_posArray objectAtIndex:i];
             [_mapView addAnnotation:pointAnnotation1];
@@ -192,7 +225,7 @@
         coors[i].longitude = pointAnnotation1.coordinate.longitude;
     }
     
-    polyline = [BMKPolyline polylineWithCoordinates:coors count:tripArrayCount];
+    polyline = [BMKPolyline polylineWithCoordinates:coors count:_posArray.count];
     [_mapView addOverlay:polyline];
     
 }

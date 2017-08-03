@@ -10,6 +10,7 @@
 
 @interface BSRegexValidate : NSObject
 + (BOOL)validateUserName:(NSString *)userName;
++ (BOOL)validatePassWord:(NSString *)userName;
 + (BOOL)validateTelephone:(NSString *)telephone;
 + (BOOL)validateRealName:(NSString *)realName;
 + (BOOL)validateIdCard:(NSString *)idCard;

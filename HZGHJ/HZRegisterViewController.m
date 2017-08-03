@@ -39,7 +39,7 @@
     self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStyleBordered target:nil action:nil];
      self.title=@"注册";
     
-    _titleArray=[[NSArray alloc]initWithObjects:@"账号",@"用户名",@"密码",@"联系方式",@"职位",@"建设单位",@"建设单位地址",@"建设单位联系人",@"建设单位联系电话", nil] ;
+    _titleArray=[[NSArray alloc]initWithObjects:@"账号",@"用户名",@"密码",@"联系手机",@"职位",@"建设单位",@"建设单位地址",@"建设单位联系人",@"建设单位联系电话", nil] ;
     _placeArray=[[NSArray alloc]initWithObjects:@"请输入账号(6-12位字母或者数字)",@"请输入用户名(不超过10位数)",@"请输入密码(6-12位字母或者数字)",@"请输入联系方式(11位)",@"请输入职位(不超过10位)",@"请输入建设单位名称(不超过100)",@"请输入建设单位地址(不超过100)",@"请输入建设单位联系人(不超过10)",@"请输入建设单位联系电话(11位)", nil] ;
     _tableview=[[UITableView alloc]initWithFrame:CGRectMake(0, 10, Width, Height-64-100)];
     _tableview.backgroundColor=[UIColor whiteColor];
@@ -80,20 +80,21 @@
         [self.view makeToast:@"请填写完整" duration:2 position:CSToastPositionCenter];
         return;
     }
-    if ([textfield1.text length]<5||[textfield1.text length]>13) {
+    if ([BSRegexValidate validatePassWord:textfield1.text]==NO) {
         [self.view makeToast:@"账号请按要求填写完整" duration:2 position:CSToastPositionCenter];
         return;
-    }else if ([textfield2.text length]<5||[textfield2.text length]>13) {
+    }else if ([textfield2.text length]<1||[textfield2.text length]>11) {
         [self.view makeToast:@"用户名请按要求填写完整" duration:2 position:CSToastPositionCenter];
         return;
-    }else if ([textfield3.text length]<5||[textfield3.text length]>                                                                                                                                                                                                                                                                                                                                                                                                                                                                13) {
+    }else if ([BSRegexValidate validatePassWord:textfield3.text]==NO) {
         [self.view makeToast:@"密码请按要求填写完整" duration:2 position:CSToastPositionCenter];
         return;
     }else if ([BSRegexValidate validateTelephone:textfield4.text]==NO) {
         [self.view makeToast:@"联系方式请按要求填写完整" duration:2 position:CSToastPositionCenter];
         return;
     }
-    if (![BSRegexValidate validateTelephone:textfield9.text]) {
+   
+    if ([textfield9.text length]<3||[textfield9.text length]>15) {
         [self.view makeToast:@"建设单位联系电话请按要求填写完整" duration:2 position:CSToastPositionCenter];
         return;
     }
@@ -106,7 +107,7 @@
             HZLoginViewController *login=[[HZLoginViewController alloc]init];
             [self.navigationController pushViewController:login animated:YES];
         }else{
-            [self.view makeToast:@"注册失败" duration:2 position:CSToastPositionCenter];
+            [self.view makeToast:[returnDic objectForKey:@"desc"] duration:2 position:CSToastPositionCenter];
         }
         
     }];

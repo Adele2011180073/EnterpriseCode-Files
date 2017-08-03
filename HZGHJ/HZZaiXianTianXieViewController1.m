@@ -39,7 +39,14 @@
     self.title=[array objectAtIndex:self.PCODE];
     
     NSLog(@"选址申请表   %@",self.commitData);
+    
+    if ([[self.commitData objectForKey:@"lzbg"]intValue]==1) {
+        _isCheck=[NSString stringWithFormat:@"%@",[self.commitData objectForKey:@"lzbg"]];
+    }else if ([[self.commitData objectForKey:@"lzbg"]intValue]==2) {
+       _isCheck=[NSString stringWithFormat:@"%@",[self.commitData objectForKey:@"lzbg"]];
+    }else{
     _isCheck=@"";
+    }
     UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(downKeyboard)];
     tap.delegate=self;
     [_mainBgView addGestureRecognizer:tap];
@@ -421,7 +428,6 @@
    
         [dic setObject:@"" forKey:@"zbbz"];
     [dic setObject:@"" forKey:@"tdgyfs"];
-    [dic setObject:@"" forKey:@"filecode"];
     [dic setObject:@"" forKey:@"resuuid"];
     [dic setObject:@"" forKey:@"ydqsqk"];
     [dic setObject:@"" forKey:@"sfqdfapf"];
@@ -438,6 +444,7 @@
             {
                 HZLocateContentViewController *content=(HZLocateContentViewController *)vc;
                 content.saveDic=dic;
+                content.commitData=dic;
                 [self.navigationController popToViewController:vc animated:YES];
             }
         }

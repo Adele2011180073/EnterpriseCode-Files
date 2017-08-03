@@ -36,6 +36,23 @@
     }
     return NO;
 }
++ (BOOL)validatePassWord:(NSString *)userName
+{
+    NSString *patternStr = [NSString stringWithFormat:@"^([a-zA-Z_0-9]|[a-z]|[0-9]){6,12}$"];
+    NSRegularExpression *regularexpression = [[NSRegularExpression alloc]
+                                              initWithPattern:patternStr
+                                              options:NSRegularExpressionCaseInsensitive
+                                              error:nil];
+    NSUInteger numberofMatch = [regularexpression numberOfMatchesInString:userName
+                                                                  options:NSMatchingReportProgress
+                                                                    range:NSMakeRange(0, userName.length)];
+    
+    if(numberofMatch > 0)
+    {
+        return YES;
+    }
+    return NO;
+}
 
 /*!
  @method        validateTelephone:

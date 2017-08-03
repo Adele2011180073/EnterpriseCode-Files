@@ -34,22 +34,28 @@
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden=YES;
-    _timer = [NSTimer scheduledTimerWithTimeInterval:180.0f
-                                              target:self
-                                            selector:@selector(timerFire:)
-                                            userInfo:nil
-                                             repeats:YES];
-    [_timer fire];
-       if (_tongzhidesc!=NULL) {
-           self.noticeLabel.text=_tongzhidesc;
-        UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap)];
-        tap.delegate=self;
-        [self.noticeLabel addGestureRecognizer:tap];
-       }else{
-           self.noticeLabel.text=@"暂无最新通知";
+    NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
+    if ([def objectForKey:@"username"]) {
+        _timer = [NSTimer scheduledTimerWithTimeInterval:180.0f
+                                                  target:self
+                                                selector:@selector(timerFire:)
+                                                userInfo:nil
+                                                 repeats:YES];
+        [_timer fire];
+        if (_tongzhidesc!=NULL) {
+            self.noticeLabel.text=_tongzhidesc;
+            UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap)];
+            tap.delegate=self;
+            [self.noticeLabel addGestureRecognizer:tap];
+        }else{
+            self.noticeLabel.text=@"暂无最新通知";
+            
+        }
+    }else{
+        self.noticeLabel.text=@"暂无最新通知";
+    }
 
-       }
-}
+  }
 -(void)tap{
         [[UNUserNotificationCenter currentNotificationCenter]removeAllPendingNotificationRequests];
     HZNoticeViewController *notice=[[HZNoticeViewController alloc]init];
@@ -93,7 +99,7 @@
         NSArray* dataArray = [[NSArray alloc] initWithContentsOfFile:plistPath];
         dataSourceArray=[NSMutableArray arrayWithArray:dataArray];
         
-        //    NSLog(@"datasourcearray   %@",dataSourceArray);
+            NSLog(@"datasourcearray   %@",dataSourceArray);
         
         [collectionview reloadData];
     }
