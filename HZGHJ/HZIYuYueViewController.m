@@ -14,9 +14,10 @@
 #import "BSRegexValidate.h"
 #import "HZLoginViewController.h"
 #import "HZBanShiViewController.h"
+#import "HZYuYueWebViewController.h"
 
 
-@interface HZIYuYueViewController ()<UIGestureRecognizerDelegate,UITextFieldDelegate,UITextViewDelegate>{
+@interface HZIYuYueViewController ()<UIGestureRecognizerDelegate,UITextFieldDelegate,UITextViewDelegate,UIDocumentMenuDelegate,UIDocumentMenuDelegate>{
     UIScrollView *bgScrollView;
     NSMutableArray *projectNameArray;
     NSMutableArray *reservationserviceArray;
@@ -29,6 +30,7 @@
     NSInteger projectNum;//当前项目所在顺序
       NSInteger nodeNum;
     UITextView *_detailText;//资讯内容描述
+    NSString *savedPath;
     
     UIView *pickerView;
     UILabel *timeLabel;
@@ -830,7 +832,7 @@
             nodeName.backgroundColor=[UIColor whiteColor];
             nodeName.text=[nodelistdic objectForKey:@"value"];
         }
-        
+        [self addSubviews];
     }
    
 }
@@ -841,7 +843,8 @@
 -(void)timeSelect:(UIDatePicker*)datePicker{
     NSDateFormatter *formatter = [[ NSDateFormatter alloc ] init ];
     
-    // 格式化日期格式
+    // 格式化日期格式123
+    
     
     formatter. dateFormat = @"YYYY-MM-dd HH:mm:ss" ;
     
@@ -864,9 +867,42 @@
     if ([[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"]intValue]==1) {
         downloadybghyx=@"http://220.191.210.76/ghyx.docx";
     }else  if ([[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"]intValue]==2) {
-       downloadybghyx=@"http://220.191.210.76/jgghhs.docx";
+        downloadybghyx=@"http://220.191.210.76/jgghhs.docx";
     }
-       [[UIApplication sharedApplication] openURL:[NSURL URLWithString:downloadybghyx]];
+    HZYuYueWebViewController *web=[[HZYuYueWebViewController alloc]init];
+    web.url=downloadybghyx;
+    [self.navigationController pushViewController:web animated:YES];
+//    NSURL *url=[NSURL URLWithString:downloadybghyx];
+//    if([[UIApplication sharedApplication]canOpenURL:url])
+//        
+//    {
+//        //缓存到本地沙盒的地址
+//        
+//        savedPath = [NSHomeDirectory() stringByAppendingString:@"/jgghhs.docx"];
+//        if ([[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"]intValue]==1) {
+//            savedPath=[[NSBundle mainBundle]pathForResource:@"ghyx" ofType:@"docx"];
+//        }else  if ([[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"]intValue]==2) {
+//            savedPath=[[NSBundle mainBundle]pathForResource:@"jgghhs" ofType:@"docx"];
+//        }
+//        NSLog(@"url==%@",savedPath);
+//        
+//    }
+//    _docController = [UIDocumentInteractionController interactionControllerWithURL:[NSURL fileURLWithPath:savedPath]];//为该对象初始化一个加载路径
+//    _docController.UTI = @"com.microsoft.word201.doc.docx";
+//    _docController.delegate =self;//设置代理
+//    
+//    //直接显示预览
+//    //    [_docController presentPreviewAnimated:YES];
+//    
+//    CGRect navRect =self.navigationController.navigationBar.frame;
+//    navRect.size =CGSizeMake(1500.0f,40.0f);
+//    
+//    //显示包含预览的菜单项
+//    [_docController presentOptionsMenuFromRect:navRect inView:self.view animated:YES];
+//    
+//    //显示不包含预览菜单项
+//    [_docController presentOpenInMenuFromRect:navRect inView:self.view animated:YES];
+//       [[UIApplication sharedApplication] openURL:[NSURL URLWithString:downloadybghyx]];
 }
 -(void)textViewDidChange:(UITextView *)textView{
     self.placehoderLabel.hidden=YES;

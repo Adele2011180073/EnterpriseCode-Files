@@ -4,7 +4,15 @@
 <array>
 	<dict>
 		<key>title</key>
-		<string>在线办理</string>
+		<string>咨询预约</string>
+		<key>image</key>
+		<string>icon_zaixianyuyue</string>
+		<key>controller</key>
+		<string>HZYuYueViewController</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>在线申报</string>
 		<key>image</key>
 		<string>icon_zaixianbanshi</string>
 		<key>controller</key>
@@ -17,6 +25,22 @@
 		<string>icon_banshizhinan</string>
 		<key>controller</key>
 		<string>HZBanShiViewController</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>消息公告</string>
+		<key>image</key>
+		<string>icon_xiaoxigonggao</string>
+		<key>controller</key>
+		<string>HZNewsViewController</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>常用表格</string>
+		<key>image</key>
+		<string>icon_xiaoxitongzhi</string>
+		<key>controller</key>
+		<string>HZBiaoGeViewController</string>
 	</dict>
 	<dict>
 		<key>title</key>

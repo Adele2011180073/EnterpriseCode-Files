@@ -281,7 +281,7 @@
     }
         
     }else{
-        if ([[dic objectForKey:@"title"]isEqualToString:@"在线办理"]){
+        if ([[dic objectForKey:@"title"]isEqualToString:@"在线申报"]){
         HZLoginViewController *login=[[HZLoginViewController alloc]init];
         [self.navigationController pushViewController:login animated:YES];
     }else if ([[dic objectForKey:@"controller"]isEqualToString:@""]) {

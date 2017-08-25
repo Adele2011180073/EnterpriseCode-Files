@@ -13,6 +13,8 @@ typedef void (^ReturnData)(NSDictionary *returnDic ,NSError *error);
 
 // MARK: 办事指南 获取列表内容
 +(void)BanShiWithId:(NSString*)IsPId GetBlock:(ReturnData)GetContent;
+// MARK: 常用表格
++(void)BiaoGeWithId:(NSString*)IsPId GetBlock:(ReturnData)GetContent;
 // MARK: 在线办事
 
 //在线办事

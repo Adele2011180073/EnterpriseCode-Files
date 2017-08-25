@@ -87,14 +87,16 @@ static NSString * const kDetailAnnouncementURL                = @"/servicesweb/m
 //密码修改
 static NSString * const kNewPswURL                = @"/servicesweb/login/newPsw.action";
 //获取新通知
-static NSString * const kNoticeURL                = @"/servicesweb/message/notice.action";
+static NSString * const kNoticeURL                = @"/managerweb/message/notice.action";
 //已读标记
-static NSString * const kReadURL                = @"/servicesweb/message/read.action";
+static NSString * const kReadURL                = @"/managerweb/message/read.action";
 
 //图片下载
 static NSString * const kGetFileURL                = @"/servicesweb/file/getfile.action";
 //MARK:办事指南
 static NSString * const kWorkGuidURL                = @"/servicesweb/workguid/list.action";
+//MARK:常用表格
+static NSString * const kCommonTablesURL                = @"/servicesweb/commontables/list.action";
 //改密码
 //MARK:在线办事 1.获取办理窗口
 static NSString * const kQueryOrgURL                = @"/servicesweb/onlineapproval/queryOrg.action";

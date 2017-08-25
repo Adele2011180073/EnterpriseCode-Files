@@ -34,7 +34,27 @@
     }];
     
 }
+// MARK: 常用表格
++(void)BiaoGeWithId:(NSString*)IsPId GetBlock:(ReturnData)GetContent{
+    AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
+    NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kCommonTablesURL];
+    session.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"text/html",@"application/json", @"text/json", nil];
+    session.responseSerializer = [AFHTTPResponseSerializer serializer];
+    session.requestSerializer.timeoutInterval=10.f;
+    NSMutableDictionary *parameters=[NSMutableDictionary dictionary];
+    [parameters setObject:IsPId forKey:@"fileId"];
+    [session POST:serviceURLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
+        NSData *data =    [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
+        NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+        NSLog(@"成功  %@",str);
+        GetContent(dic,nil);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"失败%@",error);
+        GetContent(nil,error);
+    }];
 
+}
 //MARK:在线办事
 +(void)BanShiWithAndBlock:(ReturnData)BanShiBlock{
     AFHTTPSessionManager *session = [AFHTTPSessionManager manager];

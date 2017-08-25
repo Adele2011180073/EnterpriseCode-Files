@@ -12,7 +12,7 @@
 	</dict>
 	<dict>
 		<key>title</key>
-		<string>在线办理</string>
+		<string>在线申报</string>
 		<key>image</key>
 		<string>icon_zaixianbanshi</string>
 		<key>controller</key>
@@ -57,6 +57,14 @@
 		<string>icon_xiaoxitongzhi</string>
 		<key>controller</key>
 		<string>HZNoticeViewController</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>常用表格</string>
+		<key>image</key>
+		<string>icon_xiaoxitongzhi</string>
+		<key>controller</key>
+		<string>HZBiaoGeViewController</string>
 	</dict>
 	<dict>
 		<key>title</key>

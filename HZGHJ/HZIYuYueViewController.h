@@ -7,10 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import <QuickLook/QuickLook.h>
 @interface HZIYuYueViewController : UIViewController
 @property(nonatomic,strong)NSDictionary*returnData;
 
 @property(nonatomic,strong)UILabel *placehoderLabel;
 @property(nonatomic,strong)UILabel *numLabel;
+
+@property(nonatomic,retain)UIDocumentInteractionController *docController;
+
+@property(nonatomic,strong) QLPreviewController *previewController;
 @end
