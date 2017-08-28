@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <QuickLook/QuickLook.h>
+#import "AFNetworking.h"
+
+
 @interface HZIYuYueViewController : UIViewController
 @property(nonatomic,strong)NSDictionary*returnData;
 

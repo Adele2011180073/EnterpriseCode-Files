@@ -22,7 +22,7 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="bg_top.png" id="Slf-Aw-M0i">
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="logo2.png" id="Slf-Aw-M0i">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="120"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                 </imageView>
@@ -105,8 +105,8 @@
         </view>
     </objects>
     <resources>
-        <image name="bg_top.png" width="414" height="172"/>
         <image name="checkbox.png" width="20" height="20"/>
+        <image name="logo2.png" width="414" height="172"/>
         <image name="password.png" width="22" height="25"/>
         <image name="user.png" width="22" height="27"/>
     </resources>

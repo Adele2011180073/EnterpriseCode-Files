@@ -254,7 +254,6 @@
     _detailText=[[UITextView alloc]initWithFrame:CGRectMake(0, 240, Width, 150)];
     _detailText.delegate=self;
     [_detailText resignFirstResponder];
-    _detailText.clearsOnInsertion=YES;
     _detailText.font=[UIFont systemFontOfSize:15];
     [bgScrollView addSubview:_detailText];
     self.placehoderLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, _detailText.frame.size.width-40, 30)];
@@ -494,7 +493,6 @@
     _detailText=[[UITextView alloc]initWithFrame:CGRectMake(0, 330, Width, 150)];
     _detailText.delegate=self;
     [_detailText resignFirstResponder];
-    _detailText.clearsOnInsertion=YES;
     _detailText.font=[UIFont systemFontOfSize:15];
     [bgScrollView addSubview:_detailText];
     self.placehoderLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, _detailText.frame.size.width-40, 30)];
@@ -869,40 +867,33 @@
     }else  if ([[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"]intValue]==2) {
         downloadybghyx=@"http://220.191.210.76/jgghhs.docx";
     }
-    HZYuYueWebViewController *web=[[HZYuYueWebViewController alloc]init];
-    web.url=downloadybghyx;
-    [self.navigationController pushViewController:web animated:YES];
-//    NSURL *url=[NSURL URLWithString:downloadybghyx];
-//    if([[UIApplication sharedApplication]canOpenURL:url])
-//        
-//    {
-//        //缓存到本地沙盒的地址
-//        
-//        savedPath = [NSHomeDirectory() stringByAppendingString:@"/jgghhs.docx"];
-//        if ([[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"]intValue]==1) {
-//            savedPath=[[NSBundle mainBundle]pathForResource:@"ghyx" ofType:@"docx"];
-//        }else  if ([[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"]intValue]==2) {
-//            savedPath=[[NSBundle mainBundle]pathForResource:@"jgghhs" ofType:@"docx"];
-//        }
-//        NSLog(@"url==%@",savedPath);
-//        
-//    }
-//    _docController = [UIDocumentInteractionController interactionControllerWithURL:[NSURL fileURLWithPath:savedPath]];//为该对象初始化一个加载路径
-//    _docController.UTI = @"com.microsoft.word201.doc.docx";
-//    _docController.delegate =self;//设置代理
-//    
-//    //直接显示预览
-//    //    [_docController presentPreviewAnimated:YES];
-//    
-//    CGRect navRect =self.navigationController.navigationBar.frame;
-//    navRect.size =CGSizeMake(1500.0f,40.0f);
-//    
-//    //显示包含预览的菜单项
-//    [_docController presentOptionsMenuFromRect:navRect inView:self.view animated:YES];
-//    
-//    //显示不包含预览菜单项
-//    [_docController presentOpenInMenuFromRect:navRect inView:self.view animated:YES];
-//       [[UIApplication sharedApplication] openURL:[NSURL URLWithString:downloadybghyx]];
+    NSString *path;
+        if ([[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"]intValue]==1) {
+            path = [[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] stringByAppendingPathComponent:@"/ghyx.docx"];
+        }else  if ([[[[messageDic objectForKey:@"nodelist"]objectAtIndex:nodeNum]objectForKey:@"name"]intValue]==2) {
+            path = [[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"] stringByAppendingPathComponent:@"/jgghhs.docx"];
+        }
+        NSLog(@"url==%@",path);
+    
+//            HZYuYueWebViewController *web=[[HZYuYueWebViewController alloc]init];
+//            web.url=path;
+//            [self.navigationController pushViewController:web animated:YES];
+    
+        _docController = [UIDocumentInteractionController interactionControllerWithURL:[NSURL fileURLWithPath:path]];//为该对象初始化一个加载路径
+        _docController.UTI = @"com.microsoft.word201.doc.docx";
+        _docController.delegate =self;//设置代理
+    
+        //直接显示预览
+        //    [_docController presentPreviewAnimated:YES];
+    
+        CGRect navRect =self.navigationController.navigationBar.frame;
+        navRect.size =CGSizeMake(1500.0f,40.0f);
+    
+        //显示包含预览的菜单项
+        [_docController presentOptionsMenuFromRect:navRect inView:self.view animated:YES];
+    
+        //显示不包含预览菜单项
+        [_docController presentOpenInMenuFromRect:navRect inView:self.view animated:YES];
 }
 -(void)textViewDidChange:(UITextView *)textView{
     self.placehoderLabel.hidden=YES;

@@ -115,6 +115,9 @@
 		1F8C15D11ECDA2DD00B3E022 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F8C15D01ECDA2DD00B3E022 /* Security.framework */; };
 		1F8C15D31ECDA2E400B3E022 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F8C15D21ECDA2E400B3E022 /* SystemConfiguration.framework */; };
 		1F8D727C1F2D929F0082A772 /* HZReasonWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1F8D727B1F2D929F0082A772 /* HZReasonWebViewController.m */; };
+		1F8E01AD1F541C6E0040C6F6 /* logo2.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8E01AA1F541C6E0040C6F6 /* logo2.png */; };
+		1F8E01AE1F541C6E0040C6F6 /* logo2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8E01AB1F541C6E0040C6F6 /* logo2@2x.png */; };
+		1F8E01AF1F541C6E0040C6F6 /* logo2@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F8E01AC1F541C6E0040C6F6 /* logo2@3x.png */; };
 		1F93AD6C1F307310004D0F61 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F93AD6B1F307310004D0F61 /* MapKit.framework */; };
 		1F96414E1ED98E7700F900F1 /* icon_zaixianbanshi.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F96414B1ED98E7700F900F1 /* icon_zaixianbanshi.png */; };
 		1F96414F1ED98E7700F900F1 /* icon_zaixianbanshi@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F96414C1ED98E7700F900F1 /* icon_zaixianbanshi@2x.png */; };
@@ -326,6 +329,9 @@
 		1F8C15D21ECDA2E400B3E022 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		1F8D727A1F2D929F0082A772 /* HZReasonWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZReasonWebViewController.h; sourceTree = "<group>"; };
 		1F8D727B1F2D929F0082A772 /* HZReasonWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZReasonWebViewController.m; sourceTree = "<group>"; };
+		1F8E01AA1F541C6E0040C6F6 /* logo2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo2.png; sourceTree = "<group>"; };
+		1F8E01AB1F541C6E0040C6F6 /* logo2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo2@2x.png"; sourceTree = "<group>"; };
+		1F8E01AC1F541C6E0040C6F6 /* logo2@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo2@3x.png"; sourceTree = "<group>"; };
 		1F93AD6B1F307310004D0F61 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		1F96414B1ED98E7700F900F1 /* icon_zaixianbanshi.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_zaixianbanshi.png; sourceTree = "<group>"; };
 		1F96414C1ED98E7700F900F1 /* icon_zaixianbanshi@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_zaixianbanshi@2x.png"; sourceTree = "<group>"; };
@@ -702,6 +708,9 @@
 				1F340C751DF80746003937DF /* icon_jinduchaxun.png */,
 				1F340C761DF80746003937DF /* icon_jinduchaxun@2x.png */,
 				1F340C771DF80746003937DF /* icon_jinduchaxun@3x.png */,
+				1F8E01AA1F541C6E0040C6F6 /* logo2.png */,
+				1F8E01AB1F541C6E0040C6F6 /* logo2@2x.png */,
+				1F8E01AC1F541C6E0040C6F6 /* logo2@3x.png */,
 				1F340C781DF80746003937DF /* icon_quit.png */,
 				1F340C791DF80746003937DF /* icon_quit@2x.png */,
 				1F340C7A1DF80746003937DF /* icon_quit@3x.png */,
@@ -881,6 +890,7 @@
 				1F340C8E1DF80746003937DF /* 登录页面@3x.png in Resources */,
 				1FF89EBF1DFE9B1F007A4597 /* iconfont.css in Resources */,
 				1F96414F1ED98E7700F900F1 /* icon_zaixianbanshi@2x.png in Resources */,
+				1F8E01AD1F541C6E0040C6F6 /* logo2.png in Resources */,
 				1F340C9A1DF80746003937DF /* icon_banshizhinan@2x.png in Resources */,
 				1FF89EC31DFE9B1F007A4597 /* iconfont.woff in Resources */,
 				1F340C9D1DF80746003937DF /* icon_gerenzhongxin@2x.png in Resources */,
@@ -894,6 +904,7 @@
 				1FCDC0031DFA5C1D005E5587 /* HZYuYueViewController.xib in Resources */,
 				1F340CB31DF80746003937DF /* icon_zaixianyuyue@3x.png in Resources */,
 				1F9641501ED98E7700F900F1 /* icon_zaixianbanshi@3x.png in Resources */,
+				1F8E01AF1F541C6E0040C6F6 /* logo2@3x.png in Resources */,
 				1FECFD281E02524000872544 /* add_photo.png in Resources */,
 				1F8B89241DF6A02500087C6B /* Assets.xcassets in Resources */,
 				1FCDC0171DFA5C60005E5587 /* HZBanShiViewController.xib in Resources */,
@@ -918,6 +929,7 @@
 				1FF89EC11DFE9B1F007A4597 /* iconfont.svg in Resources */,
 				1F340CA11DF80746003937DF /* icon_gongshidengji@3x.png in Resources */,
 				1F340CB11DF80746003937DF /* icon_zaixianyuyue.png in Resources */,
+				1F8E01AE1F541C6E0040C6F6 /* logo2@2x.png in Resources */,
 				1FA0CFD51EE021BF00269EBD /* mapapi.bundle in Resources */,
 				1F8B89221DF6A02500087C6B /* Main.storyboard in Resources */,
 				1F340CB71DF80746003937DF /* password.png in Resources */,
