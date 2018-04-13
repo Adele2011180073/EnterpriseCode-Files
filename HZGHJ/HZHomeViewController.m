@@ -92,7 +92,7 @@
     if ([def objectForKey:@"username"]) {
         username=[def objectForKey:@"username"];
         [self getDataSource];
-        
+        self.userName.text=[NSString stringWithFormat:@"欢迎您，%@",username];
     }else{
         username=@"";
         NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"BottomMenuItems2" ofType:@"plist"];
@@ -102,8 +102,9 @@
             NSLog(@"datasourcearray   %@",dataSourceArray);
         
         [collectionview reloadData];
+        self.userName.text=[NSString stringWithFormat:@"欢迎您"];
     }
-    self.userName.text=[NSString stringWithFormat:@"欢迎您，%@",username];
+    
 }
 -(void)getNoti{
     //3
@@ -163,13 +164,14 @@
              _tongzhiCount=0;
              sendDic=NULL;
               [collectionview reloadData];
-//             UIAlertController *alert=[UIAlertController alertControllerWithTitle:[returnDic objectForKey:@"desc"] message:nil preferredStyle:UIAlertControllerStyleAlert];
-//             UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//             }];
-//             [alert addAction:cancelAlert];
-//             [self presentViewController:alert animated:YES completion:nil];
+             
          }else{
                 [_timer invalidate];
+             UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"请求超时，请稍候重试" message:nil preferredStyle:UIAlertControllerStyleAlert];
+             UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+             }];
+             [alert addAction:cancelAlert];
+             [self presentViewController:alert animated:YES completion:nil];
          }
     }];
 }
@@ -205,6 +207,13 @@
             dataSourceArray=[NSMutableArray arrayWithArray:dataArray];
             //    NSLog(@"datasourcearray   %@",dataSourceArray);
             [collectionview reloadData];
+        }else{
+            UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"数据获取失败" message:@"请检查网络，保证网络畅通状态" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+               
+            }];
+            [alert addAction:cancelAlert];
+            [self presentViewController:alert animated:YES completion:nil];
         }
     }];
     
@@ -232,7 +241,7 @@
     }else{
          cell.numLabel.hidden=YES;
     }
-//    NSLog(@"cell  %@   %@",[dic objectForKey:@"image"],[dic objectForKey:@"title"]);
+    NSLog(@"cell  %@   %@",[dic objectForKey:@"image"],[dic objectForKey:@"title"]);
     return cell;
 }
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath

@@ -107,10 +107,10 @@
                 [self.view makeToast:@"暂时没有数据" duration:2 position:CSToastPositionCenter];
             }
           
-            NSData *data =    [NSJSONSerialization dataWithJSONObject:returnDic options:NSJSONWritingPrettyPrinted error:nil];
-            NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+//            NSData *data =    [NSJSONSerialization dataWithJSONObject:returnDic options:NSJSONWritingPrettyPrinted error:nil];
+//            NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
             [tableview reloadData];
-            printf("预约列表 %s\n",[[NSString stringWithFormat:@"%@",str]UTF8String]);
+//            printf("预约列表 %s\n",[[NSString stringWithFormat:@"%@",str]UTF8String]);
 
         }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
             UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];

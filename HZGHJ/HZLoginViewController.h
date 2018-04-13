@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface HZLoginViewController : UIViewController
-@property (strong, nonatomic) IBOutlet UITextField *userText;
-@property (strong, nonatomic) IBOutlet UITextField *passwdText;
-@property (strong, nonatomic) IBOutlet UIButton *rememberBtn;
+//@property (strong, nonatomic) IBOutlet UITextField *userText;
+//@property (strong, nonatomic) IBOutlet UITextField *passwdText;
+//@property (strong, nonatomic) IBOutlet UIButton *rememberBtn;
 @end

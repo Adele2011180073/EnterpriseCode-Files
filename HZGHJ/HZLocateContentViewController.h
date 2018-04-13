@@ -13,8 +13,8 @@
 @property(nonatomic,retain)NSString *uuid;//已提交
 @property(nonatomic,strong)NSDictionary *commitData;//已提交
 
-@property(nonatomic,retain)NSString *qlsxcode;
-@property(nonatomic,assign)int PCODE;
+@property(nonatomic,retain)NSDictionary *qlsxcodeDic;
+//@property(nonatomic,assign)int PCODE;
 @property(nonatomic,assign)int orgId;
 
 @property(nonatomic,strong)NSArray* posArray;//已返回

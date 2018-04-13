@@ -25,7 +25,6 @@
     UITableView *tableview;
     UIScrollView *_searchView;//查询页面
     UISegmentedControl *segmented;
-    NSArray *qlsxcodeArray;
     int pageIndex;
     NSMutableArray *_dataSearchArray;
 }
@@ -41,11 +40,10 @@
     // Do any additional setup after loading the view from its nib.
     self.navigationController.navigationBarHidden=NO;
     self.view.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
-    self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStyleBordered target:nil action:nil];
+    self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStylePlain target:nil action:nil];
     self.title=@"在线办事";
     
-    qlsxcodeArray=[[NSArray alloc]initWithObjects:@"EAF31D8225045AE8CFA4E04C961F5D86",@"1FE087B8241745F16C0133ABB4832B8C",@"06C6B52BF5142FB69BA0113DFD08C77B",@"0496B51F3AB9B5135F85F31B8F255857",@"716c0ebb-d774-42f5-84da-54b0b143bc06",@"c0865333-0cbd-4440-86da-3386defefdba",@"0ef7e0ce-bb77-4979-8cc3-166d08712b96",@"b8e6c1ea-6f89-4a2d-af17-78183b3e8a9f", nil];
-     dataList=[[NSMutableArray alloc]initWithObjects:@"建设项目选址审批：一般建设项目新建、基本变更（选址位置、用地规模、建设规模）",@"建设项目选址审批：一般建设项目证书失效重新核发",@"建设项目选址审批：一般建设项目简易变更（项目名称、建设单位）",@"建设项目选址审批：一般建设项目延期", @"建设用地规划许可",@"临时建设用地规划许可",@"规划条件审定",@"规划条件变更审批",nil];
+     dataList=[[NSMutableArray alloc]init];
     NSArray *titleArray=@[@"在线申请",@"进度查询"];
     segmented=[[UISegmentedControl alloc]initWithItems:titleArray];
     segmented.frame=CGRectMake(5, 5, Width-10, 40);
@@ -56,10 +54,45 @@
     
      pageIndex=1;
     _dataSearchArray=[[NSMutableArray alloc]init];
+    // 获取在线申请列表
+    [self getINLineData];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self getResourceData];
          });
     [self getInlineRequestView];
+}
+// MARK:获取在线申请首页列表
+-(void)getINLineData{
+  NSString *userName=[[NSUserDefaults standardUserDefaults] objectForKey:@"username"];
+    [HZBanShiService BanShiHomeListWithUsreName:userName GetBlock:^(NSDictionary *returnDic, NSError *error) {
+//         NSLog(@"returnDic    %@",returnDic);
+        if ([[returnDic objectForKey:@"code"]integerValue]==0) {
+            dataList=[[NSMutableArray alloc]init];
+            NSArray *array=[returnDic objectForKey:@"list"];
+            [dataList addObjectsFromArray:array];
+            if (segmented.selectedSegmentIndex==0) {
+                [tableview reloadData];
+            }
+        }else if ([[returnDic objectForKey:@"code"]integerValue]==900) {
+            UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *okAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                HZLoginViewController *login=[[HZLoginViewController alloc]init];
+                [self.navigationController pushViewController:login animated:YES];
+            }];
+            [alert addAction:okAlert];
+            UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            }];
+            [alert addAction:cancelAlert];
+            [self presentViewController:alert animated:YES completion:nil];
+        }else{
+            UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"提示" message:[returnDic objectForKey:@"desc"] preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *defaultAction=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                
+            }];
+            [alert addAction:defaultAction];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+    }];
 }
 -(void)getResourceData{
 //    MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -69,6 +102,7 @@
     NSString *companyid=[[NSUserDefaults standardUserDefaults]objectForKey:@"companyid"];
   [HZBanShiService BanShiWithCompanyid:companyid pageIndex:pageIndex AddBlock:^(NSDictionary *returnDic, NSError *error) {
 //       [hud hideAnimated:YES];
+      NSLog(@"returnDic    %@",returnDic);
       if ([[returnDic objectForKey:@"code"]integerValue]==0) {
           NSArray *array=[returnDic objectForKey:@"obj"];
           if (pageIndex==1) {
@@ -109,10 +143,9 @@
     }
 }
 -(void)getInlineRequestView{
-    tableview=[[UITableView alloc]initWithFrame:CGRectMake(0, 50, Width, Height-44-55)];
+    tableview=[[UITableView alloc]initWithFrame:CGRectMake(0, 50, Width, Height-64-55)];
     tableview.tag=10;
     [tableview registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
-    tableview.rowHeight=120;
     tableview.backgroundColor=[UIColor whiteColor];
     tableview.delegate=self;
     tableview.separatorColor=[UIColor clearColor];
@@ -180,12 +213,17 @@
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     if (tableview.tag==10) {
-        return 120;
+        return 100;
     }else{
         NSDictionary *dic=[_dataSearchArray objectAtIndex:indexPath.row];
         NSString *qlsxcode=[dic objectForKey:@"qlsxcode"];
-        NSInteger pcode=[qlsxcodeArray indexOfObject:qlsxcode];
-        NSString *qlsxcodeString=[dataList objectAtIndex:pcode];
+        NSString *qlsxcodeString;
+        for (int i=0; i<dataList.count; i++) {
+            NSDictionary *itemDic=[dataList objectAtIndex:i];
+            if ([[itemDic objectForKey:@"qlsxcode"]isEqualToString:qlsxcode]) {
+                qlsxcodeString=[itemDic objectForKey:@"qlsxmc"];
+            }
+        }
         CGFloat height1=[self sizeWithSt:qlsxcodeString font:[UIFont systemFontOfSize:15]];
         CGFloat height2;
         if ([[dic objectForKey:@"issync"]integerValue]==1) {
@@ -209,18 +247,18 @@
     cell.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1];
     cell.accessoryType=UITableViewCellAccessoryDisclosureIndicator;
     cell.selectionStyle=UITableViewCellSelectionStyleNone;
-    UIView* bgView=[[UIView alloc]initWithFrame:CGRectMake(0, 10, Width, 100)];
+    UIView* bgView=[[UIView alloc]initWithFrame:CGRectMake(0, 5, Width, 90)];
     bgView.backgroundColor=[UIColor whiteColor];
     [cell.contentView addSubview:bgView];
-    UILabel*titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, 10, Width-60, 80)];
+    UILabel*titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, 5, Width-60, 80)];
     titleLabel.textColor=[UIColor blackColor];
     titleLabel.numberOfLines=5;
     titleLabel.textAlignment=NSTextAlignmentLeft;
-    titleLabel.font=[UIFont systemFontOfSize:16];
+    titleLabel.font=[UIFont systemFontOfSize:15];
     [bgView addSubview:titleLabel];
     
-    NSString *text=[dataList objectAtIndex:indexPath.row];
-    titleLabel.text=[NSString stringWithFormat:@"%@",text];
+    NSDictionary *dic=[dataList objectAtIndex:indexPath.row];
+    titleLabel.text=[NSString stringWithFormat:@"%@",[dic objectForKey:@"qlsxmc"]];
     }
     else{
         if (!cell) {
@@ -236,8 +274,13 @@
         NSDictionary *dic=[_dataSearchArray objectAtIndex:indexPath.row];
         NSString *xmmc=[dic objectForKey:@"xmmc"];
         NSString *qlsxcode=[dic objectForKey:@"qlsxcode"];
-        NSInteger pcode=[qlsxcodeArray indexOfObject:qlsxcode];
-        NSString *qlsxcodeString=[dataList objectAtIndex:pcode];
+        NSString *qlsxcodeString;
+        for (int i=0; i<dataList.count; i++) {
+            NSDictionary *itemDic=[dataList objectAtIndex:i];
+            if ([[itemDic objectForKey:@"qlsxcode"]isEqualToString:qlsxcode]) {
+                qlsxcodeString=[itemDic objectForKey:@"qlsxmc"];
+            }
+        }
         NSString*str=[dic objectForKey:@"uploadtime"];//时间戳
         NSDate*detaildate=[NSDate dateWithTimeIntervalSince1970:[str integerValue]/1000];
         //实例化一个NSDateFormatter对象
@@ -259,24 +302,24 @@
             label1.text=[statusLabelArray objectAtIndex:i];
             [cell.contentView  addSubview:label1];
         }
-        NSString *issync;
-        if ([[dic objectForKey:@"issync"]integerValue]==101) {
-            issync=@"提交中";
-        }else if ([[dic objectForKey:@"issync"]integerValue]==102) {
-           issync=@"提交完成";
-        }else if ([[dic objectForKey:@"issync"]integerValue]==103) {
-           issync=@"提交失败";
-        }else if ([[dic objectForKey:@"issync"]integerValue]==104) {
-            issync=@"提交失败";
-        }else if ([[dic objectForKey:@"issync"]integerValue]==0) {
-           issync=@"已受理";
-        }else if ([[dic objectForKey:@"issync"]integerValue]==1) {
-           issync=@"不予受理";
-        }else if ([[dic objectForKey:@"issync"]integerValue]==2) {
-            issync=@"补正";
-        }else{
-           issync=@"";
-        }
+        NSString *issync=@"";
+//        if ([[dic objectForKey:@"issync"]integerValue]==101) {
+//            issync=@"提交中";
+//        }else if ([[dic objectForKey:@"issync"]integerValue]==102) {
+//           issync=@"提交完成";
+//        }else if ([[dic objectForKey:@"issync"]integerValue]==103) {
+//           issync=@"提交失败";
+//        }else if ([[dic objectForKey:@"issync"]integerValue]==104) {
+//            issync=@"提交失败";
+//        }else if ([[dic objectForKey:@"issync"]integerValue]==0) {
+//           issync=@"已受理";
+//        }else if ([[dic objectForKey:@"issync"]integerValue]==1) {
+//           issync=@"不予受理";
+//        }else if ([[dic objectForKey:@"issync"]integerValue]==2) {
+//            issync=@"补正";
+//        }else{
+//           issync=@"";
+//        }
         UIView *nameLabelView1=[[UIView alloc]initWithFrame:CGRectMake(55+(Width-60)/4*3, 0,(Width-60)/4, cell.frame.size.height)];
         nameLabelView1.userInteractionEnabled=YES;
         nameLabelView1.layer.borderColor=blueCyan.CGColor;
@@ -334,9 +377,9 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
      if (tableview.tag==10) {
+    NSDictionary *dic=[dataList objectAtIndex:indexPath.row];
     HZOptionViewController *details=[[HZOptionViewController alloc]init];
-    details.qlsxcode=[qlsxcodeArray objectAtIndex:indexPath.row];
-    details.PCODE=indexPath.row;
+    details.qlsxcodeDic=dic;
     [self.navigationController pushViewController:details animated:YES];
      }else{
          

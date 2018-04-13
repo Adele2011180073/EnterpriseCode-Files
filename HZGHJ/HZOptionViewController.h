@@ -9,6 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface HZOptionViewController : UIViewController
-@property(nonatomic,retain)NSString *qlsxcode;
-@property(nonatomic,assign)int PCODE;
+@property(nonatomic,retain)NSDictionary *qlsxcodeDic;
 @end

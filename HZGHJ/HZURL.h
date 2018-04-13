@@ -9,10 +9,10 @@
 #ifndef HZURL_h
 #define HZURL_h
 //static NSString * const kDemoBaseURL                = @"http://192.168.0.113:8085";//公司局域网
-static NSString * const kDemoBaseURL                = @"http://220.191.210.76:80";//正式版本
+//static NSString * const kDemoBaseURL                = @"http://220.191.210.76:80";//正式版本
 //static NSString * const kDemoBaseURL                = @"http://192.168.0.188:80";
 
-//static NSString * const kDemoBaseURL                = @"http://220.191.210.76:8080";
+static NSString * const kDemoBaseURL                = @"http://220.191.210.76:8080";
 
 //登录
 static NSString * const kLoginURL                = @"/servicesweb/login/login.action";
@@ -87,9 +87,9 @@ static NSString * const kDetailAnnouncementURL                = @"/servicesweb/m
 //密码修改
 static NSString * const kNewPswURL                = @"/servicesweb/login/newPsw.action";
 //获取新通知
-static NSString * const kNoticeURL                = @"/managerweb/message/notice.action";
+static NSString * const kNoticeURL                = @"/servicesweb/message/notice.action";
 //已读标记
-static NSString * const kReadURL                = @"/managerweb/message/read.action";
+static NSString * const kReadURL                = @"/servicesweb/message/read.action";
 
 //图片下载
 static NSString * const kGetFileURL                = @"/servicesweb/file/getfile.action";
@@ -98,6 +98,11 @@ static NSString * const kWorkGuidURL                = @"/servicesweb/workguid/li
 //MARK:常用表格
 static NSString * const kCommonTablesURL                = @"/servicesweb/commontables/list.action";
 //改密码
+
+
+// MARK:获取在线申请首页列表
+static NSString * const kInLineHomeListURL                = @"/servicesweb/onlineapproval/queryBusinessByName.action";
+
 //MARK:在线办事 1.获取办理窗口
 static NSString * const kQueryOrgURL                = @"/servicesweb/onlineapproval/queryOrg.action";
 //MARK: 在线办事提交

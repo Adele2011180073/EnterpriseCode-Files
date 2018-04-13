@@ -13,6 +13,26 @@
 #import "HZURL.h"
 
 @implementation HZBanShiService
+// MARK:获取在线申请首页列表
++(void)BanShiHomeListWithUsreName:(NSString *)username GetBlock:(ReturnData)GetContent{
+    AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
+    NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kInLineHomeListURL];
+    session.responseSerializer.acceptableContentTypes=[NSSet setWithObjects:@"text/html",@"application/json", @"text/json", nil];
+    session.responseSerializer = [AFHTTPResponseSerializer serializer];
+    session.requestSerializer.timeoutInterval=10.f;
+    NSMutableDictionary *parameters=[NSMutableDictionary dictionary];
+    [parameters setObject:username forKey:@"username"];
+    [session POST:serviceURLString parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSDictionary *dic=[NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingAllowFragments error:nil];
+        NSData *data =    [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:nil];
+        NSString *str=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+        NSLog(@"成功  %@",str);
+        GetContent(dic,nil);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"失败%@",error);
+        GetContent(nil,error);
+    }];
+}
 //获取列表内容
 +(void)BanShiWithId:(NSString*)IsPId GetBlock:(ReturnData)GetContent{
     AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
@@ -55,7 +75,7 @@
     }];
 
 }
-//MARK:在线办事
+//MARK:请选择办理的窗口
 +(void)BanShiWithAndBlock:(ReturnData)BanShiBlock{
     AFHTTPSessionManager *session = [AFHTTPSessionManager manager];
     NSString *serviceURLString = [NSString stringWithFormat:@"%@%@",kDemoBaseURL,kQueryOrgURL];

@@ -70,7 +70,7 @@
             numOfRows= 2;
             break;
         case 2:
-            numOfRows= 4;
+            numOfRows= 3;
             break;
             
                default:
@@ -88,8 +88,8 @@
     }
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.backgroundColor=[UIColor colorWithRed:251/255. green:251/255. blue:254/255. alpha:1.];
-    NSArray *imageArray=@[@"\U0000e627",@"\U0000e656",@"\U0000e641",@"\U0000e63f",@"\U0000e683",@"\U0000e664",@"\U0000e653"];
-    NSArray *titleArray=@[@"部门",@"职位",@"密码修改",@"缓存清理",@"系统版本",@"注销"];
+    NSArray *imageArray=@[@"\U0000e627",@"\U0000e656",@"\U0000e641",@"\U0000e63f",@"\U0000e683",@"\U0000e653"];
+    NSArray *titleArray=@[@"部门",@"职位",@"密码修改",@"缓存清理",@"注销"];
     UILabel *imageTitle=[[UILabel alloc]initWithFrame:CGRectMake(10, 5, 30, 30)];
     imageTitle.textColor=blueCyan;
     imageTitle.font=[UIFont fontWithName:@"iconfont" size:28];
@@ -128,12 +128,13 @@
         subTitle.text=[responseData objectForKey:@"position"];
     }else if (indexPath.section==2&&indexPath.row==1){
        subTitle.text=[NSString stringWithFormat:@"%.1fM",[self filePath]];
-    }else if (indexPath.section==2&&indexPath.row==2){
-        NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-        // 当前应用软件版本  比如：1.0.1
-        NSString *appCurVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-        subTitle.text=[NSString stringWithFormat:@"%@",appCurVersion];
     }
+//    else if (indexPath.section==2&&indexPath.row==2){
+//        NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
+//        // 当前应用软件版本  比如：1.0.1
+//        NSString *appCurVersion = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+//        subTitle.text=[NSString stringWithFormat:@"%@",appCurVersion];
+//    }
     subTitle.font=[UIFont systemFontOfSize:15];
     subTitle.textAlignment=NSTextAlignmentLeft;
     [cell.contentView addSubview:subTitle];
@@ -204,7 +205,7 @@
         [self presentViewController:alert animated:YES completion:nil];
       
     }
-    else if (indexPath.section==2&&indexPath.row==3){
+    else if (indexPath.section==2&&indexPath.row==2){
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"username"];
          [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"passwd"];
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"remember"];
@@ -215,9 +216,9 @@
             [self.navigationController pushViewController:pw animated:YES];
         }];
         [alert addAction:okAlert];
-//        UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//        }];
-//        [alert addAction:cancelAlert];
+        UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        }];
+        [alert addAction:cancelAlert];
         [self presentViewController:alert animated:YES completion:nil];
     }
 }
@@ -259,6 +260,7 @@
     NSLog ( @" 清理成功 " );
     NSIndexPath *index=[NSIndexPath indexPathForRow:1 inSection:2];//刷新
     [tableview reloadRowsAtIndexPaths:[NSArray arrayWithObjects:index,nil] withRowAnimation:UITableViewRowAnimationNone];
+    [tableview reloadData];
 }
 
 - (void)didReceiveMemoryWarning {

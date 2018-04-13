@@ -45,7 +45,7 @@
     _tableview.backgroundColor=[UIColor whiteColor];
     _tableview.opaque=YES;
     _tableview.tableFooterView=[[UIView alloc]init];
-    _tableview.rowHeight=50;
+    _tableview.rowHeight=60;
 //    _tableview.estimatedRowHeight=44;
 //    _tableview.rowHeight=UITableViewAutomaticDimension;
     [_tableview registerClass:[HZRegistCell class] forCellReuseIdentifier:@"cell"];
@@ -75,27 +75,78 @@
      UITextView *textfield7=[self.view viewWithTag:16];
      UITextView *textfield8=[self.view viewWithTag:17];
     UITextView *textfield9=[self.view viewWithTag:18];
-    NSLog(@"textfield1.text  %@  %d   textfield2.text  %@ textfield3.text  %@  textfield4.text  %@   textfield5.text  %@   textfield6.text  %@  textfield7.text  %@  textfield8.text  %@ ",textfield1.text,[textfield1.text length],textfield2.text,textfield3.text,textfield4.text,textfield5.text,textfield6.text,textfield7.text,textfield8.text);
-    if (textfield1.text==NULL||textfield2.text==NULL||textfield3.text==NULL||textfield4.text==NULL||textfield5.text==NULL||textfield6.text==NULL||textfield7.text==NULL||textfield8.text==NULL||textfield9.text==NULL) {
-        [self.view makeToast:@"请填写完整" duration:2 position:CSToastPositionCenter];
+
+    if ([textfield1.text length]<6||[textfield2.text length]>12) {
+        UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"提示" message:@"账号请按要求填写完整" preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *defaultAction=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        
+                }];
+                [alert addAction:defaultAction];
+                [self presentViewController:alert animated:YES completion:nil];
         return;
-    }
-    if ([BSRegexValidate validatePassWord:textfield1.text]==NO) {
-        [self.view makeToast:@"账号请按要求填写完整" duration:2 position:CSToastPositionCenter];
+    } if ([textfield2.text length]<1||[textfield2.text length]>10) {
+        UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"提示" message:@"用户名请按要求填写完整" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *defaultAction=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        [alert addAction:defaultAction];
+        [self presentViewController:alert animated:YES completion:nil];
         return;
-    }else if ([textfield2.text length]<1||[textfield2.text length]>11) {
-        [self.view makeToast:@"用户名请按要求填写完整" duration:2 position:CSToastPositionCenter];
+    } if ([BSRegexValidate validatePassWord:textfield3.text]==NO) {
+        UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"提示" message:@"密码请按要求填写完整" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *defaultAction=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        [alert addAction:defaultAction];
+        [self presentViewController:alert animated:YES completion:nil];
         return;
-    }else if ([BSRegexValidate validatePassWord:textfield3.text]==NO) {
-        [self.view makeToast:@"密码请按要求填写完整" duration:2 position:CSToastPositionCenter];
+    } if ([BSRegexValidate validateTelephone:textfield4.text]==NO) {
+        UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"提示" message:@"联系方式请按要求填写完整" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *defaultAction=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        [alert addAction:defaultAction];
+        [self presentViewController:alert animated:YES completion:nil];
         return;
-    }else if ([BSRegexValidate validateTelephone:textfield4.text]==NO) {
-        [self.view makeToast:@"联系方式请按要求填写完整" duration:2 position:CSToastPositionCenter];
+    }if ([textfield5.text length]<1||[textfield5.text length]>10) {
+        UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"提示" message:@"职位请按要求填写完整" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *defaultAction=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        [alert addAction:defaultAction];
+        [self presentViewController:alert animated:YES completion:nil];
         return;
-    }
-   
-    if ([textfield9.text length]<3||[textfield9.text length]>15) {
-        [self.view makeToast:@"建设单位联系电话请按要求填写完整" duration:2 position:CSToastPositionCenter];
+    }if ([textfield6.text length]<1||[textfield6.text length]>100) {
+        UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"提示" message:@"建设单位请按要求填写完整" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *defaultAction=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        [alert addAction:defaultAction];
+        [self presentViewController:alert animated:YES completion:nil];
+        return;
+    }if ([textfield7.text length]<1||[textfield7.text length]>100) {
+        UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"提示" message:@"建设单位地址请按要求填写完整" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *defaultAction=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        [alert addAction:defaultAction];
+        [self presentViewController:alert animated:YES completion:nil];
+        return;
+    }if ([textfield8.text length]<1||[textfield8.text length]>10) {
+        UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"提示" message:@"建设单位联系人请按要求填写完整" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *defaultAction=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        [alert addAction:defaultAction];
+        [self presentViewController:alert animated:YES completion:nil];
+        return;
+    }if ([BSRegexValidate validateTelephone:textfield9.text]==NO) {
+        UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"提示" message:@"建设单位联系电话请按要求填写完整" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *defaultAction=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        [alert addAction:defaultAction];
+        [self presentViewController:alert animated:YES completion:nil];
         return;
     }
         MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -155,36 +206,56 @@
 }
 #pragma mark - UITextViewDelegate
 -(void)textViewDidBeginEditing:(UITextView *)textView{
-    UITextView *textfield1=[self.view viewWithTag:10];
-    UITextView *textfield2=[self.view viewWithTag:11];
-    UITextView *textfield3=[self.view viewWithTag:12];
-    UITextView *textfield4=[self.view viewWithTag:13];
-    UITextView *textfield5=[self.view viewWithTag:14];
-    UITextView *textfield6=[self.view viewWithTag:15];
+//    UITextView *textfield1=[self.view viewWithTag:10];
+//    UITextView *textfield2=[self.view viewWithTag:11];
+//    UITextView *textfield3=[self.view viewWithTag:12];
+//    UITextView *textfield4=[self.view viewWithTag:13];
+//    UITextView *textfield5=[self.view viewWithTag:14];
+//    UITextView *textfield6=[self.view viewWithTag:15];
     UITextView *textfield7=[self.view viewWithTag:16];
     UITextView *textfield8=[self.view viewWithTag:17];
     UITextView *textfield9=[self.view viewWithTag:18];
     if ([textView isEqual:textfield7]) {
-        _tableview.contentOffset=CGPointMake(0, 60);
+        _tableview.contentOffset=CGPointMake(0, 80);
     }else if ([textView isEqual:textfield8]||[textView isEqual:textfield9]){
-        _tableview.contentOffset=CGPointMake(0, 160);
+        _tableview.contentOffset=CGPointMake(0, 220);
     }
+    UIBarButtonItem *done =    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(leaveEditMode)];
     
+    self.navigationItem.rightBarButtonItem = done;
 }
 -(void)textViewDidEndEditing:(UITextView *)textView{
     _tableview.contentOffset=CGPointMake(0, 0);
-     [self.view endEditing:YES];
+    self.navigationItem.rightBarButtonItem = nil;
+}
+- (void)leaveEditMode {
+    
+    [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
+    
 }
 -(void)textViewDidChange:(UITextView *)textView {
     //获得textView的初始尺寸
-    CGFloat width = CGRectGetWidth(textView.frame);
-    CGFloat height = CGRectGetHeight(textView.frame);
-    CGSize newSize = [textView sizeThatFits:CGSizeMake(width,MAXFLOAT)];
-    CGRect newFrame = textView.frame;
-    newFrame.size = CGSizeMake(fmax(width, newSize.width), fmax(height, newSize.height));
-    textView.frame= newFrame;
+//    CGFloat width = CGRectGetWidth(textView.frame);
+//    CGFloat height = CGRectGetHeight(textView.frame);
+//    CGSize newSize = [textView sizeThatFits:CGSizeMake(width,MAXFLOAT)];
+//    CGRect newFrame = textView.frame;
+//    newFrame.size = CGSizeMake(fmax(width, newSize.width), fmax(height, newSize.height));
+//    textView.frame= newFrame;
 }
-
+-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    
+    if ([text isEqualToString:@"\n"]) {
+        
+        [textView resignFirstResponder];
+        
+        return NO;
+        
+    }
+    
+    return YES;    
+    
+}
 
 
 -(void)viewWillAppear:(BOOL)animated{

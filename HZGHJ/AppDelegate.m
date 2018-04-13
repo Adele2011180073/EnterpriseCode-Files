@@ -26,6 +26,7 @@ static NSString *BaiDuAK=@"P5OwjL02LUfDGEIslEMDGREsGkK9MtZI";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
        // 使用 UNUserNotificationCenter 来管理通知
     UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
     //监听回调事件

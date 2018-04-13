@@ -54,7 +54,7 @@
     titleLabel.font=[UIFont systemFontOfSize:15];
     [self.view addSubview:titleLabel];
     
-    UIButton *commit=[[UIButton alloc]initWithFrame:CGRectMake(Width/2-80,Height-44-140, 160, 40)];
+    UIButton *commit=[[UIButton alloc]initWithFrame:CGRectMake(20,Height-44-140, Width-40, 40)];
     [commit addTarget:self action:@selector(commit) forControlEvents:UIControlEventTouchUpInside];
     commit.backgroundColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1];
     commit.clipsToBounds=YES;
@@ -100,12 +100,27 @@
     sender.selected=YES;
 }
 -(void)commit{
+    BOOL ischeck=NO;
+    for (int i=0; i<_checkBoxArray.count; i++) {
+         UIButton *button=(UIButton*)[_checkBoxArray objectAtIndex:i];
+        if (button.selected==YES) {
+            ischeck=YES;
+        }
+    }
+    if (ischeck==NO) {
+          UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"提示" message:@"必须选择一个窗口才能办理" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *defaultAction=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        [alert addAction:defaultAction];
+        [self presentViewController:alert animated:YES completion:nil];
+        return;
+    }
     NSDictionary *orgDic=[_dataList objectAtIndex:checkNum-10];
     HZLocateDetailViewController *details=[[HZLocateDetailViewController alloc]init];
-    details.qlsxcode=self.qlsxcode;
+    details.qlsxcodeDic=self.qlsxcodeDic;
     details.orgId=[[orgDic objectForKey:@"orgId"]intValue];
     NSLog(@"orgDic   %@",orgDic);
-    details.PCODE=self.PCODE;
     [self.navigationController pushViewController:details animated:YES];
 }
 
