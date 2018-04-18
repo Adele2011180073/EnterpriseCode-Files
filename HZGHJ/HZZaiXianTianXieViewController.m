@@ -34,11 +34,22 @@
     // Do any additional setup after loading the view.
     self.navigationController.navigationBarHidden=NO;
     self.view.backgroundColor=[UIColor whiteColor];
-    self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStyleBordered target:nil action:nil];
-    NSArray *array=@[@"选址申请表",@"选址失效申请表",@"选址建议变更申请表",@"选址延期申请表",@"用地申请表",@"临时用地申请表",@"规划条件申请表",@"规划条件变更申请表"];
-    self.title=[array objectAtIndex:self.PCODE];
+    self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStylePlain target:nil action:nil];
+
+    self.title=@"在线填写";
+    UILabel *titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 10, Width, 20)];
+    titleLabel.textAlignment=NSTextAlignmentCenter;
+    titleLabel.font=[UIFont systemFontOfSize:16];
+    [self.view addSubview:titleLabel];
     
-     NSLog(@"选址申请表   %@",self.commitData);
+    NSString *qlsxcode=[self.qlsxcodeDic objectForKey:@"qlsxcode"];
+    if ([qlsxcode isEqualToString:@"EAF31D8225045AE8CFA4E04C961F5D86"]) {
+         titleLabel.text=@"选址申请表";
+    }else if ([qlsxcode isEqualToString:@"1FE087B8241745F16C0133ABB4832B8C"]){
+         titleLabel.text=@"选址失效申请表";
+    }
+    
+    NSLog(@" %@   %@", titleLabel.text,self.commitData);
     if ([[self.commitData objectForKey:@"lzbg"]intValue]==1) {
         _isCheck=[NSString stringWithFormat:@"%@",[self.commitData objectForKey:@"lzbg"]];
     }else if ([[self.commitData objectForKey:@"lzbg"]intValue]==2) {
@@ -58,7 +69,7 @@
 
     _mainBgView=[[UIScrollView alloc]init];
     _mainBgView.showsVerticalScrollIndicator=NO;
-    _mainBgView.frame=CGRectMake(0, 0, Width, Height-44);
+    _mainBgView.frame=CGRectMake(0, 40, Width, Height-44-40);
     _mainBgView.contentSize=CGSizeMake(Width, 940);
     _mainBgView.userInteractionEnabled=YES;
     [self.view addSubview:_mainBgView];

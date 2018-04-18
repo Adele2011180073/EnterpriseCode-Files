@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HZZaiXianTianXieViewController3 : UIViewController
+@interface HZZaiXianTianXieViewController5 : UIViewController
 @property(nonatomic,strong)NSDictionary *commitData;//已提交
 @property(nonatomic,strong)NSDictionary *saveDic;//已保存
 @property(nonatomic,retain)NSDictionary *qlsxcodeDic;

@@ -29,29 +29,30 @@
     self.title=@"受理条件";
     
     NSMutableArray *titleArray=[[NSMutableArray alloc]init];
-    int PCODE=[[self.qlsxcodeDic objectForKey:@"id"]intValue];
-    if (PCODE==4||PCODE==1||PCODE==2||PCODE==3) {
+    NSString * qlsxcode=[self.qlsxcodeDic objectForKey:@"qlsxcode"];
+    if ([qlsxcode isEqualToString:@"EAF31D8225045AE8CFA4E04C961F5D86"]||[qlsxcode isEqualToString:@"1FE087B8241745F16C0133ABB4832B8C"]||[qlsxcode isEqualToString:@"06C6B52BF5142FB69BA0113DFD08C77B"]||[qlsxcode isEqualToString:@"0496B51F3AB9B5135F85F31B8F255857"]) {
         NSArray *array=[[NSArray alloc]initWithObjects:@"一、符合经批准的控制性详细规划；",@"二、符合规划管理技术规范和标准的要求；",@"三、建设项目需要批准、核准的证明文件。", nil];
         [titleArray addObjectsFromArray:array];
-    }else if (PCODE==6||PCODE==7||PCODE==8||PCODE==5) {
-        NSArray *array=[[NSArray alloc]initWithObjects:@"一、按照国家规定需要批准、核准的建设项目，以划拨方式提供国有土地使用权的建设项目；",@"二、符合城市市总体规划、专项规划和控制性详细规划等相关规划。", nil];
+    }else if ([qlsxcode isEqualToString:@"716c0ebb-d774-42f5-84da-54b0b143bc06"]||[qlsxcode isEqualToString:@"c0865333-0cbd-4440-86da-3386defefdba"]) {
+         NSArray *array=[[NSArray alloc]initWithObjects:@"一、符合经批准的控制性详细规划或专项规划；",@"二、符合规划管理技术规范和标准的要求；",@"三、建设项目批准、核准、备案文件；",@"四、出让土地项目取得土地出让合同；",@"五、因建设项目施工或地质勘查需要临时使用土地的情形；",@"六、申请材料齐全且符合法定形式。", nil];
         [titleArray addObjectsFromArray:array];
-    }else if (PCODE==9||PCODE==10) {
-        NSArray *array=[[NSArray alloc]initWithObjects:@"一、符合经批准的控制性详细规划或专项规划；",@"二、符合规划管理技术规范和标准的要求；",@"三、建设项目批准、核准、备案文件；",@"四、出让土地项目取得土地出让合同；",@"五、因建设项目施工或地质勘查需要临时使用土地的情形；",@"六、申请材料齐全且符合法定形式。", nil];
-        [titleArray addObjectsFromArray:array];
-    }else if (PCODE==11||PCODE==12) {
-         NSArray *array=[[NSArray alloc]initWithObjects:@"一、取得土地使用权；",@"二、符合城市控制性详细规划、规划设计条件、城市规划管理等技术规范。", nil];
-        [titleArray addObjectsFromArray:array];
-    }else if (PCODE==13||PCODE==15) {
+    }else if ([qlsxcode isEqualToString:@"0ef7e0ce-bb77-4979-8cc3-166d08712b96"]||[qlsxcode isEqualToString:@"b8e6c1ea-6f89-4a2d-af17-78183b3e8a9f"]) {
          NSArray *array=[[NSArray alloc]initWithObjects:@"一、符合经批准的控制性详细规划或专项规划；",@"二、符合规划管理技术规范和标准的要求；",@"三、出具项目服务联系单、项目备案等文件；",@"四、申请材料齐全且符合法定形式。", nil];
         [titleArray addObjectsFromArray:array];
-    }else if (PCODE==14) {
+    }else if ([qlsxcode isEqualToString:@"31104F35575B4CB91AA7D5C014E730B1"]||[qlsxcode isEqualToString:@"F16BFFA466D5374C9D991F026936438F"]||[qlsxcode isEqualToString:@"42CBF39D427712000C357F3E7494007B"]||[qlsxcode isEqualToString:@"51760F1375EB1CF64A180319B743C392"]) {
+        NSArray *array=[[NSArray alloc]initWithObjects:@"一、按照国家规定需要批准、核准的建设项目，以划拨方式提供国有土地使用权的建设项目；",@"二、符合城市市总体规划、专项规划和控制性详细规划等相关规划。", nil];
+        [titleArray addObjectsFromArray:array];
+    }else if ([qlsxcode isEqualToString:@"598ea023-d3cc-4168-b3fb-529ffff53d8d"]||[qlsxcode isEqualToString:@"6241e908-79a4-4782-b5de-204178602601"]) {
+        NSArray *array=[[NSArray alloc]initWithObjects:@"一、取得土地使用权；",@"二、符合城市控制性详细规划、规划设计条件、城市规划管理等技术规范。", nil];
+        [titleArray addObjectsFromArray:array];
+    }else if ([qlsxcode isEqualToString:@"87ed0a9d-856b-45d3-8e4a-2fa4e32715f5"]) {
         NSArray *array=[[NSArray alloc]initWithObjects:@"一、建设工程已竣工；",@"二、具备竣工规划核实的条件。", nil];
         [titleArray addObjectsFromArray:array];
-    }else if (PCODE==16) {
+    }else if ([qlsxcode isEqualToString:@"3e9b0641-3a76-4cfe-9666-72350d2385d8"]) {
         NSArray *array=[[NSArray alloc]initWithObjects:@"一、取得土地使用权；",@"二、符合控制性详细规划、规划条件、城市规划管理技术规定等；",@"三、建筑设计成果、内容及深度应符合《建筑工程设计文件编制深度规定》（建质[2008]216号）要求及相关技术标准和规范。", nil];
         [titleArray addObjectsFromArray:array];
     }
+
     UILabel*titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(Width-100, 30, 50, 30)];
     titleLabel.textColor=[UIColor blackColor];
     titleLabel.text=@"全选";

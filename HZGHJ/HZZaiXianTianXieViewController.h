@@ -11,7 +11,7 @@
 @interface HZZaiXianTianXieViewController : UIViewController
 @property(nonatomic,strong)NSDictionary *commitData;//已提交
 @property(nonatomic,strong)NSDictionary *saveDic;//已保存
-@property(nonatomic,assign)int PCODE;
+@property(nonatomic,retain)NSDictionary *qlsxcodeDic;
 
 
 @property(nonatomic,strong)UILabel *placehoderLabel1;

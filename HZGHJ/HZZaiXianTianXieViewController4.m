@@ -38,11 +38,21 @@
     // Do any additional setup after loading the view.
     self.navigationController.navigationBarHidden=NO;
     self.view.backgroundColor=[UIColor whiteColor];
-    self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStyleBordered target:nil action:nil];
-    NSArray *array=@[@"选址申请表",@"选址失效申请表",@"选址建议变更申请表",@"选址延期申请表",@"用地申请表",@"临时用地申请表",@"规划条件申请表",@"规划条件变更申请表"];
-    self.title=[array objectAtIndex:self.PCODE];
+    self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.title=@"在线填写";
+    UILabel *titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 10, Width, 20)];
+    titleLabel.textAlignment=NSTextAlignmentCenter;
+    titleLabel.font=[UIFont systemFontOfSize:16];
+    [self.view addSubview:titleLabel];
     
-    NSLog(@"选址申请表   %@",self.commitData);
+    NSString *qlsxcode=[self.qlsxcodeDic objectForKey:@"qlsxcode"];
+    if ([qlsxcode isEqualToString:@"31104F35575B4CB91AA7D5C014E730B1"]) {
+        titleLabel.text=@"建设项目选址申请书（划拔供地方式项目）";
+    }else if ([qlsxcode isEqualToString:@"0496B51F3AB9B5135F85F31B8F255857"]){
+        titleLabel.text=@"选址延期申请表";
+    }
+    
+    NSLog(@" %@   %@",titleLabel.text,self.commitData);
     if ([[self.commitData objectForKey:@"lzbg"]intValue]==1) {
         _isCheck=[NSString stringWithFormat:@"%@",[self.commitData objectForKey:@"lzbg"]];
     }else if ([[self.commitData objectForKey:@"lzbg"]intValue]==2) {
@@ -63,12 +73,12 @@
     
     _mainBgView=[[UIScrollView alloc]init];
     _mainBgView.showsVerticalScrollIndicator=NO;
-    _mainBgView.frame=CGRectMake(0, 0, Width, Height-44);
-    _mainBgView.contentSize=CGSizeMake(Width, 940+150);
+    _mainBgView.frame=CGRectMake(0, 40, Width, Height-44-40);
+    _mainBgView.contentSize=CGSizeMake(Width, 940+30);
     _mainBgView.userInteractionEnabled=YES;
     [self.view addSubview:_mainBgView];
     _mainListView=[[UIScrollView alloc]init];
-    _mainListView.frame=CGRectMake(5, 10, Width-10,800+150);
+    _mainListView.frame=CGRectMake(5, 10, Width-10,800);
     _mainListView.layer.borderColor=[UIColor lightGrayColor].CGColor;
     _mainListView.layer.borderWidth=1;
     _mainListView.userInteractionEnabled=YES;
@@ -80,7 +90,7 @@
     }
     [self addReMainListView];
     
-    UIButton *commit=[[UIButton alloc]initWithFrame:CGRectMake(20,840+150, Width-40, 40)];
+    UIButton *commit=[[UIButton alloc]initWithFrame:CGRectMake(20, _mainListView.frame.origin.y+ _mainListView.frame.size.height+20, Width-40, 40)];
     [commit addTarget:self action:@selector(commit) forControlEvents:UIControlEventTouchUpInside];
     commit.backgroundColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1];
     commit.clipsToBounds=YES;
@@ -90,14 +100,13 @@
 }
 //MARK:绘制已完成主表格视图
 -(void)addReMainListView{
-    NSArray *nameLabelaArray=@[@"申请人(全称) :",@"法定代表人 :",@"受托人 :",@"手机 :",@"受理号 :",@"项目名称 :",@"电话 :"];
+    NSArray *nameLabelaArray=@[@"申请人(全称) :",@"法定代表人 :",@"受托人 :",@"手机 :",@"项目名称 :",@"电话 :"];
     NSString *str1=[self.commitData objectForKey:@"sqr"];
     NSString *str2=[self.commitData objectForKey:@"fddbr"];
     NSString *str3=[self.commitData objectForKey:@"wtr"];
     NSString *str4=[self.commitData objectForKey:@"sjh"];
-    NSString *str5=[self.commitData objectForKey:@"filecode"];
-    NSString *str6=[self.commitData objectForKey:@"xmmc"];
-    NSString *str7=[self.commitData objectForKey:@"lxdh"];
+    NSString *str5=[self.commitData objectForKey:@"xmmc"];
+    NSString *str6=[self.commitData objectForKey:@"lxdh"];
     if ([str1 isEqual:[NSNull null]]||str1==nil||str1==NULL||[str1 isEqualToString:@""]) {
         str1=@"";
     }
@@ -116,10 +125,8 @@
     if ([str6 isEqual:[NSNull null]]||str6==nil||str6==NULL||[str6 isEqualToString:@""]) {
         str6=@"";
     }
-    if ([str7 isEqual:[NSNull null]]||str7==nil||str7==NULL||[str7 isEqualToString:@""]) {
-        str7=@"";
-    }
-    NSArray *nameContentLabelArray=@[str1,str2,str3,str4,str5,str6,str7];
+  
+    NSArray *nameContentLabelArray=@[str1,str2,str3,str4,str5,str6];
     for (int i=0; i<nameContentLabelArray.count; i++) {
         UIView *nameLabelView1=[[UIView alloc]initWithFrame:CGRectMake(0, 50*i,Width-10, 50)];
         nameLabelView1.userInteractionEnabled=YES;
@@ -127,7 +134,7 @@
         nameLabelView1.layer.borderWidth=1;
         [_mainListView addSubview:nameLabelView1];
         
-         if (i<4||i==5) {
+         if (i<6) {
             UIImageView *imageview=[[UIImageView alloc]initWithFrame:CGRectMake(0, 15, 20, 20)];
             imageview.image=[UIImage imageNamed:@"must_pic.png"];
             [nameLabelView1 addSubview:imageview];
@@ -159,7 +166,7 @@
     }
     NSArray *contentArray2=@[str21,str22];
     for (int i=0; i<2; i++) {
-        UIView *textBgView=[[UIView alloc]initWithFrame:CGRectMake(0, 350+440*i, Width-10, 160)];
+        UIView *textBgView=[[UIView alloc]initWithFrame:CGRectMake(0, 300+340*i, Width-10, 160)];
         textBgView.backgroundColor=[UIColor whiteColor];
         textBgView.layer.borderColor=[UIColor lightGrayColor].CGColor;
         textBgView.layer.borderWidth=1;
@@ -245,7 +252,7 @@
     NSArray *labelArray5=@[@"有",@"无"];
     //建设地址  论址报告
     for (int i=0; i<2; i++) {
-        UIView *textBgView=[[UIView alloc]initWithFrame:CGRectMake(0, 510+130*i, Width-10, 50)];
+        UIView *textBgView=[[UIView alloc]initWithFrame:CGRectMake(0, 460+130*i, Width-10, 50)];
         textBgView.backgroundColor=[UIColor whiteColor];
         textBgView.layer.borderColor=[UIColor lightGrayColor].CGColor;
         textBgView.layer.borderWidth=1;
@@ -325,69 +332,20 @@
     NSArray *contentArray6=@[str61,str62,str63,str64];
     //东西南北
     for (int i=0; i<4; i++) {
-        UILabel  *label2=[[UILabel alloc]initWithFrame:CGRectMake(10+(Width-30)/2*(i%2),  560+40*(i/2), 50, 40)];
+        UILabel  *label2=[[UILabel alloc]initWithFrame:CGRectMake(10+(Width-30)/2*(i%2),  510+40*(i/2), 50, 40)];
         label2.textAlignment=NSTextAlignmentCenter;
         label2.font=[UIFont systemFontOfSize:15];
         label2.text=[labelArray6 objectAtIndex:i];
         [_mainListView  addSubview:label2];
         
-        UITextField *text=[[UITextField alloc]initWithFrame:CGRectMake(60+(Width-30)/2*(i%2),  560+40*(i/2), (Width-30)/2-50, 40)];
+        UITextField *text=[[UITextField alloc]initWithFrame:CGRectMake(60+(Width-30)/2*(i%2),  510+40*(i/2), (Width-30)/2-50, 40)];
         text.tag=40+i;
         text.delegate=self;
         NSString *content=[contentArray6 objectAtIndex:i];
         text.text=[NSString stringWithFormat:@"%@",content];
         text.font=[UIFont systemFontOfSize:15];
         [_mainListView addSubview:text];
-    }
     
-    //是否为规划条件变更
-    NSString *str71=[self.commitData objectForKey:@"sfghtjbg"];
-   NSString *str72=[self.commitData objectForKey:@"tdcb"];
-    if ([str71 isEqual:[NSNull null]]||str71==nil||str71==NULL||[str71 isEqualToString:@""]) {
-        str71=@"";
-    }
-    if ([str72 isEqual:[NSNull null]]||str72==nil||str72==NULL||[str72 isEqualToString:@""]) {
-        str72=@"是";
-    }
-    NSArray *labelArray7=@[@"是否为规划条件变更:",@"储备土地出让前"];
-    for (int i=0; i<labelArray7.count; i++) {
-        UILabel  *label2=[[UILabel alloc]initWithFrame:CGRectMake(10,  690+40*i, 150, 50)];
-        label2.textAlignment=NSTextAlignmentLeft;
-        label2.font=[UIFont systemFontOfSize:15];
-        label2.text=[labelArray7 objectAtIndex:i];
-        [_mainListView  addSubview:label2];
-        
-        if (i==0) {
-        UIButton *text=[[UIButton alloc]initWithFrame:CGRectMake(160,  690+40*i, Width-30-150, 50)];
-        text.tag=50+i;
-        NSString *content=[contentArray6 objectAtIndex:i];
-            text.layer.borderWidth=0.5;
-            text.layer.borderColor=blueCyan.CGColor;
-        [text setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-        if ([content isEqualToString:@""]) {
-            
-        }else{
-            [text setTitle:content forState:UIControlStateNormal];
-        }
-        [text addTarget:self action:@selector(quanshu:) forControlEvents:UIControlEventTouchUpInside];
-        text.titleLabel.font=[UIFont systemFontOfSize:15];
-        [_mainListView addSubview:text];
-        }else{
-            UIButton *text=[[UIButton alloc]initWithFrame:CGRectMake(40+(Width-180)/2*i, 740, (Width-180)/2-50, 40)];
-            [text addTarget:self action:@selector(checkBox:) forControlEvents:UIControlEventTouchUpInside];
-            text.tag=50+i;
-            if ([str72 isEqualToString:@""]) {
-                
-            }else  if ([str72 isEqualToString:@"是"]) {
-                text.selected=YES;
-            }else  if ([str72 isEqualToString:@"否"]) {
-                text.selected=NO;
-            }
-            [text setImage:[UIImage imageNamed:@"checkbox"] forState:UIControlStateNormal];
-            [text setImage:[UIImage imageNamed:@"checkbox_fill"] forState:UIControlStateSelected];
-            text.titleLabel.font=[UIFont systemFontOfSize:15];
-            [_mainListView addSubview:text];
-        }
     }
 
 }

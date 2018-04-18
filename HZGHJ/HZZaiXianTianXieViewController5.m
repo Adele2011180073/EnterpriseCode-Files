@@ -1,19 +1,20 @@
 //
-//  HZZaiXianTianXieViewController1.m
+//  HZZaiXianTianXieViewController3.m
 //  HZGHJ
 //
 //  Created by zhang on 2017/7/31.
 //  Copyright © 2017年 FiveFu. All rights reserved.
 //
 
-#import "HZZaiXianTianXieViewController1.h"
+#import "HZZaiXianTianXieViewController5.h"
 #import "HZIllustrateViewController1.h"
 #import "MBProgressHUD.h"
 #import "UIView+Toast.h"
 #import "BSRegexValidate.h"
 #import "HZLocateContentViewController.h"
 #import "UIViewController+BackButtonHandler.h"
-@interface HZZaiXianTianXieViewController1 ()<UITextViewDelegate,UITextFieldDelegate,UIGestureRecognizerDelegate>
+
+@interface HZZaiXianTianXieViewController5 ()<UITextViewDelegate,UITextFieldDelegate,UIGestureRecognizerDelegate>
 {
     UIButton *_rightBarBtn;
     UIScrollView *_mainBgView;//整个scrollview
@@ -22,12 +23,15 @@
     UITextView *_detailText2;
     
     NSString* _isCheck;
+    NSString* _isTuDi;
+    NSArray *_listArray;
+    UIScrollView *_listView;
 }
 
 
 @end
 
-@implementation HZZaiXianTianXieViewController1
+@implementation HZZaiXianTianXieViewController5
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -42,21 +46,21 @@
     [self.view addSubview:titleLabel];
     
     NSString *qlsxcode=[self.qlsxcodeDic objectForKey:@"qlsxcode"];
-     if ([qlsxcode isEqualToString:@"06C6B52BF5142FB69BA0113DFD08C77B"]) {
-           titleLabel.text=@"选址简易变更申请表";
-     }else if ([qlsxcode isEqualToString:@"0496B51F3AB9B5135F85F31B8F255857"]){
-           titleLabel.text=@"选址延期申请表";
-     }
-  
-    NSLog(@" %@   %@",titleLabel.text,self.commitData);
+    if ([qlsxcode isEqualToString:@"F16BFFA466D5374C9D991F026936438F"]) {
+        titleLabel.text=@"建设项目批后修改(延期)事项申请表";
+    }else if ([qlsxcode isEqualToString:@"0496B51F3AB9B5135F85F31B8F255857"]){
+        titleLabel.text=@"选址延期申请表";
+    }
     
+    NSLog(@" %@   %@",titleLabel.text,self.commitData);
     if ([[self.commitData objectForKey:@"lzbg"]intValue]==1) {
         _isCheck=[NSString stringWithFormat:@"%@",[self.commitData objectForKey:@"lzbg"]];
     }else if ([[self.commitData objectForKey:@"lzbg"]intValue]==2) {
-       _isCheck=[NSString stringWithFormat:@"%@",[self.commitData objectForKey:@"lzbg"]];
+        _isCheck=[NSString stringWithFormat:@"%@",[self.commitData objectForKey:@"lzbg"]];
     }else{
-    _isCheck=@"";
+        _isCheck=@"";
     }
+    _isTuDi=@"";
     UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(downKeyboard)];
     tap.delegate=self;
     [_mainBgView addGestureRecognizer:tap];
@@ -69,12 +73,12 @@
     
     _mainBgView=[[UIScrollView alloc]init];
     _mainBgView.showsVerticalScrollIndicator=NO;
-    _mainBgView.frame=CGRectMake(0, 0, Width, Height-44);
-    _mainBgView.contentSize=CGSizeMake(Width, 940);
+    _mainBgView.frame=CGRectMake(0, 40, Width, Height-44-40);
+    _mainBgView.contentSize=CGSizeMake(Width, 940+30);
     _mainBgView.userInteractionEnabled=YES;
     [self.view addSubview:_mainBgView];
     _mainListView=[[UIScrollView alloc]init];
-    _mainListView.frame=CGRectMake(5, 10, Width-10,770);
+    _mainListView.frame=CGRectMake(5, 10, Width-10,800);
     _mainListView.layer.borderColor=[UIColor lightGrayColor].CGColor;
     _mainListView.layer.borderWidth=1;
     _mainListView.userInteractionEnabled=YES;
@@ -86,7 +90,7 @@
     }
     [self addReMainListView];
     
-    UIButton *commit=[[UIButton alloc]initWithFrame:CGRectMake(20,820, Width-40, 40)];
+    UIButton *commit=[[UIButton alloc]initWithFrame:CGRectMake(20, _mainListView.frame.origin.y+ _mainListView.frame.size.height+20, Width-40, 40)];
     [commit addTarget:self action:@selector(commit) forControlEvents:UIControlEventTouchUpInside];
     commit.backgroundColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1];
     commit.clipsToBounds=YES;
@@ -96,14 +100,13 @@
 }
 //MARK:绘制已完成主表格视图
 -(void)addReMainListView{
-    NSArray *nameLabelaArray=@[@"申请人(全称) :",@"法定代表人 :",@"受托人 :",@"手机 :",@"受理号 :",@"项目名称 :",@"电话 :"];
+    NSArray *nameLabelaArray=@[@"申请人(全称) :",@"法定代表人 :",@"受托人 :",@"手机 :",@"项目名称 :",@"电话 :"];
     NSString *str1=[self.commitData objectForKey:@"sqr"];
     NSString *str2=[self.commitData objectForKey:@"fddbr"];
     NSString *str3=[self.commitData objectForKey:@"wtr"];
     NSString *str4=[self.commitData objectForKey:@"sjh"];
-    NSString *str5=[self.commitData objectForKey:@"filecode"];
-    NSString *str6=[self.commitData objectForKey:@"xmmc"];
-    NSString *str7=[self.commitData objectForKey:@"lxdh"];
+    NSString *str5=[self.commitData objectForKey:@"xmmc"];
+    NSString *str6=[self.commitData objectForKey:@"lxdh"];
     if ([str1 isEqual:[NSNull null]]||str1==nil||str1==NULL||[str1 isEqualToString:@""]) {
         str1=@"";
     }
@@ -122,10 +125,8 @@
     if ([str6 isEqual:[NSNull null]]||str6==nil||str6==NULL||[str6 isEqualToString:@""]) {
         str6=@"";
     }
-    if ([str7 isEqual:[NSNull null]]||str7==nil||str7==NULL||[str7 isEqualToString:@""]) {
-        str7=@"";
-    }
-    NSArray *nameContentLabelArray=@[str1,str2,str3,str4,str5,str6,str7];
+  
+    NSArray *nameContentLabelArray=@[str1,str2,str3,str4,str5,str6];
     for (int i=0; i<nameContentLabelArray.count; i++) {
         UIView *nameLabelView1=[[UIView alloc]initWithFrame:CGRectMake(0, 50*i,Width-10, 50)];
         nameLabelView1.userInteractionEnabled=YES;
@@ -133,7 +134,7 @@
         nameLabelView1.layer.borderWidth=1;
         [_mainListView addSubview:nameLabelView1];
         
-        if (i<4||i==5) {
+         if (i<6) {
             UIImageView *imageview=[[UIImageView alloc]initWithFrame:CGRectMake(0, 15, 20, 20)];
             imageview.image=[UIImage imageNamed:@"must_pic.png"];
             [nameLabelView1 addSubview:imageview];
@@ -165,7 +166,7 @@
     }
     NSArray *contentArray2=@[str21,str22];
     for (int i=0; i<2; i++) {
-        UIView *textBgView=[[UIView alloc]initWithFrame:CGRectMake(0, 350+260*i, Width-10, 160)];
+        UIView *textBgView=[[UIView alloc]initWithFrame:CGRectMake(0, 300+340*i, Width-10, 160)];
         textBgView.backgroundColor=[UIColor whiteColor];
         textBgView.layer.borderColor=[UIColor lightGrayColor].CGColor;
         textBgView.layer.borderWidth=1;
@@ -251,7 +252,7 @@
     NSArray *labelArray5=@[@"有",@"无"];
     //建设地址  论址报告
     for (int i=0; i<2; i++) {
-        UIView *textBgView=[[UIView alloc]initWithFrame:CGRectMake(0, 510+50*i, Width-10, 50)];
+        UIView *textBgView=[[UIView alloc]initWithFrame:CGRectMake(0, 460+130*i, Width-10, 50)];
         textBgView.backgroundColor=[UIColor whiteColor];
         textBgView.layer.borderColor=[UIColor lightGrayColor].CGColor;
         textBgView.layer.borderWidth=1;
@@ -311,19 +312,93 @@
         }
         
     }
+    NSArray *labelArray6=@[@"东至:",@"南至:",@"西至:",@"北至:"];
+    NSString *str61=[self.commitData objectForKey:@"zbdz"];
+    NSString *str62=[self.commitData objectForKey:@"zbnz"];
+    NSString *str63=[self.commitData objectForKey:@"zbxz"];
+    NSString *str64=[self.commitData objectForKey:@"zbbz"];
+    if ([str61 isEqual:[NSNull null]]||str61==nil||str61==NULL||[str61 isEqualToString:@""]) {
+        str61=@"";
+    }
+    if ([str62 isEqual:[NSNull null]]||str62==nil||str62==NULL||[str62 isEqualToString:@""]) {
+        str62=@"";
+    }
+    if ([str63 isEqual:[NSNull null]]||str63==nil||str63==NULL||[str63 isEqualToString:@""]) {
+        str63=@"";
+    }
+    if ([str64 isEqual:[NSNull null]]||str64==nil||str64==NULL||[str64 isEqualToString:@""]) {
+        str64=@"";
+    }
+    NSArray *contentArray6=@[str61,str62,str63,str64];
+    //东西南北
+    for (int i=0; i<4; i++) {
+        UILabel  *label2=[[UILabel alloc]initWithFrame:CGRectMake(10+(Width-30)/2*(i%2),  510+40*(i/2), 50, 40)];
+        label2.textAlignment=NSTextAlignmentCenter;
+        label2.font=[UIFont systemFontOfSize:15];
+        label2.text=[labelArray6 objectAtIndex:i];
+        [_mainListView  addSubview:label2];
+        
+        UITextField *text=[[UITextField alloc]initWithFrame:CGRectMake(60+(Width-30)/2*(i%2),  510+40*(i/2), (Width-30)/2-50, 40)];
+        text.tag=40+i;
+        text.delegate=self;
+        NSString *content=[contentArray6 objectAtIndex:i];
+        text.text=[NSString stringWithFormat:@"%@",content];
+        text.font=[UIFont systemFontOfSize:15];
+        [_mainListView addSubview:text];
     
+    }
+
 }
+
+//用地权属
+-(void)quanshu:(UIButton*)sender{
+    //    UIButton *button1=[self.view viewWithTag:40];
+    //    UIButton *button2=[self.view viewWithTag:41];
+    [_listView removeFromSuperview];
+    _listView=[[UIScrollView alloc]init];
+    _listView.backgroundColor=littleGray;
+    _listView.layer.borderColor=blueCyan.CGColor;
+    _listView.layer.borderWidth=0.5;
+    _listView.userInteractionEnabled=YES;
+    [_mainListView addSubview:_listView];
+        _listArray=[[NSArray alloc]initWithObjects:@"是",@"否", nil];
+        _listView.frame=CGRectMake(sender.frame.origin.x, 740, sender.frame.size.width, 50*_listArray.count);
+        for (int i=0;i< _listArray.count; i++) {
+            UIButton *text=[[UIButton alloc]initWithFrame:CGRectMake(0, 50*i, sender.frame.size.width, 50)];
+            text.tag=500+i;
+            NSString *content=[_listArray objectAtIndex:i];
+            [text setTitle:content forState:UIControlStateNormal];
+             [text setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [text addTarget:self action:@selector(listBtn:) forControlEvents:UIControlEventTouchUpInside];
+            text.titleLabel.font=[UIFont systemFontOfSize:16];
+            [_listView addSubview:text];
+        }
+    }
+-(void)listBtn:(UIButton *)sender{
+    [_listView removeFromSuperview];
+    UIButton *button1=[self.view viewWithTag:50];
+        NSString *content=[_listArray objectAtIndex:sender.tag-500];
+        [button1 setTitle:content forState:UIControlStateNormal];
+  }
 -(void)checkBox:(UIButton *)sender{
     UIButton *button1=[self.view viewWithTag:30];
     UIButton *button2=[self.view viewWithTag:31];
+    UIButton *button3=[self.view viewWithTag:51];
     if ([button1 isEqual:sender]) {
         button1.selected=YES;
         button2.selected=NO;
         _isCheck=@"1";
-    }else{
+    }else  if ([button2 isEqual:sender]){
         button2.selected=YES;
         button1.selected=NO;
         _isCheck=@"2";
+    }else  if ([button3 isEqual:sender]){
+        button3.selected=!button3.selected;
+        if (button3.selected==YES) {
+            _isTuDi=@"是";
+        }else{
+            _isTuDi=@"否";
+        }
     }
 }
 -(void)illustrate{
@@ -392,8 +467,12 @@
     UITextField *textfield21=[self.view viewWithTag:20];//区
     UITextField *textfield22=[self.view viewWithTag:21];//路
     
+    UITextField *textfield41=[self.view viewWithTag:40];//东
+    UITextField *textfield42=[self.view viewWithTag:41];//南
+    UITextField *textfield43=[self.view viewWithTag:42];//西
+    UITextField *textfield44=[self.view viewWithTag:43];//北
     
-    if (textfield1.text==NULL||textfield2.text==NULL||textfield3.text==NULL||textfield4.text==NULL||textfield6.text==NULL||_detailText2.text==NULL||_isCheck==NULL||[_isCheck isEqualToString:@""]) {
+   if (textfield1.text==NULL||textfield2.text==NULL||textfield3.text==NULL||textfield4.text==NULL||textfield6.text==NULL||_detailText2.text==NULL||_isCheck==NULL||[_isCheck isEqualToString:@""]) {
         [self.view makeToast:@"请把带*标记的必填项目填写完整" duration:2 position:CSToastPositionCenter];
         return;
     }
@@ -430,13 +509,26 @@
     }else{
         [dic setObject:_detailText1.text forKey:@"jsnrjgm"];
     }
+    if (textfield41.text==NULL) {
         [dic setObject:@"" forKey:@"zbdz"];
-  
+    }else{
+        [dic setObject:textfield41.text forKey:@"zbdz"];
+    }
+    if (textfield42.text==NULL) {
         [dic setObject:@"" forKey:@"zbnz"];
-   
+    }else{
+        [dic setObject:textfield42.text forKey:@"zbnz"];
+    }
+    if (textfield43.text==NULL) {
         [dic setObject:@"" forKey:@"zbxz"];
-   
+    }else{
+        [dic setObject:textfield43.text forKey:@"zbxz"];
+    }
+    if (textfield44.text==NULL) {
         [dic setObject:@"" forKey:@"zbbz"];
+    }else{
+        [dic setObject:textfield44.text forKey:@"zbbz"];
+    }
     [dic setObject:@"" forKey:@"tdgyfs"];
     [dic setObject:@"" forKey:@"resuuid"];
     [dic setObject:@"" forKey:@"ydqsqk"];
@@ -488,6 +580,11 @@
     UITextField *textfield21=[self.view viewWithTag:20];//区
     UITextField *textfield22=[self.view viewWithTag:21];//路
     
+    UITextField *textfield41=[self.view viewWithTag:40];//东
+    UITextField *textfield42=[self.view viewWithTag:41];//南
+    UITextField *textfield43=[self.view viewWithTag:42];//西
+    UITextField *textfield44=[self.view viewWithTag:43];//北
+    
     NSMutableDictionary *dic=[[NSMutableDictionary alloc]init];
     [dic setObject:[self getString:textfield1.text] forKey:@"sqr"];
     [dic setObject:[self getString:textfield2.text] forKey:@"fddbr"];
@@ -498,10 +595,10 @@
     [dic setObject:[self getString:textfield7.text] forKey:@"lxdh"];
     [dic setObject:[self getString:textfield21.text] forKey:@"jsdzq"];
     [dic setObject:[self getString:textfield22.text] forKey:@"jsdzl"];
-    [dic setObject:@"" forKey:@"zbdz"];
-    [dic setObject:@"" forKey:@"zbnz"];
-    [dic setObject:@"" forKey:@"zbxz"];
-    [dic setObject:@"" forKey:@"zbbz"];
+    [dic setObject:[self getString:textfield41.text] forKey:@"zbdz"];
+    [dic setObject:[self getString:textfield42.text] forKey:@"zbnz"];
+    [dic setObject:[self getString:textfield43.text] forKey:@"zbxz"];
+    [dic setObject:[self getString:textfield44.text] forKey:@"zbbz"];
     [dic setObject:_isCheck forKey:@"lzbg"];
     [dic setObject:[self getString:_detailText1.text] forKey:@"jsnrjgm"];
     [dic setObject:[self getString:_detailText2.text] forKey:@"xmsmqk"];

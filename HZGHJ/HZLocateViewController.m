@@ -102,7 +102,7 @@
     NSString *companyid=[[NSUserDefaults standardUserDefaults]objectForKey:@"companyid"];
   [HZBanShiService BanShiWithCompanyid:companyid pageIndex:pageIndex AddBlock:^(NSDictionary *returnDic, NSError *error) {
 //       [hud hideAnimated:YES];
-      NSLog(@"returnDic    %@",returnDic);
+//      NSLog(@"returnDic    %@",returnDic);
       if ([[returnDic objectForKey:@"code"]integerValue]==0) {
           NSArray *array=[returnDic objectForKey:@"obj"];
           if (pageIndex==1) {
@@ -251,7 +251,7 @@
     bgView.backgroundColor=[UIColor whiteColor];
     [cell.contentView addSubview:bgView];
     UILabel*titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, 5, Width-60, 80)];
-    titleLabel.textColor=[UIColor blackColor];
+    titleLabel.textColor=[UIColor darkGrayColor];
     titleLabel.numberOfLines=5;
     titleLabel.textAlignment=NSTextAlignmentLeft;
     titleLabel.font=[UIFont systemFontOfSize:15];
@@ -259,8 +259,7 @@
     
     NSDictionary *dic=[dataList objectAtIndex:indexPath.row];
     titleLabel.text=[NSString stringWithFormat:@"%@",[dic objectForKey:@"qlsxmc"]];
-    }
-    else{
+    }else{
         if (!cell) {
             cell=[[UITableViewCell alloc]init];
         }else{
@@ -272,9 +271,16 @@
         cell.selectionStyle=UITableViewCellSelectionStyleNone;
         
         NSDictionary *dic=[_dataSearchArray objectAtIndex:indexPath.row];
+          NSString *qlsxcode=[dic objectForKey:@"qlsxcode"];
         NSString *xmmc=[dic objectForKey:@"xmmc"];
-        NSString *qlsxcode=[dic objectForKey:@"qlsxcode"];
-        NSString *qlsxcodeString;
+        if ([qlsxcode isEqualToString:@"F16BFFA466D5374C9D991F026936438F"]||[qlsxcode isEqualToString:@"42CBF39D427712000C357F3E7494007B"]||[qlsxcode isEqualToString:@"51760F1375EB1CF64A180319B743C392"]) {
+            xmmc=[dic objectForKey:@"xmmcyq"];
+        }
+        if ([xmmc isEqual:[NSNull null]]||xmmc==NULL) {
+            xmmc=@"";
+        }
+      
+        NSString *qlsxcodeString=@"";
         for (int i=0; i<dataList.count; i++) {
             NSDictionary *itemDic=[dataList objectAtIndex:i];
             if ([[itemDic objectForKey:@"qlsxcode"]isEqualToString:qlsxcode]) {
@@ -288,12 +294,13 @@
         //设定时间格式,这里可以设置成自己需要的格式
         [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
         NSString*currentDateStr = [dateFormatter stringFromDate:detaildate];
-        NSArray *statusLabelArray=@[[NSString stringWithFormat:@"%d",indexPath.row],xmmc,qlsxcodeString,currentDateStr];
+        NSArray *statusLabelArray=@[[NSString stringWithFormat:@"%d",(int)indexPath.row+1],xmmc,qlsxcodeString,currentDateStr];
         for (int i=0; i<statusLabelArray.count; i++) {
             UILabel  *label1=[[UILabel alloc]initWithFrame:CGRectMake(55+(Width-60)/4*(i-1),  0, (Width-60)/4, cell.frame.size.height)];
             if (i==0) {
                 label1.frame=CGRectMake(5,  0, 50, cell.frame.size.height);
             }
+            label1.textColor=[UIColor darkGrayColor];
             label1.layer.borderColor=blueCyan.CGColor;
             label1.layer.borderWidth=0.5;
             label1.textAlignment=NSTextAlignmentCenter;
@@ -303,23 +310,23 @@
             [cell.contentView  addSubview:label1];
         }
         NSString *issync=@"";
-//        if ([[dic objectForKey:@"issync"]integerValue]==101) {
-//            issync=@"提交中";
-//        }else if ([[dic objectForKey:@"issync"]integerValue]==102) {
-//           issync=@"提交完成";
-//        }else if ([[dic objectForKey:@"issync"]integerValue]==103) {
-//           issync=@"提交失败";
-//        }else if ([[dic objectForKey:@"issync"]integerValue]==104) {
-//            issync=@"提交失败";
-//        }else if ([[dic objectForKey:@"issync"]integerValue]==0) {
-//           issync=@"已受理";
-//        }else if ([[dic objectForKey:@"issync"]integerValue]==1) {
-//           issync=@"不予受理";
-//        }else if ([[dic objectForKey:@"issync"]integerValue]==2) {
-//            issync=@"补正";
-//        }else{
-//           issync=@"";
-//        }
+        if ([[dic objectForKey:@"issync"]integerValue]==101) {
+            issync=@"提交中";
+        }else if ([[dic objectForKey:@"issync"]integerValue]==102) {
+           issync=@"提交完成";
+        }else if ([[dic objectForKey:@"issync"]integerValue]==103) {
+           issync=@"提交失败";
+        }else if ([[dic objectForKey:@"issync"]integerValue]==104) {
+            issync=@"提交失败";
+        }else if ([[dic objectForKey:@"issync"]integerValue]==0) {
+           issync=@"已受理";
+        }else if ([[dic objectForKey:@"issync"]integerValue]==1) {
+           issync=@"不予受理";
+        }else if ([[dic objectForKey:@"issync"]integerValue]==2) {
+            issync=@"补正";
+        }else{
+           issync=@"";
+        }
         UIView *nameLabelView1=[[UIView alloc]initWithFrame:CGRectMake(55+(Width-60)/4*3, 0,(Width-60)/4, cell.frame.size.height)];
         nameLabelView1.userInteractionEnabled=YES;
         nameLabelView1.layer.borderColor=blueCyan.CGColor;
@@ -327,6 +334,7 @@
         [cell.contentView addSubview:nameLabelView1];
         UILabel  *label1=[[UILabel alloc]initWithFrame:CGRectMake(0,  5, (Width-60)/4, 30)];
        label1.textAlignment=NSTextAlignmentCenter;
+         label1.textColor=[UIColor darkGrayColor];
         label1.font=[UIFont systemFontOfSize:15];
         label1.text=[NSString stringWithFormat:@"%@",issync] ;
         [nameLabelView1  addSubview:label1];

@@ -36,11 +36,21 @@
     // Do any additional setup after loading the view.
     self.navigationController.navigationBarHidden=NO;
     self.view.backgroundColor=[UIColor whiteColor];
-    self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStyleBordered target:nil action:nil];
-    NSArray *array=@[@"选址申请表",@"选址失效申请表",@"选址建议变更申请表",@"选址延期申请表",@"用地申请表",@"临时用地申请表",@"规划条件申请表",@"规划条件变更申请表"];
-    self.title=[array objectAtIndex:self.PCODE];
+    self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStylePlain target:nil action:nil];
     
-    NSLog(@"选址申请表   %@",self.commitData);
+    self.title=@"在线填写";
+    UILabel *titleLabel=[[UILabel alloc]initWithFrame:CGRectMake(0, 10, Width, 20)];
+    titleLabel.textAlignment=NSTextAlignmentCenter;
+    titleLabel.font=[UIFont systemFontOfSize:16];
+    [self.view addSubview:titleLabel];
+    NSString *qlsxcode=[self.qlsxcodeDic objectForKey:@"qlsxcode"];
+    if ([qlsxcode isEqualToString:@"716c0ebb-d774-42f5-84da-54b0b143bc06"]) {
+        titleLabel.text=@"用地申请表";
+    }else if ([qlsxcode isEqualToString:@"c0865333-0cbd-4440-86da-3386defefdba"]){
+       titleLabel.text=@"临时建设用地规划许可申请表";
+    }
+    
+    NSLog(@" %@   %@",self.title,self.commitData);
     if ([[self.commitData objectForKey:@"tdgyfs"] isEqualToString:@"划拨"]) {
         _isCheck=[NSString stringWithFormat:@"%@",[self.commitData objectForKey:@"tdgyfs"]];
     }else  if ([[self.commitData objectForKey:@"tdgyfs"] isEqualToString:@"出让"]) {
@@ -61,7 +71,7 @@
     
     _mainBgView=[[UIScrollView alloc]init];
     _mainBgView.showsVerticalScrollIndicator=NO;
-    _mainBgView.frame=CGRectMake(0, 0, Width, Height-44);
+    _mainBgView.frame=CGRectMake(0, 40, Width, Height-44-40);
     _mainBgView.contentSize=CGSizeMake(Width, 940);
     _mainBgView.userInteractionEnabled=YES;
     [self.view addSubview:_mainBgView];

@@ -27,9 +27,9 @@
     // Do any additional setup after loading the view.
     self.navigationController.navigationBarHidden=NO;
     self.view.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
-    self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStyleBordered target:nil action:nil];
+    self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStylePlain target:nil action:nil];
     self.title=@"样表";
-    self.view.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
+    self.view.backgroundColor=[UIColor blackColor];
 
     UIImageView *imageView=[[UIImageView alloc]initWithFrame:CGRectMake(30,40, Width-60, Height-44-140)];
     //开启交互功能
