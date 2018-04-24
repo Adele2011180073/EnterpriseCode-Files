@@ -132,6 +132,7 @@
     
         HZLocateContentViewController *content=[[HZLocateContentViewController alloc]init];
         content.orgId=self.orgId;
+        content.type=self.type;
         content.qlsxcodeDic=self.qlsxcodeDic;
         [self.navigationController pushViewController:content animated:YES];
     

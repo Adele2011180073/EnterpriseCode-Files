@@ -27,7 +27,11 @@
 #import "HZZaiXianTianXieViewController2.h"
 #import "HZZaiXianTianXieViewController3.h"
 #import "HZZaiXianTianXieViewController4.h"
-
+#import "HZZaiXianTianXieViewController5.h"
+#import "HZZaiXianTianXieViewController6.h"
+#import "HZZaiXianTianXieViewController7.h"
+#import "HZZaiXianTianXieViewController8.h"
+#import "HZZaiXianTianXieViewController9.h"
 
 @interface HZLocateContentViewController ()<UIImagePickerControllerDelegate,UINavigationControllerDelegate,UINavigationBarDelegate,UITextFieldDelegate,UIGestureRecognizerDelegate>{
     UIButton *_rightBarBtn;
@@ -80,7 +84,6 @@
     }else{
         NSLog(@"self.commitData   %@",self.commitData);
         [self getImageNameArray];
-        self.orgId=[[self.saveDic objectForKey:@"orgId"]intValue];
         [self addMainListView];
         [self getResourceData];
      
@@ -98,15 +101,13 @@
     [HZBanShiService BanShiWithId:self.uuid AddBlock:^(NSDictionary *returnDic, NSError *error) {
          [MBProgressHUD hideHUDForView:self.view animated:YES];
         if ([[returnDic objectForKey:@"code"]integerValue]==0) {
-//            _imageReCommitArray=[[NSMutableArray alloc]init];
             NSArray *array=[returnDic objectForKey:@"obj"];
-//            [_imageReCommitArray addObjectsFromArray:array];
+            NSLog(@"returnDic  %@",returnDic);
             for (int i=0; i<array.count; i++) {
                 NSDictionary *dic=[array objectAtIndex:i];
                 for (int j=0; j<_MATERArray.count; j++) {
                     NSString *templateidpurename=[NSString stringWithFormat:@"%@_%@",[dic objectForKey:@"templateid"],[dic objectForKey:@"purename"]];
                  if([templateidpurename rangeOfString:[_MATERArray objectAtIndex:j]].location !=NSNotFound) {
-                     //if ([[dic objectForKey:@"templateid"]isEqualToString:[_MATERArray objectAtIndex:j]]) {
                         NSMutableArray *array=[_imageAllArray objectAtIndex:j];
                         UIImage *image=[UIImage sd_imageWithData:[[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@?fileId=%@",kDemoBaseURL,kGetFileURL,[dic objectForKey:@"id"]]]]];
                         [array addObject:image];
@@ -131,20 +132,18 @@
     NSArray *array4=[[NSArray alloc]initWithObjects:@"1736932C8C0C44D9AF9D72B1BA411832",@"8401F317CEA1453597D93FFD23BD3BCB_a$",@"8401F317CEA1453597D93FFD23BD3BCB_b$",@"8401F317CEA1453597D93FFD23BD3BCB_c$",@"A362794986CE464B9FC37834EB49750D",@"0E66C235BE6D4C1D8DA568947ED447AC",@"734BA930F91B4E8A8AD08717BAE8B6E8",@"9D5325FD6D59484F997897085B9F0675",@"3783734074F94D21BA4DD7010C427290", nil];
 
     _MATERArray=[[NSMutableArray alloc]init];
-       int PCODE=[[self.qlsxcodeDic objectForKey:@"id"]intValue];
-    NSString *qlsxmc=[self.qlsxcodeDic objectForKey:@"qlsxmc"];
-//    if ([qlsxmc isEqualToString:@""]) {
-//        <#statements#>
-//    }
-    if (PCODE<4) {
-        [_MATERArray addObjectsFromArray:array1];
-    }else if (PCODE==4){
-        [_MATERArray addObjectsFromArray:array2];
-    }else if (PCODE==5){
+    NSString *qlsxcode=[self.qlsxcodeDic objectForKey:@"qlsxcode"];
+    if ([qlsxcode isEqualToString:@"EAF31D8225045AE8CFA4E04C961F5D86"]||[qlsxcode isEqualToString:@"1FE087B8241745F16C0133ABB4832B8C"]||[qlsxcode isEqualToString:@"06C6B52BF5142FB69BA0113DFD08C77B"]||[qlsxcode isEqualToString:@"0496B51F3AB9B5135F85F31B8F255857"]) {
+         [_MATERArray addObjectsFromArray:array1];
+    }else if ([qlsxcode isEqualToString:@"716c0ebb-d774-42f5-84da-54b0b143bc06"]) {
+          [_MATERArray addObjectsFromArray:array2];
+    }else if ([qlsxcode isEqualToString:@"c0865333-0cbd-4440-86da-3386defefdba"]) {
         [_MATERArray addObjectsFromArray:array3];
-    }else if (PCODE==6||PCODE==7){
+    }else if ([qlsxcode isEqualToString:@"0ef7e0ce-bb77-4979-8cc3-166d08712b96"]||[qlsxcode isEqualToString:@"b8e6c1ea-6f89-4a2d-af17-78183b3e8a9f"]) {
         [_MATERArray addObjectsFromArray:array4];
     }
+    
+
     
 }
 
@@ -196,8 +195,17 @@
         nameLabelaArray=@[@"材料名称",@"书面申请书（《建设项目选址申请书》（一般建设项目新报））",@"工商营业执照或组织机构代码证复印件（加盖单位公章）",@"授权委托书（须提供原件核对）",@"委托身份证明（须提供原件核对）",@"项目建议书批复（启用审批新流程项目可用发改项目收件单及项目建议书文本、电子文件）或行政许可申请材料补正告知书（须提供原件核对）",@"标明拟选址位置的地形图（拟建位置1/1000带规划控制线地形图1份用铅笔标明拟用地位置）",@"有效土地权属证明（自有用地项目提供）（须提供原件核对）",@"选址论证报告批复文件及报告文本(成果稿)、电子光盘（要求编制选址论证报告的项目提供）",@"西湖风景名胜区项目需提供立项回复单、选址申报书、项目相关的会议纪要和政府研究批文（如涉及该项目本阶段事宜的需提供）"];
         statusLabelArray=@[@"必要性",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"非必要",@"非必要(要求编制选址论证报告的项目提供)",@"非必要(西湖风景区项目提供)"];
     }else if ([qlsxcode isEqualToString:@"598ea023-d3cc-4168-b3fb-529ffff53d8d"]){//建设工程规划许可证核发
-        nameLabelaArray=@[@"材料名称",@"《建设工程规划许可证申请表》（建筑类）",@"《建设工程规划许可证申请表》（市政类）",@"工商营业执照或组织机构代码证复印件（加盖单位公章）",@"授权委托书（须提供原件核对）",@"委托身份证明（须提供原件核对）",@"相应资质的设计单位设计的建筑施工图（平、立、剖面图一套），1/500（范围较大时1/1000）总平面蓝图四份（总平面蓝图加盖预定位章）、成果电子文件一份（含三维电子模型）",@"有效土地权属证明（建设用地批准书或土地证，须提供原件核对），国有土地出让合同（出让项目提供，须提供原件核对）",@"建设行政主管部门出具的民用建筑节能意见（须提供原件核对）",@"《建设项目批后修改(延期)事项申请表》（变更、修改、延期）",@"公示材料（较原批方案有调整时提交再次公示的材料原件）",@"经复核的日照分析报告（需进行日照分析的项目提供）",@"达不到日照标准要求的国家、省、市重点建设项目以及其他公共设施建设项目，提供经公证的日照补偿协议",@"变更规划条件涉及补缴土地出让金的，应提供补缴证明",@"违法补办项目提供处罚决定书"];
-        statusLabelArray=@[@"必要性",@"必要（建筑类）",@"必要（市政类）",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"非必要(涉及批后修改或延期事项提供。)",@"非必要",@"非必要",@"非必要",@"非必要",@"非必要"];
+        nameLabelaArray=@[@"材料名称",@"《建设工程规划许可证申请表》（建筑类）",@"工商营业执照或组织机构代码证复印件（加盖单位公章）",@"授权委托书（须提供原件核对）",@"委托身份证明（须提供原件核对）",@"方案、扩初联合审查意见及批复意见（含有初步设计项目提供），经复核同意的方案总平面图",@"相应资质的设计单位设计的建筑施工图（平、立、剖面图一套），1/500（范围较大时1/1000）总平面蓝图四份（总平面蓝图加盖预定位章）、成果电子文件一份（含三维电子模型）",@"有效土地权属证明（建设用地批准书或土地证，须提供原件核对），国有土地出让合同（出让项目提供，须提供原件核对）",@"建设行政主管部门出具的民用建筑节能意见（须提供原件核对）",@"需公示项目的公示材料，包括现场公示图片，社区反馈意见。（较原批方案有调整时提交再次公示的材料原件，较原批方案没调整时提交方案审批时提供材料的复印件）",@"经复核的日照分析报告（按照《杭州市建筑工程日照分析技术管理规则》要求需进行日照分析的项目提供）",@"景观分析报告（拟批建设项目处于城市规划确定的景观控制区时提供，较原批方案有调整时提交修改的景观分析报告原件，较原批方案没调整时提交方案审批时提供材料的复印件）",@"国家、省、市重点建设项目以及其他公共设施建设项目，其建筑间距达不到国家和地方规定的日照标准要求的，提供取得受影响建筑所有权人同意达成的日照补偿协议",@"变更规划条件涉及补缴土地出让金的，应提供补缴证明",@"违法补办项目提供处罚决定书"];
+        statusLabelArray=@[@"必要性",@"必要（建筑类）",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"非必要",@"非必要",@"非必要",@"非必要",@"非必要"];
+    }else if ([qlsxcode isEqualToString:@"6241e908-79a4-4782-b5de-204178602601"]){//临时建设工程规划许可证核发
+        nameLabelaArray=@[@"材料名称",@"建设工程规划许可证申请表",@"工商营业执照或组织机构代码证复印件（加盖单位公章）",@"授权委托书（须提供原件核对）",@"委托身份证明（须提供原件核对）",@"方案、扩初联合审查意见及批复意见（含有初步设计项目提供），经复核同意的方案总平面图",@"相应资质的设计单位设计的建筑施工图（平、立、剖面图一套），1/500（范围较大时1/1000）总平面蓝图四份（总平面蓝图加盖预定位章）、成果电子文件一份（含三维电子模型）",@"有效土地权属证明（建设用地批准书或土地证，须提供原件核对），国有土地出让合同（出让项目提供，须提供原件核对）",@"建设行政主管部门出具的民用建筑节能意见（须提供原件核对）",@"需公示项目的公示材料，包括现场公示图片，社区反馈意见。（较原批方案有调整时提交再次公示的材料原件，较原批方案没调整时提交方案审批时提供材料的复印件）",@"经复核的日照分析报告（按照《杭州市建筑工程日照分析技术管理规则》要求需进行日照分析的项目提供）",@"景观分析报告（拟批建设项目处于城市规划确定的景观控制区时提供，较原批方案有调整时提交修改的景观分析报告原件，较原批方案没调整时提交方案审批时提供材料的复印件）",@"国家、省、市重点建设项目以及其他公共设施建设项目，其建筑间距达不到国家和地方规定的日照标准要求的，提供取得受影响建筑所有权人同意达成的日照补偿协议",@"变更规划条件涉及补缴土地出让金的，应提供补缴证明",@"临时建设影响交通、市容、安全等的，提供相应行政主管部门意见",@"违法补办项目提供处罚决定书"];
+        statusLabelArray=@[@"必要性",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"非必要",@"非必要",@"非必要",@"非必要",@"非必要",@"非必要"];
+    }else if ([qlsxcode isEqualToString:@"87ed0a9d-856b-45d3-8e4a-2fa4e32715f5"]){//建设工程竣工规划核实
+        nameLabelaArray=@[@"材料名称",@"《建设工程竣工规划核实申请表》",@"工商营业执照或组织机构代码证复印件（加盖单位公章）",@"授权委托书（须提供原件核对）",@"委托身份证明（须提供原件核对）",@"建设项目选址意见书或规划条件（包括附图）复印件（须提供原件核对）",@"建设用地规划许可证、建设工程规划许可证及附件、附图和施工许可证(复印件须提供原件核对）",@"经加盖竣工章的建设工程竣工总平面图二份和平、立、剖面图一套",@"有相应测绘资质等级的勘测单位出具的竣工测绘成果",@"建设项目批后管理跟踪表或盖有规划分局公章的批后跟踪意见书",@"如有违法建设情况，需提供处罚凭证"];
+        statusLabelArray=@[@"必要性",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"非必要"];
+    }else if ([qlsxcode isEqualToString:@"3e9b0641-3a76-4cfe-9666-72350d2385d8"]){//建设工程设计方案（修建性详细规划）审查
+        nameLabelaArray=@[@"材料名称",@"《建设工程方案设计审查申请表》",@"工商营业执照或组织机构代码证复印件（加盖单位公章）",@"授权委托书（须提供原件核对）",@"委托身份证明（须提供原件核对）",@"项目立项批准文件（须提供原件核对）",@"建设项目选址意见书或规划条件（包括附图），出让土地项目同步提供含规划条件的土地出让合同（须提供原件核对）",@"有效土地权属证明（存量土地提供土地证、新征土地视情况提供用地规划许可证）（须提供原件核对)",@"方案设计1/500（范围较大时1/1000）总平面蓝图二份",@"相应资质的设计单位编制的含方案说明书、效果图、总平面图、建筑方案图等的设计方案文本一套（同时提交电子文件一份）",@"日照分析成果（按照《杭州市建筑工程日照分析技术管理规则》要求需进行日照分析的项目提供）",@"景观分析报告（拟批建设项目处于城市规划确定的景观控制区时提供）",@"规划公示材料，包括现场公示图片、社区反馈意见"];
+        statusLabelArray=@[@"必要性",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"非必要",@"非必要",@"必要"];
     }
     for (int i=0; i<statusLabelArray.count; i++) {
         UIView *nameLabelView1=[[UIView alloc]initWithFrame:CGRectMake(0, 60+120*(i-1),160, 120)];
@@ -256,6 +264,9 @@
             statusLabelView2.frame=CGRectMake(160, lastbgview.frame.origin.y+lastbgview.frame.size.height,50, label1.frame.size.height+30);
             contentView3.frame=CGRectMake(210, lastbgview.frame.origin.y+lastbgview.frame.size.height,Width-220, label1.frame.size.height+30);
             if ([label1.text containsString:@"拟建位置1/1000带规划控制线地形图1份"]) {
+                nameLabelView1.frame=CGRectMake(0, lastbgview.frame.origin.y+lastbgview.frame.size.height,160, 140);
+                statusLabelView2.frame=CGRectMake(160, lastbgview.frame.origin.y+lastbgview.frame.size.height,50, 140);
+                contentView3.frame=CGRectMake(210, lastbgview.frame.origin.y+lastbgview.frame.size.height,Width-220, 140);
                 _textfield=[[UITextField alloc]initWithFrame:CGRectMake(5, 5, Width-230, 30)];
                 _textfield.layer.borderColor=blueCyan.CGColor;
                 _textfield.layer.borderWidth=1;
@@ -420,6 +431,7 @@
 }
 //MARK:在线填写
 -(void)zaixiantianxie:(UIButton*)sender{
+    self.isBackWarn=YES;
      NSString* qlsxcode=[self.qlsxcodeDic objectForKey:@"qlsxcode"];
     if ([qlsxcode isEqualToString:@"EAF31D8225045AE8CFA4E04C961F5D86"]||[qlsxcode isEqualToString:@"1FE087B8241745F16C0133ABB4832B8C"]) {
         HZZaiXianTianXieViewController *tianxie=[[HZZaiXianTianXieViewController alloc]init];
@@ -471,14 +483,68 @@
         }
         tianxie.qlsxcodeDic=self.qlsxcodeDic;
         [self.navigationController pushViewController:tianxie animated:YES];
-    }else if ([qlsxcode isEqualToString:@"F16BFFA466D5374C9D991F026936438F"]){//风景名胜区建设项目证书失效重新核发
-     
-    }else if ([qlsxcode isEqualToString:@"42CBF39D427712000C357F3E7494007B"]){//风景名胜区建设项目简易变更（项目名称、建设单位）
-      
-    }else if ([qlsxcode isEqualToString:@"51760F1375EB1CF64A180319B743C392"]){//风景名胜区建设项目延期
-      
+    }else if ([qlsxcode isEqualToString:@"F16BFFA466D5374C9D991F026936438F"]||[qlsxcode isEqualToString:@"42CBF39D427712000C357F3E7494007B"]||[qlsxcode isEqualToString:@"51760F1375EB1CF64A180319B743C392"]){//风景名胜区建设项目证书失效重新核发//风景名胜区建设项目简易变更（项目名称、建设单位）//风景名胜区建设项目延期
+        HZZaiXianTianXieViewController5 *tianxie=[[HZZaiXianTianXieViewController5 alloc]init];
+        if (self.uuid==NULL||self.uuid==nil) {
+            tianxie.commitData=self.commitData;
+        }else{
+            tianxie.commitData=self.commitData;
+            tianxie.saveDic=saveDic;
+        }
+        tianxie.qlsxcodeDic=self.qlsxcodeDic;
+        [self.navigationController pushViewController:tianxie animated:YES];
     }else if ([qlsxcode isEqualToString:@"598ea023-d3cc-4168-b3fb-529ffff53d8d"]){//建设工程规划许可证核发
-   
+        if ([self.type isEqualToString:@"建筑类"]) {
+                    HZZaiXianTianXieViewController6 *tianxie=[[HZZaiXianTianXieViewController6 alloc]init];
+                    if (self.uuid==NULL||self.uuid==nil) {
+                        tianxie.commitData=self.commitData;
+                    }else{
+                        tianxie.commitData=self.commitData;
+                        tianxie.saveDic=saveDic;
+                    }
+                    tianxie.qlsxcodeDic=self.qlsxcodeDic;
+                    [self.navigationController pushViewController:tianxie animated:YES];
+        }else  if ([self.type isEqualToString:@"市政类"]) {
+                    HZZaiXianTianXieViewController7 *tianxie=[[HZZaiXianTianXieViewController7 alloc]init];
+                    if (self.uuid==NULL||self.uuid==nil) {
+                        tianxie.commitData=self.commitData;
+                    }else{
+                        tianxie.commitData=self.commitData;
+                        tianxie.saveDic=saveDic;
+                    }
+                    tianxie.qlsxcodeDic=self.qlsxcodeDic;
+                    [self.navigationController pushViewController:tianxie animated:YES];
+        }
+    }else if ([qlsxcode isEqualToString:@"6241e908-79a4-4782-b5de-204178602601"]){//临时建设工程规划许可证核发
+        HZZaiXianTianXieViewController7 *tianxie=[[HZZaiXianTianXieViewController7 alloc]init];
+        if (self.uuid==NULL||self.uuid==nil) {
+            tianxie.commitData=self.commitData;
+        }else{
+            tianxie.commitData=self.commitData;
+            tianxie.saveDic=saveDic;
+        }
+        tianxie.qlsxcodeDic=self.qlsxcodeDic;
+        [self.navigationController pushViewController:tianxie animated:YES];
+    }else if ([qlsxcode isEqualToString:@"87ed0a9d-856b-45d3-8e4a-2fa4e32715f5"]){//建设工程竣工规划核实
+        HZZaiXianTianXieViewController8 *tianxie=[[HZZaiXianTianXieViewController8 alloc]init];
+        if (self.uuid==NULL||self.uuid==nil) {
+            tianxie.commitData=self.commitData;
+        }else{
+            tianxie.commitData=self.commitData;
+            tianxie.saveDic=saveDic;
+        }
+        tianxie.qlsxcodeDic=self.qlsxcodeDic;
+        [self.navigationController pushViewController:tianxie animated:YES];
+    }else if ([qlsxcode isEqualToString:@"3e9b0641-3a76-4cfe-9666-72350d2385d8"]){//建设工程设计方案（修建性详细规划）审查
+        HZZaiXianTianXieViewController9 *tianxie=[[HZZaiXianTianXieViewController9 alloc]init];
+        if (self.uuid==NULL||self.uuid==nil) {
+            tianxie.commitData=self.commitData;
+        }else{
+            tianxie.commitData=self.commitData;
+            tianxie.saveDic=saveDic;
+        }
+        tianxie.qlsxcodeDic=self.qlsxcodeDic;
+        [self.navigationController pushViewController:tianxie animated:YES];
     }
     
 }
@@ -533,16 +599,7 @@
     UIImage *scaleImage = [self imageWithImage:originImage scaledToSize:CGSizeMake(320*1.5, 480*1.5)];
     
     NSTimeInterval interval = [[NSDate date] timeIntervalSince1970] * 1000;
-    NSString *imagename=nil;
-//    if (imageBtnNum==202) {
-//         imagename=[NSString stringWithFormat:@"%@_a$%1.0f.png",[_MATERArray objectAtIndex:imageBtnNum-201],interval];
-//    }else if (imageBtnNum==203) {
-//        imagename=[NSString stringWithFormat:@"%@_b$%1.0f.png",[_MATERArray objectAtIndex:imageBtnNum-201],interval];
-//    }else if (imageBtnNum==204) {
-//        imagename=[NSString stringWithFormat:@"%@_c$%1.0f.png",[_MATERArray objectAtIndex:imageBtnNum-201],interval];
-//    }else{
-        imagename=[NSString stringWithFormat:@"%@_%1.0f.png",[_MATERArray objectAtIndex:imageBtnNum-201],interval];
-//    }
+    NSString *imagename=[NSString stringWithFormat:@"%@_%1.0f.png",[_MATERArray objectAtIndex:imageBtnNum-201],interval];
     [_imageCommitArray addObject:scaleImage];
     [_imageNameArray addObject:imagename];
 //        NSLog(@"图片   %@ ",imagename);
@@ -606,7 +663,6 @@
     }
     
     [picker dismissViewControllerAnimated:YES completion:nil];
-//    [self addSubviews];
     
 }
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
@@ -697,38 +753,277 @@
     if ([self.saveDic objectForKey:@"linerange"]) {
         linerange=[self.saveDic objectForKey:@"linerange"];
     }
-    NSArray *modifiedTagArray=@[@"0",@"0",@"1",@"1",@"0",@"0",@"0",@"1"];
-    NSArray *businessIdArray=@[@"25",@"25",@"25",@"25",@"1",@"1",@"25",@"25"];
     MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.label.text=@"数据加载中，请稍候...";
-//    [HZBanShiService BanShiWithCompanyid:companyid userid:userid qlsxcode:self.qlsxcode uuid:uuid uploadtime:@"" synctime:@"" linerange:linerange tzdm:@"" tdgyfs:[saveDic objectForKey:@"tdgyfs"] qlsxzx:@"" lxwh:@"" sqr:[saveDic objectForKey:@"sqr"] xmmc:[saveDic objectForKey:@"xmmc"] fddbr:[saveDic objectForKey:@"fddbr"] lxdh:[saveDic objectForKey:@"lxdh"] wtr:[saveDic objectForKey:@"wtr"] sjh:[saveDic objectForKey:@"sjh"] jsnrjgm:[saveDic objectForKey:@"jsnrjgm"] jsdzq:[saveDic objectForKey:@"jsdzq"] jsdzl:[saveDic objectForKey:@"jsdzl"] zbdz:[saveDic objectForKey:@"zbdz"] zbnz:[saveDic objectForKey:@"zbnz"] zbxz:[saveDic objectForKey:@"zbxz"] zbbz:[saveDic objectForKey:@"zbbz"] lzbg:[saveDic objectForKey:@"lzbg"] sxslh:[NSString stringWithFormat:@"%@",_textfield.text] applysource:@"" xmsmqk:[saveDic objectForKey:@"xmsmqk"] filecode:[saveDic objectForKey:@"filecode"] businessId:[businessIdArray objectAtIndex:self.PCODE] resuuid:[saveDic objectForKey:@"resuuid"] ydqsqk:[saveDic objectForKey:@"ydqsqk"] sfqdfapf:[saveDic objectForKey:@"sfqdfapf"] sfghtjbg:[saveDic objectForKey:@"sfghtjbg"] tdcb:[saveDic objectForKey:@"tdcb"] tznrjly:[saveDic objectForKey:@"tznrjly"] modifiedTag:[modifiedTagArray objectAtIndex:self.PCODE] orgId:[NSString stringWithFormat:@"%d",self.orgId] imageArray:_imageCommitArray imageNameArray:_imageNameArray AddBlock:^(NSDictionary *returnDic, NSError *error) {
-//        [MBProgressHUD hideHUDForView:self.view animated:YES];
-//        if ([[returnDic objectForKey:@"code"]integerValue]==0) {
-//              [self.view makeToast:[returnDic objectForKey:@"desc"] duration:2 position:CSToastPositionCenter];
-//            NSArray *vcArray = self.navigationController.viewControllers;
-//            for(UIViewController *vc in vcArray)
-//            {
-//                if ([vc isKindOfClass:[HZLocateViewController class]])
-//                {
-//                    [self.navigationController popToViewController:vc animated:YES];
-//                }
-//            }
-//        }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
-//            UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
-//            UIAlertAction *okAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//                HZLoginViewController *login=[[HZLoginViewController alloc]init];
-//                [self.navigationController pushViewController:login animated:YES];
-//            }];
-//            [alert addAction:okAlert];
-//            UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//            }];
-//            [alert addAction:cancelAlert];
-//            [self presentViewController:alert animated:YES completion:nil];
-//        }else{
-//            [self.view makeToast:@"请求失败，请重新尝试" duration:2 position:CSToastPositionCenter];
-//        }
-//
-//    }];
+    NSString *qlsxcode=[self.qlsxcodeDic objectForKey:@"qlsxcode"];
+    NSString *businessId=[self.qlsxcodeDic objectForKey:@"businessId"];
+    NSMutableDictionary *totalDic=[[NSMutableDictionary alloc]init];
+    [totalDic setObject:qlsxcode forKey:@"qlsxcode"];
+    [totalDic setObject:companyid forKey:@"companyid"];
+     [totalDic setObject:userid forKey:@"userid"];
+     [totalDic setObject:uuid forKey:@"uuid"];
+     [totalDic setObject:businessId forKey:@"businessId"];
+    [totalDic setObject:self.orgId forKey:@"orgId"];
+    
+     [totalDic setObject:linerange forKey:@"linerange"];
+    
+    NSString *modifiedTag=[self getmodifiedTag];
+    [totalDic setObject:modifiedTag forKey:@"modifiedTag"];
+    NSString *tzdm=@"";
+    if ([self.saveDic objectForKey:@"tzdm"]) {
+        tzdm=[self.saveDic objectForKey:@"tzdm"];
+    }
+    NSString *tdgyfs=@"";
+    if ([self.saveDic objectForKey:@"tdgyfs"]) {
+        tdgyfs=[self.saveDic objectForKey:@"tdgyfs"];
+    }
+    NSString *qlsxzx=@"";
+    if ([self.saveDic objectForKey:@"qlsxzx"]) {
+        qlsxzx=[self.saveDic objectForKey:@"qlsxzx"];
+    }
+    NSString *lxwh=@"";
+    if ([self.saveDic objectForKey:@"lxwh"]) {
+        lxwh=[self.saveDic objectForKey:@"lxwh"];
+    }
+    NSString *sqr=@"";
+    if ([self.saveDic objectForKey:@"sqr"]) {
+        sqr=[self.saveDic objectForKey:@"sqr"];
+    }
+    NSString *xmmc=@"";
+    if ([self.saveDic objectForKey:@"xmmc"]) {
+        xmmc=[self.saveDic objectForKey:@"xmmc"];
+    }
+    NSString *fddbr=@"";
+    if ([self.saveDic objectForKey:@"fddbr"]) {
+        fddbr=[self.saveDic objectForKey:@"fddbr"];
+    }
+    NSString *lxdh=@"";
+    if ([self.saveDic objectForKey:@"lxdh"]) {
+        lxdh=[self.saveDic objectForKey:@"lxdh"];
+    }
+    NSString *wtr=@"";
+    if ([self.saveDic objectForKey:@"wtr"]) {
+        wtr=[self.saveDic objectForKey:@"wtr"];
+    }
+    NSString *sjh=@"";
+    if ([self.saveDic objectForKey:@"sjh"]) {
+        sjh=[self.saveDic objectForKey:@"sjh"];
+    }
+    NSString *jsnrjgm=@"";
+    if ([self.saveDic objectForKey:@"jsnrjgm"]) {
+        jsnrjgm=[self.saveDic objectForKey:@"jsnrjgm"];
+    }
+    NSString *jsdzq=@"";
+    if ([self.saveDic objectForKey:@"jsdzq"]) {
+        jsdzq=[self.saveDic objectForKey:@"jsdzq"];
+    }
+    NSString *jsdzl=@"";
+    if ([self.saveDic objectForKey:@"jsdzl"]) {
+        jsdzl=[self.saveDic objectForKey:@"jsdzl"];
+    }
+    NSString *zbdz=@"";
+    if ([self.saveDic objectForKey:@"zbdz"]) {
+        zbdz=[self.saveDic objectForKey:@"zbdz"];
+    }
+    NSString *zbnz=@"";
+    if ([self.saveDic objectForKey:@"zbnz"]) {
+        zbnz=[self.saveDic objectForKey:@"zbnz"];
+    }
+    NSString *zbxz=@"";
+    if ([self.saveDic objectForKey:@"zbxz"]) {
+        zbxz=[self.saveDic objectForKey:@"zbxz"];
+    }
+    NSString *zbbz=@"";
+    if ([self.saveDic objectForKey:@"zbbz"]) {
+        zbbz=[self.saveDic objectForKey:@"zbbz"];
+    }
+    NSString *lzbg=@"";
+    if ([self.saveDic objectForKey:@"lzbg"]) {
+        lzbg=[self.saveDic objectForKey:@"lzbg"];
+    }
+    NSString *sxslh=@"";
+    if (_textfield.text==NULL||[_textfield.text isEqualToString:@""]||_textfield==nil||_textfield.text==nil) {
+        sxslh=@"";
+    }else{
+        sxslh=_textfield.text;
+    }
+    NSString *xmsmqk=@"";
+    if ([self.saveDic objectForKey:@"xmsmqk"]) {
+        xmsmqk=[self.saveDic objectForKey:@"xmsmqk"];
+    }
+    NSString *resuuid=@"";
+    if ([self.saveDic objectForKey:@"resuuid"]) {
+        resuuid=[self.saveDic objectForKey:@"resuuid"];
+    }
+    NSString *ydqsqk=@"";
+    if ([self.saveDic objectForKey:@"ydqsqk"]) {
+        ydqsqk=[self.saveDic objectForKey:@"ydqsqk"];
+    }
+    NSString *sfqdfapf=@"";
+    if ([self.saveDic objectForKey:@"sfqdfapf"]) {
+        sfqdfapf=[self.saveDic objectForKey:@"sfqdfapf"];
+    }
+    NSString *sfghtjbg=@"";
+    if ([self.saveDic objectForKey:@"sfghtjbg"]) {
+        sfghtjbg=[self.saveDic objectForKey:@"sfghtjbg"];
+    }
+    NSString *tdcb=@"";
+    if ([self.saveDic objectForKey:@"tdcb"]) {
+        tdcb=[self.saveDic objectForKey:@"tdcb"];
+    }
+    NSString *tznrjly=@"";
+    if ([self.saveDic objectForKey:@"tznrjly"]) {
+        tznrjly=[self.saveDic objectForKey:@"tznrjly"];
+    }
+    NSString *filecode=@"";
+    if ([self.saveDic objectForKey:@"filecode"]) {
+        filecode=[self.saveDic objectForKey:@"filecode"];
+    }
+    NSString *sqryq=@"";
+    if ([self.saveDic objectForKey:@"sqryq"]) {
+        sqryq=[self.saveDic objectForKey:@"sqryq"];
+    }
+    NSString *fddbryq=@"";
+    if ([self.saveDic objectForKey:@"fddbryq"]) {
+        fddbryq=[self.saveDic objectForKey:@"fddbryq"];
+    }
+    NSString *stryq=@"";
+    if ([self.saveDic objectForKey:@"stryq"]) {
+        stryq=[self.saveDic objectForKey:@"stryq"];
+    }
+    NSString *sjyq=@"";
+    if ([self.saveDic objectForKey:@"sjyq"]) {
+        sjyq=[self.saveDic objectForKey:@"sjyq"];
+    }
+    NSString *dhyq=@"";
+    if ([self.saveDic objectForKey:@"dhyq"]) {
+        dhyq=[self.saveDic objectForKey:@"dhyq"];
+    }
+    NSString *xmmcyq=@"";
+    if ([self.saveDic objectForKey:@"xmmcyq"]) {
+        xmmcyq=[self.saveDic objectForKey:@"xmmcyq"];
+    }
+    NSString *jsnrjgmyq=@"";
+    if ([self.saveDic objectForKey:@"jsnrjgmyq"]) {
+        jsnrjgmyq=[self.saveDic objectForKey:@"jsnrjgmyq"];
+    }
+    NSString *quyq=@"";
+    if ([self.saveDic objectForKey:@"quyq"]) {
+        quyq=[self.saveDic objectForKey:@"quyq"];
+    }
+    NSString *luyq=@"";
+    if ([self.saveDic objectForKey:@"luyq"]) {
+        luyq=[self.saveDic objectForKey:@"luyq"];
+    }
+    NSString *blxs=@"";
+    if ([self.saveDic objectForKey:@"blxs"]) {
+        blxs=[self.saveDic objectForKey:@"blxs"];
+    }
+    NSString *xghyqsxmc=@"";
+    if ([self.saveDic objectForKey:@"xghyqsxmc"]) {
+        xghyqsxmc=[self.saveDic objectForKey:@"xghyqsxmc"];
+    }
+    NSString *xghyqjnr=@"";
+    if ([self.saveDic objectForKey:@"xghyqjnr"]) {
+        xghyqjnr=[self.saveDic objectForKey:@"xghyqjnr"];
+    }
+    NSString *sjdw=@"";
+    if ([self.saveDic objectForKey:@"sjdw"]) {
+        sjdw=[self.saveDic objectForKey:@"sjdw"];
+    }
+    NSString *sjr=@"";
+    if ([self.saveDic objectForKey:@"sjr"]) {
+        sjr=[self.saveDic objectForKey:@"sjr"];
+    }
+    NSString *shrsj=@"";
+    if ([self.saveDic objectForKey:@"shrsj"]) {
+        shrsj=[self.saveDic objectForKey:@"shrsj"];
+    }
+    NSString *gcmcsx=@"";
+    if ([self.saveDic objectForKey:@"gcmcsx"]) {
+        gcmcsx=[self.saveDic objectForKey:@"gcmcsx"];
+    }
+    NSString *qd=@"";
+    if ([self.saveDic objectForKey:@"qd"]) {
+        qd=[self.saveDic objectForKey:@"qd"];
+    }
+    NSString *zd=@"";
+    if ([self.saveDic objectForKey:@"zd"]) {
+        zd=[self.saveDic objectForKey:@"zd"];
+    }
+    NSString *dlgl=@"";
+    if ([self.saveDic objectForKey:@"dlgl"]) {
+        dlgl=[self.saveDic objectForKey:@"dlgl"];
+    }
+    NSString *ql=@"";
+    if ([self.saveDic objectForKey:@"ql"]) {
+        ql=[self.saveDic objectForKey:@"ql"];
+    }
+    NSString *bk=@"";
+    if ([self.saveDic objectForKey:@"bk"]) {
+        bk=[self.saveDic objectForKey:@"bk"];
+    }
+    NSString *gxgc=@"";
+    if ([self.saveDic objectForKey:@"gxgc"]) {
+        gxgc=[self.saveDic objectForKey:@"gxgc"];
+    }
+    NSString *jsgc=@"";
+    if ([self.saveDic objectForKey:@"jsgc"]) {
+        jsgc=[self.saveDic objectForKey:@"jsgc"];
+    }
+    NSString *gcghxkzh=@"";
+    if ([self.saveDic objectForKey:@"gcghxkzh"]) {
+        gcghxkzh=[self.saveDic objectForKey:@"gcghxkzh"];
+    }
+    NSString *xknr=@"";
+    if ([self.saveDic objectForKey:@"xknr"]) {
+        xknr=[self.saveDic objectForKey:@"xknr"];
+    }
+    NSString *sgxcql=@"";
+    if ([self.saveDic objectForKey:@"sgxcql"]) {
+        sgxcql=[self.saveDic objectForKey:@"sgxcql"];
+    }
+    NSString *yqccjz=@"";
+    if ([self.saveDic objectForKey:@"yqccjz"]) {
+        yqccjz=[self.saveDic objectForKey:@"yqccjz"];
+    }
+    NSString *jrczxt=@"";
+    if ([self.saveDic objectForKey:@"jrczxt"]) {
+        jrczxt=[self.saveDic objectForKey:@"jrczxt"];
+    }
+    NSString *sclx=@"";
+    if ([self.saveDic objectForKey:@"sclx"]) {
+        sclx=[self.saveDic objectForKey:@"sclx"];
+    }
+    
+    [HZBanShiService BanShiCommitWithTotalDic:totalDic imageArray:_imageCommitArray imageNameArray:_imageNameArray AddBlock:^(NSDictionary *returnDic, NSError *error) {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        if ([[returnDic objectForKey:@"code"]integerValue]==0) {
+              [self.view makeToast:[returnDic objectForKey:@"desc"] duration:2 position:CSToastPositionCenter];
+            NSArray *vcArray = self.navigationController.viewControllers;
+            for(UIViewController *vc in vcArray)
+            {
+                if ([vc isKindOfClass:[HZLocateViewController class]])
+                {
+                    [self.navigationController popToViewController:vc animated:YES];
+                }
+            }
+        }else   if ([[returnDic objectForKey:@"code"]integerValue]==900) {
+            UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"您的账号已被其他设备登陆，请重新登录" message:nil preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *okAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                HZLoginViewController *login=[[HZLoginViewController alloc]init];
+                [self.navigationController pushViewController:login animated:YES];
+            }];
+            [alert addAction:okAlert];
+            UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            }];
+            [alert addAction:cancelAlert];
+            [self presentViewController:alert animated:YES completion:nil];
+        }else{
+            [self.view makeToast:@"请求失败，请重新尝试" duration:2 position:CSToastPositionCenter];
+        }
+
+    }];
 }
 //MARK:判空
 -(NSString *)getString:(NSString *)currentStr{
@@ -736,6 +1031,44 @@
         currentStr=@"";
     }
     return currentStr;
+}
+-(NSString *)getmodifiedTag{
+    NSString * qlsxcode=[self.qlsxcodeDic objectForKey:@"qlsxcode"];
+    NSString *modifiedTag=@"0";
+    if ([qlsxcode isEqualToString:@"EAF31D8225045AE8CFA4E04C961F5D86"]) {
+        modifiedTag=@"0";
+    }else if ([qlsxcode isEqualToString:@"1FE087B8241745F16C0133ABB4832B8C"]) {
+        modifiedTag=@"0";
+    }else if ([qlsxcode isEqualToString:@"06C6B52BF5142FB69BA0113DFD08C77B"]) {
+        modifiedTag=@"1";
+    }else if ([qlsxcode isEqualToString:@"0496B51F3AB9B5135F85F31B8F255857"]) {
+        modifiedTag=@"1";
+    }else if ([qlsxcode isEqualToString:@"31104F35575B4CB91AA7D5C014E730B1"]) {
+        modifiedTag=@"0";
+    }else if ([qlsxcode isEqualToString:@"F16BFFA466D5374C9D991F026936438F"]) {
+        modifiedTag=@"0";
+    }else if ([qlsxcode isEqualToString:@"42CBF39D427712000C357F3E7494007B"]) {
+        modifiedTag=@"1";
+    }else if ([qlsxcode isEqualToString:@"51760F1375EB1CF64A180319B743C392"]) {
+        modifiedTag=@"1";
+    }else if ([qlsxcode isEqualToString:@"716c0ebb-d774-42f5-84da-54b0b143bc06"]) {
+        modifiedTag=@"0";
+    }else if ([qlsxcode isEqualToString:@"c0865333-0cbd-4440-86da-3386defefdba"]) {
+        modifiedTag=@"0";
+    }else if ([qlsxcode isEqualToString:@"598ea023-d3cc-4168-b3fb-529ffff53d8d"]) {
+        modifiedTag=@"0";
+    }else if ([qlsxcode isEqualToString:@"6241e908-79a4-4782-b5de-204178602601"]) {
+        modifiedTag=@"0";
+    }else if ([qlsxcode isEqualToString:@"0ef7e0ce-bb77-4979-8cc3-166d08712b96"]) {
+        modifiedTag=@"0";
+    }else if ([qlsxcode isEqualToString:@"87ed0a9d-856b-45d3-8e4a-2fa4e32715f5"]) {
+        modifiedTag=@"0";
+    }else if ([qlsxcode isEqualToString:@"b8e6c1ea-6f89-4a2d-af17-78183b3e8a9f"]) {
+        modifiedTag=@"1";
+    }else if ([qlsxcode isEqualToString:@"3e9b0641-3a76-4cfe-9666-72350d2385d8"]) {
+        modifiedTag=@"0";
+    }
+    return modifiedTag;
 }
 -(void)textFieldDidEndEditing:(UITextField *)textField{
     [self.view endEditing:YES];
@@ -748,6 +1081,7 @@
     return YES;
 }
 -(BOOL)navigationShouldPopOnBackButton{
+    if (self.isBackWarn==YES) {
         UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"提示" message:@"返回将导致你所填写的信息丢失" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *okAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [self.navigationController popViewControllerAnimated:YES];
@@ -757,8 +1091,10 @@
         }];
         [alert addAction:cancelAlert];
         [self presentViewController:alert animated:YES completion:nil];
-   
-    return NO;
+        return NO;
+    }
+    
+    return YES;
 }
 
 - (void)didReceiveMemoryWarning {

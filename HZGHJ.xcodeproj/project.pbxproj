@@ -146,6 +146,13 @@
 		1FAB26B920874A7F00CFA8FD /* HZZaiXianTianXieViewController5.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FAB26B720874A7E00CFA8FD /* HZZaiXianTianXieViewController5.m */; };
 		1FB1538B1E2DBCC100A24C07 /* BSRegexValidate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB1538A1E2DBCC100A24C07 /* BSRegexValidate.m */; };
 		1FB1538E1E2DBFE600A24C07 /* UIView+Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB1538D1E2DBFE600A24C07 /* UIView+Toast.m */; };
+		1FB6196C208C735C009E6EA0 /* HZZaiXianTianXieViewController9.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FB6196B208C735C009E6EA0 /* HZZaiXianTianXieViewController9.m */; };
+		1FB61973208C7850009E6EA0 /* select_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FB6196D208C784F009E6EA0 /* select_1@2x.png */; };
+		1FB61974208C7850009E6EA0 /* select_1@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FB6196E208C784F009E6EA0 /* select_1@3x.png */; };
+		1FB61975208C7850009E6EA0 /* select_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FB6196F208C784F009E6EA0 /* select_1.png */; };
+		1FB61976208C7850009E6EA0 /* select_4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FB61970208C784F009E6EA0 /* select_4@2x.png */; };
+		1FB61977208C7850009E6EA0 /* select_4.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FB61971208C7850009E6EA0 /* select_4.png */; };
+		1FB61978208C7850009E6EA0 /* select_4@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1FB61972208C7850009E6EA0 /* select_4@3x.png */; };
 		1FC33CCF207F04DC00C90A16 /* HZZaiXianTianXieViewController4.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FC33CCE207F04DB00C90A16 /* HZZaiXianTianXieViewController4.m */; };
 		1FCDBFFE1DFA5091005E5587 /* BottomMenuItems1.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1FCDBFFD1DFA5091005E5587 /* BottomMenuItems1.plist */; };
 		1FCDC0021DFA5C1D005E5587 /* HZYuYueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FCDC0001DFA5C1D005E5587 /* HZYuYueViewController.m */; };
@@ -185,6 +192,9 @@
 		1FF89EC31DFE9B1F007A4597 /* iconfont.woff in Resources */ = {isa = PBXBuildFile; fileRef = 1FF89EBC1DFE9B1F007A4597 /* iconfont.woff */; };
 		1FF89EC61DFEACF3007A4597 /* HZChangePwViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF89EC51DFEACF3007A4597 /* HZChangePwViewController.m */; };
 		1FF89EC91DFEB7D9007A4597 /* NoticeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF89EC81DFEB7D9007A4597 /* NoticeCell.m */; };
+		1FF960252089F52300480746 /* HZZaiXianTianXieViewController6.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF960232089F52200480746 /* HZZaiXianTianXieViewController6.m */; };
+		1FF9602C2089F66200480746 /* HZZaiXianTianXieViewController7.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF9602B2089F66200480746 /* HZZaiXianTianXieViewController7.m */; };
+		1FF9602F208A0A5500480746 /* HZZaiXianTianXieViewController8.m in Sources */ = {isa = PBXBuildFile; fileRef = 1FF9602E208A0A5400480746 /* HZZaiXianTianXieViewController8.m */; };
 		FDD5B9E7F55D47DACDEAE76F /* Pods_HZGHJ.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EA28D231673E755335A4B5D /* Pods_HZGHJ.framework */; };
 /* End PBXBuildFile section */
 
@@ -375,6 +385,14 @@
 		1FB1538A1E2DBCC100A24C07 /* BSRegexValidate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSRegexValidate.m; sourceTree = "<group>"; };
 		1FB1538C1E2DBFE600A24C07 /* UIView+Toast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Toast.h"; sourceTree = "<group>"; };
 		1FB1538D1E2DBFE600A24C07 /* UIView+Toast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Toast.m"; sourceTree = "<group>"; };
+		1FB6196A208C735C009E6EA0 /* HZZaiXianTianXieViewController9.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZZaiXianTianXieViewController9.h; sourceTree = "<group>"; };
+		1FB6196B208C735C009E6EA0 /* HZZaiXianTianXieViewController9.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZZaiXianTianXieViewController9.m; sourceTree = "<group>"; };
+		1FB6196D208C784F009E6EA0 /* select_1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "select_1@2x.png"; sourceTree = "<group>"; };
+		1FB6196E208C784F009E6EA0 /* select_1@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "select_1@3x.png"; sourceTree = "<group>"; };
+		1FB6196F208C784F009E6EA0 /* select_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = select_1.png; sourceTree = "<group>"; };
+		1FB61970208C784F009E6EA0 /* select_4@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "select_4@2x.png"; sourceTree = "<group>"; };
+		1FB61971208C7850009E6EA0 /* select_4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = select_4.png; sourceTree = "<group>"; };
+		1FB61972208C7850009E6EA0 /* select_4@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "select_4@3x.png"; sourceTree = "<group>"; };
 		1FC33CCD207F04DB00C90A16 /* HZZaiXianTianXieViewController4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZZaiXianTianXieViewController4.h; sourceTree = "<group>"; };
 		1FC33CCE207F04DB00C90A16 /* HZZaiXianTianXieViewController4.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZZaiXianTianXieViewController4.m; sourceTree = "<group>"; };
 		1FCDBFFD1DFA5091005E5587 /* BottomMenuItems1.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BottomMenuItems1.plist; sourceTree = "<group>"; };
@@ -433,6 +451,12 @@
 		1FF89EC51DFEACF3007A4597 /* HZChangePwViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZChangePwViewController.m; sourceTree = "<group>"; };
 		1FF89EC71DFEB7D9007A4597 /* NoticeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoticeCell.h; sourceTree = "<group>"; };
 		1FF89EC81DFEB7D9007A4597 /* NoticeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoticeCell.m; sourceTree = "<group>"; };
+		1FF960232089F52200480746 /* HZZaiXianTianXieViewController6.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZZaiXianTianXieViewController6.m; sourceTree = "<group>"; };
+		1FF960242089F52300480746 /* HZZaiXianTianXieViewController6.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZZaiXianTianXieViewController6.h; sourceTree = "<group>"; };
+		1FF9602A2089F66100480746 /* HZZaiXianTianXieViewController7.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZZaiXianTianXieViewController7.h; sourceTree = "<group>"; };
+		1FF9602B2089F66200480746 /* HZZaiXianTianXieViewController7.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZZaiXianTianXieViewController7.m; sourceTree = "<group>"; };
+		1FF9602D208A0A5400480746 /* HZZaiXianTianXieViewController8.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZZaiXianTianXieViewController8.h; sourceTree = "<group>"; };
+		1FF9602E208A0A5400480746 /* HZZaiXianTianXieViewController8.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZZaiXianTianXieViewController8.m; sourceTree = "<group>"; };
 		6EA28D231673E755335A4B5D /* Pods_HZGHJ.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HZGHJ.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8237C7EFC0F3BA35074EB335 /* Pods-HZGHJ.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HZGHJ.release.xcconfig"; path = "Pods/Target Support Files/Pods-HZGHJ/Pods-HZGHJ.release.xcconfig"; sourceTree = "<group>"; };
 		FD3BEDD01416BDC7EC995802 /* Pods-HZGHJ.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HZGHJ.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HZGHJ/Pods-HZGHJ.debug.xcconfig"; sourceTree = "<group>"; };
@@ -643,6 +667,14 @@
 				1FC33CCE207F04DB00C90A16 /* HZZaiXianTianXieViewController4.m */,
 				1FAB26B820874A7F00CFA8FD /* HZZaiXianTianXieViewController5.h */,
 				1FAB26B720874A7E00CFA8FD /* HZZaiXianTianXieViewController5.m */,
+				1FF960242089F52300480746 /* HZZaiXianTianXieViewController6.h */,
+				1FF960232089F52200480746 /* HZZaiXianTianXieViewController6.m */,
+				1FF9602A2089F66100480746 /* HZZaiXianTianXieViewController7.h */,
+				1FF9602B2089F66200480746 /* HZZaiXianTianXieViewController7.m */,
+				1FF9602D208A0A5400480746 /* HZZaiXianTianXieViewController8.h */,
+				1FF9602E208A0A5400480746 /* HZZaiXianTianXieViewController8.m */,
+				1FB6196A208C735C009E6EA0 /* HZZaiXianTianXieViewController9.h */,
+				1FB6196B208C735C009E6EA0 /* HZZaiXianTianXieViewController9.m */,
 				1F9D6A0C1F0B451C00F3035F /* HZYangBiaoViewController.h */,
 				1F9D6A0D1F0B451C00F3035F /* HZYangBiaoViewController.m */,
 				1F9D6A0F1F0BA0C000F3035F /* HZIllustrateViewController1.h */,
@@ -680,6 +712,12 @@
 		1F9AF8431F28853C003E309E /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				1FB6196F208C784F009E6EA0 /* select_1.png */,
+				1FB6196D208C784F009E6EA0 /* select_1@2x.png */,
+				1FB6196E208C784F009E6EA0 /* select_1@3x.png */,
+				1FB61971208C7850009E6EA0 /* select_4.png */,
+				1FB61970208C784F009E6EA0 /* select_4@2x.png */,
+				1FB61972208C7850009E6EA0 /* select_4@3x.png */,
 				1FA796D8207B0EB7001A9A65 /* disselected.png */,
 				1FA796D5207B0EB7001A9A65 /* disselected@2x.png */,
 				1FA796D6207B0EB7001A9A65 /* selected.png */,
@@ -916,6 +954,7 @@
 				1FAAC9AC1EF61CB900E9B19E /* BottomMenuItems.plist in Resources */,
 				1FCDC0031DFA5C1D005E5587 /* HZYuYueViewController.xib in Resources */,
 				1F340CB31DF80746003937DF /* icon_zaixianyuyue@3x.png in Resources */,
+				1FB61975208C7850009E6EA0 /* select_1.png in Resources */,
 				1F9641501ED98E7700F900F1 /* icon_zaixianbanshi@3x.png in Resources */,
 				1F8E01AF1F541C6E0040C6F6 /* logo2@3x.png in Resources */,
 				1FECFD281E02524000872544 /* add_photo.png in Resources */,
@@ -925,15 +964,18 @@
 				1FA796D9207B0EB7001A9A65 /* disselected@2x.png in Resources */,
 				1FCDC0081DFA5C2D005E5587 /* HZJinDuViewController.xib in Resources */,
 				1F340CB91DF80746003937DF /* password@3x.png in Resources */,
+				1FB61974208C7850009E6EA0 /* select_1@3x.png in Resources */,
 				1FA796DA207B0EB7001A9A65 /* selected.png in Resources */,
 				1FCDC0261DFA5CB7005E5587 /* HZPersonalViewController.xib in Resources */,
 				1FF89EBD1DFE9B1F007A4597 /* demo.css in Resources */,
 				1FF89EBE1DFE9B1F007A4597 /* demo.html in Resources */,
 				1FA926101E038F1E004F6ED5 /* icon_yj.png in Resources */,
+				1FB61978208C7850009E6EA0 /* select_4@3x.png in Resources */,
 				1F9AF8421F284166003E309E /* BottomMenuItems2.plist in Resources */,
 				1F340CC21DF808F9003937DF /* bg_top@3x.png in Resources */,
 				1FECFD291E02524000872544 /* addBtn_photo@2x.png in Resources */,
 				1F340CBA1DF80746003937DF /* user.png in Resources */,
+				1FB61973208C7850009E6EA0 /* select_1@2x.png in Resources */,
 				1F340C991DF80746003937DF /* icon_banshizhinan.png in Resources */,
 				1F340CA81DF80746003937DF /* icon_quit.png in Resources */,
 				1FCDC01C1DFA5C73005E5587 /* HZNoticeViewController.xib in Resources */,
@@ -950,6 +992,7 @@
 				1F340CB71DF80746003937DF /* password.png in Resources */,
 				1F7E87F6207DE7E300DA840B /* businessType.plist in Resources */,
 				1F7DF1521F2F3B9F00DE29CC /* slh_yb.jpg in Resources */,
+				1FB61976208C7850009E6EA0 /* select_4@2x.png in Resources */,
 				1F340C961DF80746003937DF /* checkbox.png in Resources */,
 				1F49E41B1E24FC600019E664 /* img_default@3x.png in Resources */,
 				1F340C931DF80746003937DF /* checkbox_fill.png in Resources */,
@@ -972,6 +1015,7 @@
 				1F340C981DF80746003937DF /* checkbox@3x.png in Resources */,
 				1F340CAC1DF80746003937DF /* icon_xiaoxigonggao@2x.png in Resources */,
 				1F340C8D1DF80746003937DF /* .DS_Store in Resources */,
+				1FB61977208C7850009E6EA0 /* select_4.png in Resources */,
 				1FCDC0211DFA5C85005E5587 /* HZNewsViewController.xib in Resources */,
 				1F717A2A1DFFA58A00833463 /* HZNoticeDetailViewController.xib in Resources */,
 				1F340CA21DF80746003937DF /* icon_guochengshangbao.png in Resources */,
@@ -1062,6 +1106,7 @@
 				1F717A301E00153A00833463 /* HZGongShiListViewController.m in Sources */,
 				1FF89EC91DFEB7D9007A4597 /* NoticeCell.m in Sources */,
 				1F8B891F1DF6A02500087C6B /* ViewController.m in Sources */,
+				1FB6196C208C735C009E6EA0 /* HZZaiXianTianXieViewController9.m in Sources */,
 				1F8B891C1DF6A02500087C6B /* AppDelegate.m in Sources */,
 				1F9AF8481F288E57003E309E /* HZZiXunDetailViewController.m in Sources */,
 				1F7DF14A1F2EDD9D00DE29CC /* HZZaiXianTianXieViewController1.m in Sources */,
@@ -1080,6 +1125,7 @@
 				1F73AEF41EC1C76F00A1BE7E /* HZLocateContentViewController.m in Sources */,
 				1F8147C61F4EB8CD0021B988 /* HZBiaoGeViewController.m in Sources */,
 				1F717A291DFFA58A00833463 /* HZNoticeDetailViewController.m in Sources */,
+				1FF960252089F52300480746 /* HZZaiXianTianXieViewController6.m in Sources */,
 				1F9D6A111F0BA0C000F3035F /* HZIllustrateViewController1.m in Sources */,
 				1FC33CCF207F04DC00C90A16 /* HZZaiXianTianXieViewController4.m in Sources */,
 				1FF89EA21DFE3685007A4597 /* CollectionViewCell.m in Sources */,
@@ -1101,6 +1147,8 @@
 				1F9A9CBF1E20DA4100E56AFF /* HZYuYueReViewController.m in Sources */,
 				1FF89EAF1DFE6E80007A4597 /* HZYuYueDetailCell.m in Sources */,
 				1F7DF14D1F2EE02C00DE29CC /* HZZaiXianTianXieViewController2.m in Sources */,
+				1FF9602F208A0A5500480746 /* HZZaiXianTianXieViewController8.m in Sources */,
+				1FF9602C2089F66200480746 /* HZZaiXianTianXieViewController7.m in Sources */,
 				1F9D6A0E1F0B451C00F3035F /* HZYangBiaoViewController.m in Sources */,
 				1FB1538E1E2DBFE600A24C07 /* UIView+Toast.m in Sources */,
 				1F34A6261E02CACA003462B8 /* GongShiListCell.m in Sources */,

@@ -76,7 +76,7 @@
     _mainListView=[[UIScrollView alloc]init];
     _mainListView.frame=CGRectMake(5, 10, Width-10,800);
     _mainListView.layer.borderColor=[UIColor lightGrayColor].CGColor;
-    _mainListView.layer.borderWidth=1;
+    _mainListView.layer.borderWidth=0.5;
     _mainListView.userInteractionEnabled=YES;
     [_mainBgView addSubview:_mainListView];
     if (self.commitData==NULL||self.commitData==nil) {
@@ -126,7 +126,7 @@
         UIView *nameLabelView1=[[UIView alloc]initWithFrame:CGRectMake(0, 50*i,Width-10, 50)];
         nameLabelView1.userInteractionEnabled=YES;
         nameLabelView1.layer.borderColor=[UIColor lightGrayColor].CGColor;
-        nameLabelView1.layer.borderWidth=1;
+        nameLabelView1.layer.borderWidth=0.5;
         [_mainListView addSubview:nameLabelView1];
         
         if (i<5) {
@@ -164,7 +164,7 @@
         UIView *textBgView=[[UIView alloc]initWithFrame:CGRectMake(0, 300+340*i, Width-10, 160)];
         textBgView.backgroundColor=[UIColor whiteColor];
         textBgView.layer.borderColor=[UIColor lightGrayColor].CGColor;
-        textBgView.layer.borderWidth=1;
+        textBgView.layer.borderWidth=0.5;
         textBgView.userInteractionEnabled=YES;
         [_mainListView addSubview:textBgView];
         
@@ -177,7 +177,7 @@
         
         if (i==0) {
             _detailText1=[[UITextView alloc]initWithFrame:CGRectMake(5, 40, Width-20, 115)];
-            _detailText1.layer.borderWidth=1;
+            _detailText1.layer.borderWidth=0.5;
             _detailText1.layer.borderColor=blueCyan.CGColor;
             _detailText1.clipsToBounds=YES;
             _detailText1.layer.cornerRadius=5;
@@ -203,7 +203,7 @@
             imageview.image=[UIImage imageNamed:@"must_pic.png"];
             [textBgView addSubview:imageview];
             _detailText2=[[UITextView alloc]initWithFrame:CGRectMake(5, 40, Width-20, 115)];
-            _detailText2.layer.borderWidth=1;
+            _detailText2.layer.borderWidth=0.5;
             _detailText2.layer.borderColor=blueCyan.CGColor;
             _detailText2.clipsToBounds=YES;
             NSString *content=[contentArray2 objectAtIndex:i];
@@ -250,7 +250,7 @@
         UIView *textBgView=[[UIView alloc]initWithFrame:CGRectMake(0, 460+130*i, Width-10, 50)];
         textBgView.backgroundColor=[UIColor whiteColor];
         textBgView.layer.borderColor=[UIColor lightGrayColor].CGColor;
-        textBgView.layer.borderWidth=1;
+        textBgView.layer.borderWidth=0.5;
         textBgView.userInteractionEnabled=YES;
         [_mainListView addSubview:textBgView];
         UIImageView *imageview=[[UIImageView alloc]initWithFrame:CGRectMake(0, 15, 20, 20)];
@@ -376,7 +376,7 @@
 //        UIView *nameLabelView1=[[UIView alloc]initWithFrame:CGRectMake(0, 50*i,Width-10, 50)];
 //        nameLabelView1.userInteractionEnabled=YES;
 //        nameLabelView1.layer.borderColor=[UIColor lightGrayColor].CGColor;
-//        nameLabelView1.layer.borderWidth=1;
+//        nameLabelView1.layer.borderWidth=0.5;
 //        [_mainListView addSubview:nameLabelView1];
 //        
 //        if (i<5) {
@@ -414,7 +414,7 @@
 //    UIView *textBgView=[[UIView alloc]initWithFrame:CGRectMake(0, 300+340*i, Width-10, 160)];
 //    textBgView.backgroundColor=[UIColor whiteColor];
 //    textBgView.layer.borderColor=[UIColor lightGrayColor].CGColor;
-//    textBgView.layer.borderWidth=1;
+//    textBgView.layer.borderWidth=0.5;
 //    textBgView.userInteractionEnabled=YES;
 //    [_mainListView addSubview:textBgView];
 //        
@@ -427,7 +427,7 @@
 //        
 //        if (i==0) {
 //            _detailText1=[[UITextView alloc]initWithFrame:CGRectMake(5, 40, Width-20, 115)];
-//            _detailText1.layer.borderWidth=1;
+//            _detailText1.layer.borderWidth=0.5;
 //            _detailText1.layer.borderColor=blueCyan.CGColor;
 //            _detailText1.clipsToBounds=YES;
 //            _detailText1.layer.cornerRadius=5;
@@ -450,7 +450,7 @@
 //            imageview.image=[UIImage imageNamed:@"must_pic.png"];
 //            [textBgView addSubview:imageview];
 //            _detailText2=[[UITextView alloc]initWithFrame:CGRectMake(5, 40, Width-20, 115)];
-//            _detailText2.layer.borderWidth=1;
+//            _detailText2.layer.borderWidth=0.5;
 //            _detailText2.layer.borderColor=blueCyan.CGColor;
 //            _detailText2.clipsToBounds=YES;
 //            NSString *content=[contentArray2 objectAtIndex:i];
@@ -494,7 +494,7 @@
 //        UIView *textBgView=[[UIView alloc]initWithFrame:CGRectMake(0, 460+130*i, Width-10, 50)];
 //        textBgView.backgroundColor=[UIColor whiteColor];
 //        textBgView.layer.borderColor=[UIColor lightGrayColor].CGColor;
-//        textBgView.layer.borderWidth=1;
+//        textBgView.layer.borderWidth=0.5;
 //        textBgView.userInteractionEnabled=YES;
 //        [_mainListView addSubview:textBgView];
 //            UIImageView *imageview=[[UIImageView alloc]initWithFrame:CGRectMake(0, 15, 20, 20)];

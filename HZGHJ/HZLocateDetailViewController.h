@@ -10,5 +10,6 @@
 
 @interface HZLocateDetailViewController : UIViewController
 @property(nonatomic,retain)NSDictionary *qlsxcodeDic;
-@property(nonatomic,assign)int orgId;
+@property(nonatomic,retain)NSString *type;//判断是否是建筑类 市政类
+@property(nonatomic,retain)NSString* orgId;
 @end

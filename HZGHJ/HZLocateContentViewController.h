@@ -14,8 +14,10 @@
 @property(nonatomic,strong)NSDictionary *commitData;//已提交
 
 @property(nonatomic,retain)NSDictionary *qlsxcodeDic;
-@property(nonatomic,assign)int orgId;
+@property(nonatomic,retain)NSString* orgId;
+@property(nonatomic,retain)NSString *type;//判断是否是建筑类 市政类
 
 @property(nonatomic,strong)NSArray* posArray;//已返回
+@property(nonatomic,assign)BOOL isBackWarn;//返回提示
 @property(nonatomic,strong)NSDictionary *saveDic;
 @end
