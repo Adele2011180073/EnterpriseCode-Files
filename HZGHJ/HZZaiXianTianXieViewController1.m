@@ -57,9 +57,7 @@
     }else{
     _isCheck=@"";
     }
-    UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(downKeyboard)];
-    tap.delegate=self;
-    [_mainBgView addGestureRecognizer:tap];
+  
     _rightBarBtn = [[UIButton alloc] initWithFrame:CGRectMake(15, 5, 80, 20)];
     [_rightBarBtn setTitleColor: [UIColor whiteColor] forState:UIControlStateNormal];
     [_rightBarBtn addTarget:self action:@selector(illustrate) forControlEvents:UIControlEventTouchUpInside];
@@ -85,6 +83,10 @@
     }else{
     }
     [self addReMainListView];
+    
+    UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(downKeyboard)];
+    tap.delegate=self;
+    [_mainBgView addGestureRecognizer:tap];
     
     UIButton *commit=[[UIButton alloc]initWithFrame:CGRectMake(20,820, Width-40, 40)];
     [commit addTarget:self action:@selector(commit) forControlEvents:UIControlEventTouchUpInside];
@@ -393,8 +395,13 @@
     UITextField *textfield22=[self.view viewWithTag:21];//路
     
     
-    if (textfield1.text==NULL||textfield2.text==NULL||textfield3.text==NULL||textfield4.text==NULL||textfield6.text==NULL||_detailText2.text==NULL||_isCheck==NULL||[_isCheck isEqualToString:@""]) {
-        [self.view makeToast:@"请把带*标记的必填项目填写完整" duration:2 position:CSToastPositionCenter];
+    if ([textfield1.text length]==0||[textfield2.text length]==0||[textfield3.text length]==0||[textfield4.text length]==0||[textfield6.text length]==0||[textfield21.text length]==0||[textfield22.text length]==0||[_detailText2.text length]==0||_isCheck==NULL||[_isCheck isEqualToString:@""]) {
+        UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"提示" message:@"请把带*标记的必填项目填写完整" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *defaultAction=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        [alert addAction:defaultAction];
+        [self presentViewController:alert animated:YES completion:nil];
         return;
     }
     if ([BSRegexValidate stringContainsEmoji:_detailText1.text]||[BSRegexValidate stringContainsEmoji:_detailText2.text]) {

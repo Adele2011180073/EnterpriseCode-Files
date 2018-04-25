@@ -143,7 +143,7 @@
     }
 }
 -(void)getInlineRequestView{
-    tableview=[[UITableView alloc]initWithFrame:CGRectMake(0, 50, Width, Height-64-55)];
+    tableview=[[UITableView alloc]initWithFrame:CGRectMake(0, 50, Width, Height-64-50)];
     tableview.tag=10;
     [tableview registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cell"];
     tableview.backgroundColor=[UIColor whiteColor];

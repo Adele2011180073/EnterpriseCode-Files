@@ -55,9 +55,7 @@
     }else{
         _isCheck=@"";
     }
-    UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(downKeyboard)];
-    tap.delegate=self;
-    [_mainBgView addGestureRecognizer:tap];
+  
     _rightBarBtn = [[UIButton alloc] initWithFrame:CGRectMake(15, 5, 80, 20)];
     [_rightBarBtn setTitleColor: [UIColor whiteColor] forState:UIControlStateNormal];
     [_rightBarBtn addTarget:self action:@selector(illustrate) forControlEvents:UIControlEventTouchUpInside];
@@ -83,6 +81,9 @@
     }
     [self addReMainListView];
     
+    UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(downKeyboard)];
+    tap.delegate=self;
+    [_mainBgView addGestureRecognizer:tap];
     UIButton *commit=[[UIButton alloc]initWithFrame:CGRectMake(20, _mainListView.frame.origin.y+ _mainListView.frame.size.height+20, Width-40, 40)];
     [commit addTarget:self action:@selector(commit) forControlEvents:UIControlEventTouchUpInside];
     commit.backgroundColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1];
@@ -414,7 +415,6 @@
     UITextField *textfield4=[self.view viewWithTag:13];
     UITextField *textfield5=[self.view viewWithTag:14];
     UITextField *textfield6=[self.view viewWithTag:15];
-    UITextField *textfield7=[self.view viewWithTag:16];
     
     UITextField *textfield21=[self.view viewWithTag:20];//区
     UITextField *textfield22=[self.view viewWithTag:21];//路
@@ -424,7 +424,7 @@
     UITextField *textfield43=[self.view viewWithTag:42];//西
     UITextField *textfield44=[self.view viewWithTag:43];//北
     
-   if (textfield1.text==NULL||textfield2.text==NULL||textfield3.text==NULL||textfield4.text==NULL||textfield5.text==NULL||textfield6.text==NULL||textfield21.text==NULL||textfield22.text==NULL||_detailText2.text==NULL||_isCheck==NULL||[_isCheck isEqualToString:@""]) {
+   if ([textfield1.text length]==0||[textfield2.text length]==0||[textfield3.text length]==0||[textfield4.text length]==0||[textfield5.text length]==0||[textfield6.text length]==0||[textfield21.text length]==0||[textfield22.text length]==0||[_detailText2.text length]==0||_isCheck==NULL||[_isCheck isEqualToString:@""]) {
         [self.view makeToast:@"请把带*标记的必填项目填写完整" duration:2 position:CSToastPositionCenter];
         return;
     }

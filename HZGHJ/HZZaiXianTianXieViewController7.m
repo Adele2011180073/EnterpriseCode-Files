@@ -44,9 +44,6 @@
     
     NSLog(@" %@   %@",titleLabel.text,self.commitData);
   
-    UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(downKeyboard)];
-    tap.delegate=self;
-    [_mainBgView addGestureRecognizer:tap];
     _rightBarBtn = [[UIButton alloc] initWithFrame:CGRectMake(15, 5, 80, 20)];
     [_rightBarBtn setTitleColor: [UIColor whiteColor] forState:UIControlStateNormal];
     [_rightBarBtn addTarget:self action:@selector(illustrate) forControlEvents:UIControlEventTouchUpInside];
@@ -73,6 +70,9 @@
     }
     [self addReMainListView];
     
+    UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(downKeyboard)];
+    tap.delegate=self;
+    [_mainBgView addGestureRecognizer:tap];
     UIButton *commit=[[UIButton alloc]initWithFrame:CGRectMake(20, _mainListView.frame.origin.y+ _mainListView.frame.size.height+20, Width-40, 40)];
     [commit addTarget:self action:@selector(commit) forControlEvents:UIControlEventTouchUpInside];
     commit.backgroundColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1];
@@ -175,7 +175,7 @@
                 label2.text=[labelArray4 objectAtIndex:j];
                 [nameLabelView1  addSubview:label2];
                 
-                UITextField *text=[[UITextField alloc]initWithFrame:CGRectMake(100+(Width-110)/2*i, 5, (Width-110)/2-40, 40)];
+                UITextField *text=[[UITextField alloc]initWithFrame:CGRectMake(100+(Width-110)/2*j, 5, (Width-110)/2-40, 40)];
                 text.layer.borderColor=[UIColor lightGrayColor].CGColor;
                 text.layer.borderWidth=0.5;
                 text.tag=20+j;
@@ -188,6 +188,7 @@
         }else if (i==9){//起点
                 UILabel  *label2=[[UILabel alloc]initWithFrame:CGRectMake(Width-10-60,  5, 40, 40)];
                 label2.textAlignment=NSTextAlignmentCenter;
+                label2.adjustsFontSizeToFitWidth=YES;
                 label2.font=[UIFont systemFontOfSize:15];
                 label2.text=@"路(巷)";
                 [nameLabelView1  addSubview:label2];
@@ -200,9 +201,10 @@
                 text.text=[NSString stringWithFormat:@"%@",str11];
                 text.font=[UIFont systemFontOfSize:15];
                 [nameLabelView1 addSubview:text];
-        }else if (i==9){//终点
+        }else if (i==10){//终点
             UILabel  *label2=[[UILabel alloc]initWithFrame:CGRectMake(Width-10-60,  5, 40, 40)];
             label2.textAlignment=NSTextAlignmentCenter;
+            label2.adjustsFontSizeToFitWidth=YES;
             label2.font=[UIFont systemFontOfSize:15];
             label2.text=@"路(巷)";
             [nameLabelView1  addSubview:label2];
@@ -286,6 +288,7 @@
     label3.text=@"道路（公路）";
     [textBgView2  addSubview:label3];
     NSArray *labelArray3=@[@"长度（米）",@"宽度（米）",@"横断面布置(米)"];
+     NSArray *contentArray3=@[[self getString:[self.commitData objectForKey:@"dlglcd1"]],[self getString:[self.commitData objectForKey:@"dlglkd1"]],[self getString:[self.commitData objectForKey:@"dlglhdm1"]],[self getString:[self.commitData objectForKey:@"dlglcd2"]],[self getString:[self.commitData objectForKey:@"dlglkd2"]],[self getString:[self.commitData objectForKey:@"dlglhdm3"]]];
     for (int i=0; i<3; i++) {
         UIView *textBgView=[[UIView alloc]initWithFrame:CGRectMake((Width-20)/3*i,40, (Width-20)/3, 40)];
         textBgView.backgroundColor=[UIColor whiteColor];
@@ -311,8 +314,8 @@
         text1.delegate=self;
         //        text.placeholder=[placeholderArray objectAtIndex:i];
         text1.font=[UIFont systemFontOfSize:15];
-//        NSString *content=[contentArray3 objectAtIndex:i];
-//        text.text=[NSString stringWithFormat:@"%@",content];
+        NSString *content=[contentArray3 objectAtIndex:i];
+        text1.text=[NSString stringWithFormat:@"%@",content];
         [textBgView2 addSubview:text1];
         
         
@@ -324,8 +327,8 @@
         text2.delegate=self;
         //        text.placeholder=[placeholderArray objectAtIndex:i];
         text2.font=[UIFont systemFontOfSize:15];
-        //        NSString *content=[contentArray3 objectAtIndex:i];
-        //        text.text=[NSString stringWithFormat:@"%@",content];
+        NSString *content2=[contentArray3 objectAtIndex:i+3];
+        text2.text=[NSString stringWithFormat:@"%@",content2];
         [textBgView2 addSubview:text2];
     }
     
@@ -339,6 +342,7 @@
     label4.text=@"桥        梁";
     [textBgView2  addSubview:label4];
     NSArray *labelArray4=@[@"长度（米）",@"宽度（米）",@"梁底标高(米)",@"形式"];
+     NSArray *contentArray4=@[[self getString:[self.commitData objectForKey:@"qlcd1"]],[self getString:[self.commitData objectForKey:@"qlkd1"]],[self getString:[self.commitData objectForKey:@"qlldbg1"]],[self getString:[self.commitData objectForKey:@"qlxs1"]],[self getString:[self.commitData objectForKey:@"qlcd2"]],[self getString:[self.commitData objectForKey:@"qlkd2"]],[self getString:[self.commitData objectForKey:@"qlldbg2"]],[self getString:[self.commitData objectForKey:@"qlxs2"]]];
     for (int i=0; i<4; i++) {
         UIView *textBgView=[[UIView alloc]initWithFrame:CGRectMake((Width-20)/4*i,200, (Width-20)/4, 40)];
         textBgView.backgroundColor=[UIColor whiteColor];
@@ -364,8 +368,8 @@
         text1.delegate=self;
         //        text.placeholder=[placeholderArray objectAtIndex:i];
         text1.font=[UIFont systemFontOfSize:15];
-        //        NSString *content=[contentArray3 objectAtIndex:i];
-        //        text.text=[NSString stringWithFormat:@"%@",content];
+        NSString *content1=[contentArray4 objectAtIndex:i];
+        text1.text=[NSString stringWithFormat:@"%@",content1];
         [textBgView2 addSubview:text1];
         
         
@@ -377,8 +381,8 @@
         text2.delegate=self;
         //        text.placeholder=[placeholderArray objectAtIndex:i];
         text2.font=[UIFont systemFontOfSize:15];
-        //        NSString *content=[contentArray3 objectAtIndex:i];
-        //        text.text=[NSString stringWithFormat:@"%@",content];
+        NSString *content2=[contentArray4 objectAtIndex:i+4];
+        text2.text=[NSString stringWithFormat:@"%@",content2];
         [textBgView2 addSubview:text2];
     }
     UIImageView *imageview5=[[UIImageView alloc]initWithFrame:CGRectMake(0, 330, 20, 20)];
@@ -391,6 +395,7 @@
     label5.text=@"驳　      坎";
     [textBgView2  addSubview:label5];
     NSArray *labelArray5=@[@"长度（米）",@"（二级驳坎）克顶标高(米)"];
+     NSArray *contentArray5=@[[self getString:[self.commitData objectForKey:@"bkcd1"]],[self getString:[self.commitData objectForKey:@"bkbg1"]],[self getString:[self.commitData objectForKey:@"bkcd2"]],[self getString:[self.commitData objectForKey:@"bkbg2"]]];
     for (int i=0; i<2; i++) {
         UIView *textBgView=[[UIView alloc]initWithFrame:CGRectMake((Width-20)/2*i,360, (Width-20)/2, 40)];
         textBgView.backgroundColor=[UIColor whiteColor];
@@ -416,8 +421,8 @@
         text1.delegate=self;
         //        text.placeholder=[placeholderArray objectAtIndex:i];
         text1.font=[UIFont systemFontOfSize:15];
-        //        NSString *content=[contentArray3 objectAtIndex:i];
-        //        text.text=[NSString stringWithFormat:@"%@",content];
+        NSString *content1=[contentArray5 objectAtIndex:i];
+        text1.text=[NSString stringWithFormat:@"%@",content1];
         [textBgView2 addSubview:text1];
         
         
@@ -429,8 +434,8 @@
         text2.delegate=self;
         //        text.placeholder=[placeholderArray objectAtIndex:i];
         text2.font=[UIFont systemFontOfSize:15];
-        //        NSString *content=[contentArray3 objectAtIndex:i];
-        //        text.text=[NSString stringWithFormat:@"%@",content];
+                NSString *content2=[contentArray5 objectAtIndex:i+2];
+                text2.text=[NSString stringWithFormat:@"%@",content2];
         [textBgView2 addSubview:text2];
     }
     UILabel  *label6=[[UILabel alloc]initWithFrame:CGRectMake(20,  1240, Width-40, 20)];
@@ -453,15 +458,15 @@
     mingchen.textColor=[UIColor blackColor];
     mingchen.text=@"名称：";
     [textBgView3  addSubview:mingchen];
-    
+    NSArray *contentArray6=@[[self getString:[self.commitData objectForKey:@"gxgcmc"]],[self getString:[self.commitData objectForKey:@"gxgccd1"]],[self getString:[self.commitData objectForKey:@"gxgcgg"]],[self getString:[self.commitData objectForKey:@"gxgccd2"]],[self getString:[self.commitData objectForKey:@"gxgcgw"]],[self getString:[self.commitData objectForKey:@"gxgcbz"]]];
     UITextField *mingchenText=[[UITextField alloc]initWithFrame:CGRectMake(70, 0, Width-20-80, 40)];
     mingchenText.tag=60;
     //            text.keyboardType = UIKeyboardTypeNumberPad;
     mingchenText.delegate=self;
     //        text.placeholder=[placeholderArray objectAtIndex:i];
     mingchenText.font=[UIFont systemFontOfSize:15];
-    //        NSString *content=[contentArray3 objectAtIndex:i];
-    //        text.text=[NSString stringWithFormat:@"%@",content];
+    NSString *content=[contentArray6 objectAtIndex:0];
+    mingchenText.text=[NSString stringWithFormat:@"%@",content];
     [textBgView3 addSubview:mingchenText];
     
     NSArray *labelArray6=@[@"架空管线：",@"地下管线："];
@@ -496,8 +501,8 @@
         text1.delegate=self;
         //        text.placeholder=[placeholderArray objectAtIndex:i];
         text1.font=[UIFont systemFontOfSize:15];
-        //        NSString *content=[contentArray3 objectAtIndex:i];
-        //        text.text=[NSString stringWithFormat:@"%@",content];
+        NSString *content1=[contentArray6 objectAtIndex:i+1];
+        text1.text=[NSString stringWithFormat:@"%@",content1];
         [textBgView addSubview:text1];
         
         UILabel  *guige=[[UILabel alloc]initWithFrame:CGRectMake(220,  5, 40, 30)];
@@ -520,8 +525,8 @@
         text2.delegate=self;
         //        text.placeholder=[placeholderArray objectAtIndex:i];
         text2.font=[UIFont systemFontOfSize:15];
-        //        NSString *content=[contentArray3 objectAtIndex:i];
-        //        text.text=[NSString stringWithFormat:@"%@",content];
+                NSString *content2=[contentArray6 objectAtIndex:i+3];
+                text2.text=[NSString stringWithFormat:@"%@",content2];
         [textBgView addSubview:text2];
     }
     UILabel  *beizhu=[[UILabel alloc]initWithFrame:CGRectMake(5,  130, 60, 20)];
@@ -532,14 +537,14 @@
     beizhu.text=@"备注：";
     [textBgView3  addSubview:beizhu];
     
-    UITextField *beizhuText=[[UITextField alloc]initWithFrame:CGRectMake(70, 0, Width-20-80, 40)];
+    UITextField *beizhuText=[[UITextField alloc]initWithFrame:CGRectMake(70, 120, Width-20-80, 40)];
     beizhuText.tag=65;
     //            text.keyboardType = UIKeyboardTypeNumberPad;
     beizhuText.delegate=self;
     //        text.placeholder=[placeholderArray objectAtIndex:i];
     beizhuText.font=[UIFont systemFontOfSize:15];
-    //        NSString *content=[contentArray3 objectAtIndex:i];
-    //        text.text=[NSString stringWithFormat:@"%@",content];
+    NSString *beizhuTextcontent=[contentArray6 objectAtIndex:5];
+    beizhuText.text=[NSString stringWithFormat:@"%@",beizhuTextcontent];
     [textBgView3 addSubview:beizhuText];
     
     UILabel  *jiansegc=[[UILabel alloc]initWithFrame:CGRectMake(20,  1440, Width-40, 20)];
@@ -556,6 +561,7 @@
     textBgView5.userInteractionEnabled=YES;
     [_mainListView addSubview:textBgView5];
     NSArray *labelArray7=@[@"结构种类",@"层数",@"幢数",@"高度(m)",@"占地面积"];
+     NSArray *contentArray7=@[[self getString:[self.commitData objectForKey:@"jsgcjgzl1"]],[self getString:[self.commitData objectForKey:@"jsgccs1"]],[self getString:[self.commitData objectForKey:@"jsgcds1"]],[self getString:[self.commitData objectForKey:@"jsgcgd1"]],[self getString:[self.commitData objectForKey:@"jsgczdmj1"]],[self getString:[self.commitData objectForKey:@"jsgcjgzl2"]],[self getString:[self.commitData objectForKey:@"jsgccs2"]],[self getString:[self.commitData objectForKey:@"jsgcds2"]],[self getString:[self.commitData objectForKey:@"jsgcgd2"]],[self getString:[self.commitData objectForKey:@"jsgczdmj2"]]];
     for (int i=0; i<5; i++) {
         UIView *textBgView=[[UIView alloc]initWithFrame:CGRectMake((Width-20)/5*i,0, (Width-20)/5, 40)];
         textBgView.backgroundColor=[UIColor whiteColor];
@@ -581,8 +587,8 @@
         text1.delegate=self;
         //        text.placeholder=[placeholderArray objectAtIndex:i];
         text1.font=[UIFont systemFontOfSize:15];
-        //        NSString *content=[contentArray3 objectAtIndex:i];
-        //        text.text=[NSString stringWithFormat:@"%@",content];
+                NSString *content1=[contentArray7 objectAtIndex:i];
+                text1.text=[NSString stringWithFormat:@"%@",content1];
         [textBgView5 addSubview:text1];
         
         
@@ -592,10 +598,10 @@
         text2.tag=75+i;
         //            text.keyboardType = UIKeyboardTypeNumberPad;
         text2.delegate=self;
-        //        text.placeholder=[placeholderArray objectAtIndex:i];
+        //        text.placeholder=[placeholderA  rray objectAtIndex:i];
         text2.font=[UIFont systemFontOfSize:15];
-        //        NSString *content=[contentArray3 objectAtIndex:i];
-        //        text.text=[NSString stringWithFormat:@"%@",content];
+        NSString *content2=[contentArray7 objectAtIndex:i+5];
+        text2.text=[NSString stringWithFormat:@"%@",content2];
         [textBgView5 addSubview:text2];
     }
 }
@@ -715,19 +721,19 @@
     UITextField *textfield79=[self.view viewWithTag:79];//
     
     
-   if (textfield1.text==NULL||textfield2.text==NULL||textfield3.text==NULL||textfield4.text==NULL||textfield5.text==NULL||textfield6.text==NULL||textfield7.text==NULL||textfield8.text==NULL||textfield21.text==NULL||textfield22.text==NULL||textfield23.text==NULL||textfield24.text==NULL||_detailText1.text==NULL) {
+   if ([textfield1.text length]==0||[textfield2.text length]==0||[textfield3.text length]==0||[textfield4.text length]==0||[textfield5.text length]==0||[textfield6.text length]==0||[textfield7.text length]==0||[textfield8.text length]==0||[textfield21.text length]==0||[textfield22.text length]==0||[textfield23.text length]==0||[textfield24.text length]==0||[_detailText1.text length]==0) {
         [self.view makeToast:@"请把带*标记的必填项目填写完整" duration:2 position:CSToastPositionCenter];
         return;
     }
-    if (textfield31.text==NULL||textfield32.text==NULL||textfield33.text==NULL||textfield34.text==NULL||textfield35.text==NULL||textfield36.text==NULL) {
+    if ([textfield31.text length]==0||[textfield32.text length]==0||[textfield33.text length]==0||[textfield34.text length]==0||[textfield35.text length]==0||[textfield36.text length]==0) {
         [self.view makeToast:@"请把带*标记的必填项目填写完整" duration:2 position:CSToastPositionCenter];
         return;
     }
-    if (textfield41.text==NULL||textfield42.text==NULL||textfield43.text==NULL||textfield44.text==NULL||textfield45.text==NULL||textfield46.text==NULL||textfield47.text==NULL||textfield48.text==NULL) {
+    if ([textfield41.text length]==0||[textfield42.text length]==0||[textfield43.text length]==0||[textfield44.text length]==0||[textfield45.text length]==0||[textfield46.text length]==0||[textfield47.text length]==0||[textfield48.text length]==0) {
         [self.view makeToast:@"请把带*标记的必填项目填写完整" duration:2 position:CSToastPositionCenter];
         return;
     }
-    if (textfield51.text==NULL||textfield52.text==NULL||textfield53.text==NULL||textfield54.text==NULL) {
+    if ([textfield51.text length]==0||[textfield52.text length]==0||[textfield53.text length]==0||[textfield54.text length]==0) {
         [self.view makeToast:@"请把带*标记的必填项目填写完整" duration:2 position:CSToastPositionCenter];
         return;
     }
@@ -739,6 +745,10 @@
     }
     if (![BSRegexValidate validateTelephone:textfield4.text]) {
         [self.view makeToast:@"手机号码格式不正确" duration:2 position:CSToastPositionCenter];
+        return;
+    }
+    if (![BSRegexValidate validateTelephone:textfield7.text]) {
+        [self.view makeToast:@"设计人手机号码格式不正确" duration:2 position:CSToastPositionCenter];
         return;
     }
     NSMutableDictionary *dic=[[NSMutableDictionary alloc]init];
@@ -753,8 +763,8 @@
     
     [dic setObject:textfield21.text forKey:@"jsdzq"];
     [dic setObject:textfield22.text forKey:@"jsdzl"];
-    [dic setObject:textfield23.text forKey:@"shrsj"];
-    [dic setObject:textfield24.text forKey:@"xmmc"];
+    [dic setObject:textfield23.text forKey:@"qd"];
+    [dic setObject:textfield24.text forKey:@"zd"];
     
     [dic setObject:_detailText1.text forKey:@"jsnrjgm"];
    //道路公路
@@ -848,7 +858,7 @@
         [dic setObject:textfield66.text forKey:@"gxgcbz"];
         gxgcbz=textfield66.text;
     }
-    NSString *gxgc= [NSString stringWithFormat:@"{%@,%@,%@,%@,%@,%@}",textfield61.text,textfield62.text,textfield63.text,textfield64.text,textfield65.text,textfield66.text];
+    NSString *gxgc= [NSString stringWithFormat:@"{%@,%@,%@,%@,%@,%@}",gxgcmc,gxgccd1,gxgcgg,gxgccd2,gxgcgw,gxgcbz];
     [dic setObject:gxgc forKey:@"gxgc"];
     
     //建设工程
@@ -953,10 +963,65 @@
     [self.view endEditing:YES];
 }
 -(void)textFieldDidBeginEditing:(UITextField *)textField{
-     _mainBgView.contentOffset=CGPointMake(0, 0);
+    //道路（公路）
+    UITextField *textfield31=[self.view viewWithTag:30];//长度（米
+    UITextField *textfield32=[self.view viewWithTag:31];//宽度
+    UITextField *textfield33=[self.view viewWithTag:32];//横断面布置(
+    UITextField *textfield34=[self.view viewWithTag:33];//长度（米
+    UITextField *textfield35=[self.view viewWithTag:34];//宽度
+    UITextField *textfield36=[self.view viewWithTag:35];//横断面布置(
+    if (textfield31==textField||textfield32==textField||textfield33==textField||textfield34==textField||textfield35==textField||textfield36==textField) {
+      _mainListView.contentOffset=CGPointMake(0, 300);
+    }
+    
+    //桥        梁
+    UITextField *textfield41=[self.view viewWithTag:40];//长度
+    UITextField *textfield42=[self.view viewWithTag:41];//宽度
+    UITextField *textfield43=[self.view viewWithTag:42];//梁底标高(
+    UITextField *textfield44=[self.view viewWithTag:43];//形式
+    UITextField *textfield45=[self.view viewWithTag:44];//长度
+    UITextField *textfield46=[self.view viewWithTag:45];///宽度
+    UITextField *textfield47=[self.view viewWithTag:46];//梁底标高(
+    UITextField *textfield48=[self.view viewWithTag:47];//形式
+    if (textfield41==textField||textfield42==textField||textfield43==textField||textfield44==textField||textfield45==textField||textfield46==textField||textfield47==textField||textfield48==textField) {
+       _mainListView.contentOffset=CGPointMake(0, 300);
+    }
+    
+    //驳　      坎
+    UITextField *textfield51=[self.view viewWithTag:50];//长度
+    UITextField *textfield52=[self.view viewWithTag:51];//二级驳坎）克顶标高
+    UITextField *textfield53=[self.view viewWithTag:52];//长度
+    UITextField *textfield54=[self.view viewWithTag:53];//二级驳坎）克顶标高
+    if (textfield51==textField||textfield52==textField||textfield53==textField||textfield54==textField) {
+       _mainListView.contentOffset=CGPointMake(0, 400);
+    }
+    //管线工程
+    UITextField *textfield61=[self.view viewWithTag:60];//名称
+    UITextField *textfield62=[self.view viewWithTag:61];//架空管线
+    UITextField *textfield63=[self.view viewWithTag:62];//地下管线
+    UITextField *textfield64=[self.view viewWithTag:63];//架空管线
+    UITextField *textfield65=[self.view viewWithTag:64];//地下管线
+    UITextField *textfield66=[self.view viewWithTag:65];//备注
+    if (textfield61==textField||textfield62==textField||textfield63==textField||textfield64==textField||textfield65==textField||textfield66==textField) {
+        _mainListView.contentOffset=CGPointMake(0, 300);
+    }
+    //建设工程
+    UITextField *textfield70=[self.view viewWithTag:70];//
+    UITextField *textfield71=[self.view viewWithTag:71];//
+    UITextField *textfield72=[self.view viewWithTag:72];//
+    UITextField *textfield73=[self.view viewWithTag:73];//
+    UITextField *textfield74=[self.view viewWithTag:74];//
+    UITextField *textfield75=[self.view viewWithTag:75];//
+    UITextField *textfield76=[self.view viewWithTag:76];//
+    UITextField *textfield77=[self.view viewWithTag:77];//
+    UITextField *textfield78=[self.view viewWithTag:78];//
+    UITextField *textfield79=[self.view viewWithTag:79];//
+    if (textfield70==textField||textfield71==textField||textfield72==textField||textfield73==textField||textfield74==textField||textfield75==textField||textfield76==textField||textfield77==textField||textfield78==textField||textfield79==textField) {
+        _mainListView.contentOffset=CGPointMake(0, 300);
+    }
 }
 -(void)textFieldDidEndEditing:(UITextField *)textField{
-     _mainBgView.contentOffset=CGPointMake(0, 0);
+     _mainListView.contentOffset=CGPointMake(0, 0);
 }
 -(BOOL)textFieldShouldReturn:(UITextField *)textField{
     [self.view endEditing:YES];
@@ -978,10 +1043,49 @@
     UITextField *textfield23=[self.view viewWithTag:22];//起点
     UITextField *textfield24=[self.view viewWithTag:23];//终点
     
-//    UITextField *textfield41=[self.view viewWithTag:40];//东
-//    UITextField *textfield42=[self.view viewWithTag:41];//南
-//    UITextField *textfield43=[self.view viewWithTag:42];//西
-//    UITextField *textfield44=[self.view viewWithTag:43];//北
+    //道路（公路）
+    UITextField *textfield31=[self.view viewWithTag:30];//长度（米
+    UITextField *textfield32=[self.view viewWithTag:31];//宽度
+    UITextField *textfield33=[self.view viewWithTag:32];//横断面布置(
+    UITextField *textfield34=[self.view viewWithTag:33];//长度（米
+    UITextField *textfield35=[self.view viewWithTag:34];//宽度
+    UITextField *textfield36=[self.view viewWithTag:35];//横断面布置(
+    
+    //桥        梁
+    UITextField *textfield41=[self.view viewWithTag:40];//长度
+    UITextField *textfield42=[self.view viewWithTag:41];//宽度
+    UITextField *textfield43=[self.view viewWithTag:42];//梁底标高(
+    UITextField *textfield44=[self.view viewWithTag:43];//形式
+    UITextField *textfield45=[self.view viewWithTag:44];//长度
+    UITextField *textfield46=[self.view viewWithTag:45];///宽度
+    UITextField *textfield47=[self.view viewWithTag:46];//梁底标高(
+    UITextField *textfield48=[self.view viewWithTag:47];//形式
+    
+    //驳　      坎
+    UITextField *textfield51=[self.view viewWithTag:50];//长度
+    UITextField *textfield52=[self.view viewWithTag:51];//二级驳坎）克顶标高
+    UITextField *textfield53=[self.view viewWithTag:52];//长度
+    UITextField *textfield54=[self.view viewWithTag:53];//二级驳坎）克顶标高
+    
+    //管线工程
+    UITextField *textfield61=[self.view viewWithTag:60];//名称
+    UITextField *textfield62=[self.view viewWithTag:61];//架空管线
+    UITextField *textfield63=[self.view viewWithTag:62];//地下管线
+    UITextField *textfield64=[self.view viewWithTag:63];//架空管线
+    UITextField *textfield65=[self.view viewWithTag:64];//地下管线
+    UITextField *textfield66=[self.view viewWithTag:65];//备注
+    
+    //建设工程
+    UITextField *textfield70=[self.view viewWithTag:70];//
+    UITextField *textfield71=[self.view viewWithTag:71];//
+    UITextField *textfield72=[self.view viewWithTag:72];//
+    UITextField *textfield73=[self.view viewWithTag:73];//
+    UITextField *textfield74=[self.view viewWithTag:74];//
+    UITextField *textfield75=[self.view viewWithTag:75];//
+    UITextField *textfield76=[self.view viewWithTag:76];//
+    UITextField *textfield77=[self.view viewWithTag:77];//
+    UITextField *textfield78=[self.view viewWithTag:78];//
+    UITextField *textfield79=[self.view viewWithTag:79];//
     
     NSMutableDictionary *dic=[[NSMutableDictionary alloc]init];
     [dic setObject:[self getString:textfield1.text] forKey:@"sqr"];
@@ -1000,6 +1104,52 @@
     
     [dic setObject:[self getString:textfield23.text] forKey:@"qd"];
     [dic setObject:[self getString:textfield24.text] forKey:@"zd"];
+    
+    
+    //道路公路
+    [dic setObject:[self getString:textfield31.text] forKey:@"dlglcd1"];
+    [dic setObject:[self getString:textfield32.text] forKey:@"dlglkd1"];
+      [dic setObject:[self getString:textfield33.text] forKey:@"dlglhdm1"];
+      [dic setObject:[self getString:textfield34.text] forKey:@"dlglcd2"];
+     [dic setObject:[self getString:textfield35.text] forKey:@"dlglkd2"];
+     [dic setObject:[self getString:textfield36.text] forKey:@"dlglhdm3"];
+  
+    //桥梁
+    [dic setObject:[self getString:textfield41.text] forKey:@"qlcd1"];
+    [dic setObject:[self getString:textfield42.text] forKey:@"qlkd1"];
+    [dic setObject:[self getString:textfield43.text] forKey:@"qlldbg1"];
+    [dic setObject:[self getString:textfield44.text] forKey:@"qlxs1"];
+    [dic setObject:[self getString:textfield45.text] forKey:@"qlcd2"];
+    [dic setObject:[self getString:textfield46.text] forKey:@"qlkd2"];
+    [dic setObject:[self getString:textfield47.text] forKey:@"qlldbg2"];
+    [dic setObject:[self getString:textfield48.text] forKey:@"qlxs2"];
+    
+    
+    //驳坎
+    [dic setObject:[self getString:textfield51.text] forKey:@"bkcd1"];
+    [dic setObject:[self getString:textfield52.text] forKey:@"bkbg1"];
+    [dic setObject:[self getString:textfield53.text] forKey:@"bkcd2"];
+    [dic setObject:[self getString:textfield54.text] forKey:@"bkbg2"];
+    
+    //管线工程
+    [dic setObject:[self getString:textfield61.text] forKey:@"gxgcmc"];
+    [dic setObject:[self getString:textfield62.text] forKey:@"gxgccd1"];
+    [dic setObject:[self getString:textfield63.text] forKey:@"gxgcgg"];
+    [dic setObject:[self getString:textfield64.text] forKey:@"gxgccd2"];
+    [dic setObject:[self getString:textfield65.text] forKey:@"gxgcgw"];
+    [dic setObject:[self getString:textfield66.text] forKey:@"gxgcbz"];
+  
+    //建设工程
+    [dic setObject:[self getString:textfield70.text] forKey:@"jsgcjgzl1"];
+    [dic setObject:[self getString:textfield71.text] forKey:@"jsgccs1"];
+    [dic setObject:[self getString:textfield72.text] forKey:@"jsgcds1"];
+    [dic setObject:[self getString:textfield73.text] forKey:@"jsgcgd1"];
+    [dic setObject:[self getString:textfield74.text] forKey:@"jsgczdmj1"];
+    [dic setObject:[self getString:textfield75.text] forKey:@"jsgcjgzl2"];
+    [dic setObject:[self getString:textfield76.text] forKey:@"jsgccs2"];
+    [dic setObject:[self getString:textfield77.text] forKey:@"jsgcds2"];
+    [dic setObject:[self getString:textfield78.text] forKey:@"jsgcgd2"];
+    [dic setObject:[self getString:textfield79.text] forKey:@"jsgczdmj2"];
     
     NSArray *vcArray = self.navigationController.viewControllers;
     for(UIViewController *vc in vcArray)

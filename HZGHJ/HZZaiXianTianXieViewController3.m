@@ -60,9 +60,7 @@
         _isCheck=@"";
     }
     _isTuDi=@"";
-    UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(downKeyboard)];
-    tap.delegate=self;
-    [_mainBgView addGestureRecognizer:tap];
+  
     _rightBarBtn = [[UIButton alloc] initWithFrame:CGRectMake(15, 5, 80, 20)];
     [_rightBarBtn setTitleColor: [UIColor whiteColor] forState:UIControlStateNormal];
     [_rightBarBtn addTarget:self action:@selector(illustrate) forControlEvents:UIControlEventTouchUpInside];
@@ -88,6 +86,10 @@
     }else{
     }
     [self addReMainListView];
+    
+    UITapGestureRecognizer *tap=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(downKeyboard)];
+    tap.delegate=self;
+    [_mainBgView addGestureRecognizer:tap];
     
     UIButton *commit=[[UIButton alloc]initWithFrame:CGRectMake(20,840+150, Width-40, 40)];
     [commit addTarget:self action:@selector(commit) forControlEvents:UIControlEventTouchUpInside];
@@ -360,13 +362,17 @@
     }
     NSArray *labelArray7=@[@"是否为规划条件变更:",@"储备土地出让前"];
     for (int i=0; i<labelArray7.count; i++) {
-        UILabel  *label2=[[UILabel alloc]initWithFrame:CGRectMake(10,  690+40*i, 150, 50)];
+        UILabel  *label2=[[UILabel alloc]initWithFrame:CGRectMake(20,  690+40*i, 140, 50)];
         label2.textAlignment=NSTextAlignmentLeft;
         label2.font=[UIFont systemFontOfSize:15];
         label2.text=[labelArray7 objectAtIndex:i];
         [_mainListView  addSubview:label2];
         
         if (i==0) {
+            UIImageView *imageview=[[UIImageView alloc]initWithFrame:CGRectMake(0, 690+40*i, 20, 20)];
+            imageview.image=[UIImage imageNamed:@"must_pic.png"];
+            [_mainListView addSubview:imageview];
+            
         UIButton *text=[[UIButton alloc]initWithFrame:CGRectMake(160,  690+40*i, Width-30-150, 50)];
         text.tag=50+i;
         NSString *content=[contentArray6 objectAtIndex:i];
@@ -523,8 +529,16 @@
     UITextField *textfield43=[self.view viewWithTag:42];//西
     UITextField *textfield44=[self.view viewWithTag:43];//北
     
-   if (textfield1.text==NULL||textfield2.text==NULL||textfield3.text==NULL||textfield4.text==NULL||textfield6.text==NULL||_detailText2.text==NULL||_isCheck==NULL||[_isCheck isEqualToString:@""]) {
-        [self.view makeToast:@"请把带*标记的必填项目填写完整" duration:2 position:CSToastPositionCenter];
+    UIButton *textfield51=[self.view viewWithTag:50];//是否为规划条件变更
+    UIButton *textfield52=[self.view viewWithTag:51];//储备土地出让前
+    
+ if ([textfield1.text length]==0||[textfield2.text length]==0||[textfield3.text length]==0||[textfield4.text length]==0||[textfield6.text length]==0||[textfield21.text length]==0||[textfield22.text length]==0||[textfield51.titleLabel.text length]==0||[_detailText2.text length]==0||_isCheck==NULL||[_isCheck isEqualToString:@""]) {
+     UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"提示" message:@"请把带*标记的必填项目填写完整" preferredStyle:UIAlertControllerStyleAlert];
+     UIAlertAction *defaultAction=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+         
+     }];
+     [alert addAction:defaultAction];
+     [self presentViewController:alert animated:YES completion:nil];
         return;
     }
     if ([BSRegexValidate stringContainsEmoji:_detailText1.text]||[BSRegexValidate stringContainsEmoji:_detailText2.text]) {
@@ -543,6 +557,7 @@
     [dic setObject:textfield6.text forKey:@"xmmc"];
     [dic setObject:textfield21.text forKey:@"jsdzq"];
     [dic setObject:textfield22.text forKey:@"jsdzl"];
+     [dic setObject:textfield51.titleLabel.text forKey:@"sfghtjbg"];
     [dic setObject:_isCheck forKey:@"lzbg"];
     [dic setObject:_detailText2.text forKey:@"xmsmqk"];
     if (textfield5.text==NULL) {
@@ -580,12 +595,15 @@
     }else{
         [dic setObject:textfield44.text forKey:@"zbbz"];
     }
+    if (textfield52.selected==YES) {
+        [dic setObject:@"1" forKey:@"tdcb"];
+    }else{
+        [dic setObject:@"0" forKey:@"tdcb"];
+    }
     [dic setObject:@"" forKey:@"tdgyfs"];
     [dic setObject:@"" forKey:@"resuuid"];
     [dic setObject:@"" forKey:@"ydqsqk"];
     [dic setObject:@"" forKey:@"sfqdfapf"];
-    [dic setObject:@"" forKey:@"sfghtjbg"];
-    [dic setObject:@"" forKey:@"tdcb"];
     [dic setObject:@"" forKey:@"tznrjly"];
     
     UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"保存成功" message:nil preferredStyle:UIAlertControllerStyleAlert];
