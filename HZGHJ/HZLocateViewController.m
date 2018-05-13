@@ -65,7 +65,7 @@
 -(void)getINLineData{
   NSString *userName=[[NSUserDefaults standardUserDefaults] objectForKey:@"username"];
     [HZBanShiService BanShiHomeListWithUsreName:userName GetBlock:^(NSDictionary *returnDic, NSError *error) {
-//         NSLog(@"returnDic    %@",returnDic);
+         NSLog(@"returnDic    %@",returnDic);
         if ([[returnDic objectForKey:@"code"]integerValue]==0) {
             dataList=[[NSMutableArray alloc]init];
             NSArray *array=[returnDic objectForKey:@"list"];

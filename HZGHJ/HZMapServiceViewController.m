@@ -30,11 +30,8 @@
     BMKLocationService *_service;//定位服务
     CLLocationCoordinate2D  _userLocation;
     
-    NSMutableArray *_posArray;
-    
     BMKPolyline* polyline;/**<折线*/
-    NSMutableArray *annoArray;/**<大头针数组*/
-    NSMutableArray *piAnnoarray;/**<PinAnnotation数组*/
+
 }
 
 @end
@@ -55,12 +52,21 @@
     // Do any additional setup after loading the view.
     self.navigationController.navigationBarHidden=NO;
     self.view.backgroundColor=[UIColor colorWithRed:237/255.0 green:237/255.0 blue:237/255.0 alpha:1.0];
-    self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStyleBordered target:nil action:nil];
+    self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStylePlain target:nil action:nil];
     self.title=@"地图选址";
 
-    _posArray=[[NSMutableArray alloc]init];
-    piAnnoarray = [[NSMutableArray alloc]init];
-    annoArray = [[NSMutableArray alloc]init];
+    if (self.posArray==nil||self.posArray==NULL) {
+        self.posArray=[[NSMutableArray alloc]init];
+    }else{
+        self.posArray=[[NSMutableArray alloc]init];//不想写了
+    }
+//    NSMutableArray *array=[[NSMutableArray alloc]init];
+//    for (int i=0; i<self.posArray.count; i++) {
+//        BMKPointAnnotation* annotation=[self.posArray objectAtIndex:i];
+//        NSString *str=[NSString stringWithFormat:@"{\"x\":%f,\"y\":%f}",annotation.coordinate.latitude,annotation.coordinate.longitude];
+//        [array addObject:str];
+//    }
+//    linerange=[NSString stringWithFormat:@"[%@]",[array componentsJoinedByString:@","]];
     
      _mapView = [[BMKMapView alloc]initWithFrame:CGRectMake(0, 0, Width, Height-44)];
     _mapView.delegate =self;

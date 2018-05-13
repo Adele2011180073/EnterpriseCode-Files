@@ -288,7 +288,23 @@
     label3.text=@"道路（公路）";
     [textBgView2  addSubview:label3];
     NSArray *labelArray3=@[@"长度（米）",@"宽度（米）",@"横断面布置(米)"];
-     NSArray *contentArray3=@[[self getString:[self.commitData objectForKey:@"dlglcd1"]],[self getString:[self.commitData objectForKey:@"dlglkd1"]],[self getString:[self.commitData objectForKey:@"dlglhdm1"]],[self getString:[self.commitData objectForKey:@"dlglcd2"]],[self getString:[self.commitData objectForKey:@"dlglkd2"]],[self getString:[self.commitData objectForKey:@"dlglhdm3"]]];
+    NSMutableArray *contentArray3=[[NSMutableArray alloc] initWithObjects:[self getString:[self.commitData objectForKey:@"dlglcd1"]],[self getString:[self.commitData objectForKey:@"dlglkd1"]],[self getString:[self.commitData objectForKey:@"dlglhdm1"]],[self getString:[self.commitData objectForKey:@"dlglcd2"]],[self getString:[self.commitData objectForKey:@"dlglkd2"]],[self getString:[self.commitData objectForKey:@"dlglhdm3"]], nil];
+    if ([self.commitData objectForKey:@"dlgl"]!=NULL||[self.commitData objectForKey:@"dlgl"]!=nil) {
+        contentArray3=[[NSMutableArray alloc]init];
+        NSString *dlgl=[self.commitData objectForKey:@"dlgl"];
+        NSRange startRange = [dlgl rangeOfString:@"["];
+        NSRange endRange = [dlgl rangeOfString:@"]"];
+        NSRange range = NSMakeRange(startRange.location + startRange.length, endRange.location - startRange.location - startRange.length);
+        NSString *result = [dlgl substringWithRange:range];
+        NSArray *resultArray=[result componentsSeparatedByString:@","];
+        for (int m=0; m<resultArray.count; m++) {
+            NSString *item1=[resultArray objectAtIndex:m];
+            item1 = [item1 stringByReplacingOccurrencesOfString:@"{" withString:@""];
+            item1 = [item1 stringByReplacingOccurrencesOfString:@"}" withString:@""];
+            [contentArray3 addObject:item1];
+        }
+    }
+    NSLog(@"contentArray3   %@",contentArray3);
     for (int i=0; i<3; i++) {
         UIView *textBgView=[[UIView alloc]initWithFrame:CGRectMake((Width-20)/3*i,40, (Width-20)/3, 40)];
         textBgView.backgroundColor=[UIColor whiteColor];
@@ -342,7 +358,23 @@
     label4.text=@"桥        梁";
     [textBgView2  addSubview:label4];
     NSArray *labelArray4=@[@"长度（米）",@"宽度（米）",@"梁底标高(米)",@"形式"];
-     NSArray *contentArray4=@[[self getString:[self.commitData objectForKey:@"qlcd1"]],[self getString:[self.commitData objectForKey:@"qlkd1"]],[self getString:[self.commitData objectForKey:@"qlldbg1"]],[self getString:[self.commitData objectForKey:@"qlxs1"]],[self getString:[self.commitData objectForKey:@"qlcd2"]],[self getString:[self.commitData objectForKey:@"qlkd2"]],[self getString:[self.commitData objectForKey:@"qlldbg2"]],[self getString:[self.commitData objectForKey:@"qlxs2"]]];
+     NSMutableArray *contentArray4=[[NSMutableArray alloc]initWithObjects:[self getString:[self.commitData objectForKey:@"qlcd1"]],[self getString:[self.commitData objectForKey:@"qlkd1"]],[self getString:[self.commitData objectForKey:@"qlldbg1"]],[self getString:[self.commitData objectForKey:@"qlxs1"]],[self getString:[self.commitData objectForKey:@"qlcd2"]],[self getString:[self.commitData objectForKey:@"qlkd2"]],[self getString:[self.commitData objectForKey:@"qlldbg2"]],[self getString:[self.commitData objectForKey:@"qlxs2"]], nil];
+    if ([self.commitData objectForKey:@"ql"]!=NULL||[self.commitData objectForKey:@"ql"]!=nil) {
+        contentArray4=[[NSMutableArray alloc]init];
+        NSString *ql=[self.commitData objectForKey:@"ql"];
+        NSRange startRange = [ql rangeOfString:@"["];
+        NSRange endRange = [ql rangeOfString:@"]"];
+        NSRange range = NSMakeRange(startRange.location + startRange.length, endRange.location - startRange.location - startRange.length);
+        NSString *result = [ql substringWithRange:range];
+        NSArray *resultArray=[result componentsSeparatedByString:@","];
+        for (int m=0; m<resultArray.count; m++) {
+            NSString *item1=[resultArray objectAtIndex:m];
+            item1 = [item1 stringByReplacingOccurrencesOfString:@"{" withString:@""];
+            item1 = [item1 stringByReplacingOccurrencesOfString:@"}" withString:@""];
+            [contentArray4 addObject:item1];
+        }
+    }
+    NSLog(@"contentArray4   %@",contentArray4);
     for (int i=0; i<4; i++) {
         UIView *textBgView=[[UIView alloc]initWithFrame:CGRectMake((Width-20)/4*i,200, (Width-20)/4, 40)];
         textBgView.backgroundColor=[UIColor whiteColor];
@@ -395,7 +427,23 @@
     label5.text=@"驳　      坎";
     [textBgView2  addSubview:label5];
     NSArray *labelArray5=@[@"长度（米）",@"（二级驳坎）克顶标高(米)"];
-     NSArray *contentArray5=@[[self getString:[self.commitData objectForKey:@"bkcd1"]],[self getString:[self.commitData objectForKey:@"bkbg1"]],[self getString:[self.commitData objectForKey:@"bkcd2"]],[self getString:[self.commitData objectForKey:@"bkbg2"]]];
+     NSMutableArray *contentArray5=[[NSMutableArray alloc]initWithObjects:[self getString:[self.commitData objectForKey:@"bkcd1"]],[self getString:[self.commitData objectForKey:@"bkbg1"]],[self getString:[self.commitData objectForKey:@"bkcd2"]],[self getString:[self.commitData objectForKey:@"bkbg2"]], nil];
+    if ([self.commitData objectForKey:@"bk"]!=NULL||[self.commitData objectForKey:@"bk"]!=nil) {
+        contentArray5=[[NSMutableArray alloc]init];
+        NSString *bk=[self.commitData objectForKey:@"bk"];
+        NSRange startRange = [bk rangeOfString:@"["];
+        NSRange endRange = [bk rangeOfString:@"]"];
+        NSRange range = NSMakeRange(startRange.location + startRange.length, endRange.location - startRange.location - startRange.length);
+        NSString *result = [bk substringWithRange:range];
+        NSArray *resultArray=[result componentsSeparatedByString:@","];
+        for (int m=0; m<resultArray.count; m++) {
+            NSString *item1=[resultArray objectAtIndex:m];
+            item1 = [item1 stringByReplacingOccurrencesOfString:@"{" withString:@""];
+            item1 = [item1 stringByReplacingOccurrencesOfString:@"}" withString:@""];
+            [contentArray5 addObject:item1];
+        }
+    }
+    NSLog(@"contentArray5   %@",contentArray5);
     for (int i=0; i<2; i++) {
         UIView *textBgView=[[UIView alloc]initWithFrame:CGRectMake((Width-20)/2*i,360, (Width-20)/2, 40)];
         textBgView.backgroundColor=[UIColor whiteColor];
@@ -458,7 +506,21 @@
     mingchen.textColor=[UIColor blackColor];
     mingchen.text=@"名称：";
     [textBgView3  addSubview:mingchen];
-    NSArray *contentArray6=@[[self getString:[self.commitData objectForKey:@"gxgcmc"]],[self getString:[self.commitData objectForKey:@"gxgccd1"]],[self getString:[self.commitData objectForKey:@"gxgcgg"]],[self getString:[self.commitData objectForKey:@"gxgccd2"]],[self getString:[self.commitData objectForKey:@"gxgcgw"]],[self getString:[self.commitData objectForKey:@"gxgcbz"]]];
+    NSMutableArray *contentArray6=[[NSMutableArray alloc]initWithObjects:[self getString:[self.commitData objectForKey:@"gxgcmc"]],[self getString:[self.commitData objectForKey:@"gxgccd1"]],[self getString:[self.commitData objectForKey:@"gxgcgg"]],[self getString:[self.commitData objectForKey:@"gxgccd2"]],[self getString:[self.commitData objectForKey:@"gxgcgw"]],[self getString:[self.commitData objectForKey:@"gxgcbz"]], nil];
+    if ([self.commitData objectForKey:@"gxgc"]!=NULL||[self.commitData objectForKey:@"gxgc"]!=nil) {
+        contentArray6=[[NSMutableArray alloc]init];
+        NSString *gxgc=[self.commitData objectForKey:@"gxgc"];
+        NSRange startRange = [gxgc rangeOfString:@"{"];
+        NSRange endRange = [gxgc rangeOfString:@"}"];
+        NSRange range = NSMakeRange(startRange.location + startRange.length, endRange.location - startRange.location - startRange.length);
+        NSString *result = [gxgc substringWithRange:range];
+        NSArray *resultArray=[result componentsSeparatedByString:@","];
+        for (int m=0; m<resultArray.count; m++) {
+            NSString *item1=[resultArray objectAtIndex:m];
+            [contentArray6 addObject:item1];
+        }
+    }
+    NSLog(@"contentArray6   %@",contentArray6);
     UITextField *mingchenText=[[UITextField alloc]initWithFrame:CGRectMake(70, 0, Width-20-80, 40)];
     mingchenText.tag=60;
     //            text.keyboardType = UIKeyboardTypeNumberPad;
@@ -561,7 +623,23 @@
     textBgView5.userInteractionEnabled=YES;
     [_mainListView addSubview:textBgView5];
     NSArray *labelArray7=@[@"结构种类",@"层数",@"幢数",@"高度(m)",@"占地面积"];
-     NSArray *contentArray7=@[[self getString:[self.commitData objectForKey:@"jsgcjgzl1"]],[self getString:[self.commitData objectForKey:@"jsgccs1"]],[self getString:[self.commitData objectForKey:@"jsgcds1"]],[self getString:[self.commitData objectForKey:@"jsgcgd1"]],[self getString:[self.commitData objectForKey:@"jsgczdmj1"]],[self getString:[self.commitData objectForKey:@"jsgcjgzl2"]],[self getString:[self.commitData objectForKey:@"jsgccs2"]],[self getString:[self.commitData objectForKey:@"jsgcds2"]],[self getString:[self.commitData objectForKey:@"jsgcgd2"]],[self getString:[self.commitData objectForKey:@"jsgczdmj2"]]];
+     NSMutableArray *contentArray7=[[NSMutableArray alloc]initWithObjects:[self getString:[self.commitData objectForKey:@"jsgcjgzl1"]],[self getString:[self.commitData objectForKey:@"jsgccs1"]],[self getString:[self.commitData objectForKey:@"jsgcds1"]],[self getString:[self.commitData objectForKey:@"jsgcgd1"]],[self getString:[self.commitData objectForKey:@"jsgczdmj1"]],[self getString:[self.commitData objectForKey:@"jsgcjgzl2"]],[self getString:[self.commitData objectForKey:@"jsgccs2"]],[self getString:[self.commitData objectForKey:@"jsgcds2"]],[self getString:[self.commitData objectForKey:@"jsgcgd2"]],[self getString:[self.commitData objectForKey:@"jsgczdmj2"]], nil];
+    if ([self.commitData objectForKey:@"jsgc"]!=NULL||[self.commitData objectForKey:@"jsgc"]!=nil) {
+        contentArray7=[[NSMutableArray alloc]init];
+        NSString *jsgc=[self.commitData objectForKey:@"jsgc"];
+        NSRange startRange = [jsgc rangeOfString:@"["];
+        NSRange endRange = [jsgc rangeOfString:@"]"];
+        NSRange range = NSMakeRange(startRange.location + startRange.length, endRange.location - startRange.location - startRange.length);
+        NSString *result = [jsgc substringWithRange:range];
+        NSArray *resultArray=[result componentsSeparatedByString:@","];
+        for (int m=0; m<resultArray.count; m++) {
+            NSString *item1=[resultArray objectAtIndex:m];
+            item1 = [item1 stringByReplacingOccurrencesOfString:@"{" withString:@""];
+            item1 = [item1 stringByReplacingOccurrencesOfString:@"}" withString:@""];
+            [contentArray7 addObject:item1];
+        }
+    }
+    NSLog(@"contentArray7   %@",contentArray7);
     for (int i=0; i<5; i++) {
         UIView *textBgView=[[UIView alloc]initWithFrame:CGRectMake((Width-20)/5*i,0, (Width-20)/5, 40)];
         textBgView.backgroundColor=[UIColor whiteColor];

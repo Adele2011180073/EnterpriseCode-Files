@@ -354,16 +354,21 @@
     //是否为规划条件变更
     NSString *str71=[self.commitData objectForKey:@"sfghtjbg"];
    NSString *str72=[self.commitData objectForKey:@"tdcb"];
-    if ([str71 isEqual:[NSNull null]]||str71==nil||str71==NULL||[str71 isEqualToString:@""]) {
-        str71=@"";
+    if ([str71 isEqual:[NSNull null]]||str71==nil||str71==NULL||[str71 isEqualToString:@"否"]||[str71 isEqualToString:@"0"]) {
+        str71=@"否";
+    }else{
+        str71=@"是";
     }
-    if ([str72 isEqual:[NSNull null]]||str72==nil||str72==NULL||[str72 isEqualToString:@""]) {
-        str72=@"是";
-    }
+     if ([str72 isEqual:[NSNull null]]||str72==nil||str72==NULL||[str72 isEqualToString:@"否"]||[str72 isEqualToString:@"0"]) {
+        str72=@"否";
+     }else{
+         str72=@"是";
+     }
     NSArray *labelArray7=@[@"是否为规划条件变更:",@"储备土地出让前"];
     for (int i=0; i<labelArray7.count; i++) {
         UILabel  *label2=[[UILabel alloc]initWithFrame:CGRectMake(20,  690+40*i, 140, 50)];
         label2.textAlignment=NSTextAlignmentLeft;
+        label2.adjustsFontSizeToFitWidth=YES;
         label2.font=[UIFont systemFontOfSize:15];
         label2.text=[labelArray7 objectAtIndex:i];
         [_mainListView  addSubview:label2];
@@ -375,15 +380,11 @@
             
         UIButton *text=[[UIButton alloc]initWithFrame:CGRectMake(160,  690+40*i, Width-30-150, 50)];
         text.tag=50+i;
-        NSString *content=[contentArray6 objectAtIndex:i];
+        NSString *content=str71;
             text.layer.borderWidth=0.5;
             text.layer.borderColor=blueCyan.CGColor;
         [text setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-        if ([content isEqualToString:@""]) {
-            
-        }else{
-            [text setTitle:content forState:UIControlStateNormal];
-        }
+         [text setTitle:content forState:UIControlStateNormal];
         [text addTarget:self action:@selector(quanshu:) forControlEvents:UIControlEventTouchUpInside];
         text.titleLabel.font=[UIFont systemFontOfSize:15];
         [_mainListView addSubview:text];
@@ -391,9 +392,7 @@
             UIButton *text=[[UIButton alloc]initWithFrame:CGRectMake(40+(Width-180)/2*i, 740, (Width-180)/2-50, 40)];
             [text addTarget:self action:@selector(checkBox:) forControlEvents:UIControlEventTouchUpInside];
             text.tag=50+i;
-            if ([str72 isEqualToString:@""]) {
-                
-            }else  if ([str72 isEqualToString:@"是"]) {
+              if ([str72 isEqualToString:@"是"]) {
                 text.selected=YES;
             }else  if ([str72 isEqualToString:@"否"]) {
                 text.selected=NO;

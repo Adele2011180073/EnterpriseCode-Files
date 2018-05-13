@@ -164,6 +164,11 @@
         }else if ([self.type isEqualToString:@"市政类"]) {
                [_MATERArray addObjectsFromArray:array7];
         }
+        if ([[self.commitData objectForKey:@"businessId"]intValue]==107) {
+             [_MATERArray addObjectsFromArray:array6];
+        }else if ([[self.commitData objectForKey:@"businessId"]intValue]==115){
+              [_MATERArray addObjectsFromArray:array7];
+        }
      
     }else if ([qlsxcode isEqualToString:@"6241e908-79a4-4782-b5de-204178602601"] ){//临时建设工程规划许可证核发
          [_MATERArray addObjectsFromArray:array8];
@@ -246,6 +251,13 @@
             nameLabelaArray=@[@"材料名称",@"《建设工程规划许可证申请表》（建筑类）",@"工商营业执照或组织机构代码证复印件（加盖单位公章）",@"授权委托书（须提供原件核对）",@"委托身份证明（须提供原件核对）",@"方案、扩初联合审查意见及批复意见（含有初步设计项目提供），经复核同意的方案总平面图",@"相应资质的设计单位设计的建筑施工图（平、立、剖面图一套），1/500（范围较大时1/1000）总平面蓝图四份（总平面蓝图加盖预定位章）、成果电子文件一份（含三维电子模型）",@"有效土地权属证明（建设用地批准书或土地证，须提供原件核对），国有土地出让合同（出让项目提供，须提供原件核对）",@"建设行政主管部门出具的民用建筑节能意见（须提供原件核对）",@"需公示项目的公示材料，包括现场公示图片，社区反馈意见。（较原批方案有调整时提交再次公示的材料原件，较原批方案没调整时提交方案审批时提供材料的复印件）",@"经复核的日照分析报告（按照《杭州市建筑工程日照分析技术管理规则》要求需进行日照分析的项目提供）",@"景观分析报告（拟批建设项目处于城市规划确定的景观控制区时提供，较原批方案有调整时提交修改的景观分析报告原件，较原批方案没调整时提交方案审批时提供材料的复印件）",@"国家、省、市重点建设项目以及其他公共设施建设项目，其建筑间距达不到国家和地方规定的日照标准要求的，提供取得受影响建筑所有权人同意达成的日照补偿协议",@"变更规划条件涉及补缴土地出让金的，应提供补缴证明",@"违法补办项目提供处罚决定书"];
             statusLabelArray=@[@"必要性",@"必要（建筑类）",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"非必要",@"非必要",@"非必要",@"非必要",@"非必要"];
         }else if ([self.type isEqualToString:@"市政类"]) {
+            nameLabelaArray=@[@"材料名称",@"《建设工程规划许可证申请表》（市政类）",@"工商营业执照或组织机构代码证复印件（加盖单位公章）",@"授权委托书（须提供原件核对）",@"委托身份证明（须提供原件核对）",@"建设项目选址意见书或规划条件（包括附图）复印件（须提供原件核对）",@"方案、扩初联合审查意见及批复意见（含有初步设计项目提供），经复核同意的方案总平面图",@"相应资质的设计单位设计的建筑施工图（平、立、剖面图一套），1/500（范围较大时1/1000）总平面蓝图四份（总平面蓝图加盖预定位章）、成果电子文件一份（含三维电子模型）",@"有效土地权属证明（建设用地批准书或土地证，须提供原件核对），国有土地出让合同（出让项目提供，须提供原件核对）",@"需公示项目的公示材料，包括现场公示图片，社区反馈意见。（较原批方案有调整时提交再次公示的材料原件，较原批方案没调整时提交方案审批时提供材料的复印件）"];
+            statusLabelArray=@[@"必要性",@"必要（市政类）",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要"];
+        }
+        if ([[self.commitData objectForKey:@"businessId"]intValue]==107) {
+            nameLabelaArray=@[@"材料名称",@"《建设工程规划许可证申请表》（建筑类）",@"工商营业执照或组织机构代码证复印件（加盖单位公章）",@"授权委托书（须提供原件核对）",@"委托身份证明（须提供原件核对）",@"方案、扩初联合审查意见及批复意见（含有初步设计项目提供），经复核同意的方案总平面图",@"相应资质的设计单位设计的建筑施工图（平、立、剖面图一套），1/500（范围较大时1/1000）总平面蓝图四份（总平面蓝图加盖预定位章）、成果电子文件一份（含三维电子模型）",@"有效土地权属证明（建设用地批准书或土地证，须提供原件核对），国有土地出让合同（出让项目提供，须提供原件核对）",@"建设行政主管部门出具的民用建筑节能意见（须提供原件核对）",@"需公示项目的公示材料，包括现场公示图片，社区反馈意见。（较原批方案有调整时提交再次公示的材料原件，较原批方案没调整时提交方案审批时提供材料的复印件）",@"经复核的日照分析报告（按照《杭州市建筑工程日照分析技术管理规则》要求需进行日照分析的项目提供）",@"景观分析报告（拟批建设项目处于城市规划确定的景观控制区时提供，较原批方案有调整时提交修改的景观分析报告原件，较原批方案没调整时提交方案审批时提供材料的复印件）",@"国家、省、市重点建设项目以及其他公共设施建设项目，其建筑间距达不到国家和地方规定的日照标准要求的，提供取得受影响建筑所有权人同意达成的日照补偿协议",@"变更规划条件涉及补缴土地出让金的，应提供补缴证明",@"违法补办项目提供处罚决定书"];
+            statusLabelArray=@[@"必要性",@"必要（建筑类）",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"非必要",@"非必要",@"非必要",@"非必要",@"非必要"];
+        }else if ([[self.commitData objectForKey:@"businessId"]intValue]==115){
             nameLabelaArray=@[@"材料名称",@"《建设工程规划许可证申请表》（市政类）",@"工商营业执照或组织机构代码证复印件（加盖单位公章）",@"授权委托书（须提供原件核对）",@"委托身份证明（须提供原件核对）",@"建设项目选址意见书或规划条件（包括附图）复印件（须提供原件核对）",@"方案、扩初联合审查意见及批复意见（含有初步设计项目提供），经复核同意的方案总平面图",@"相应资质的设计单位设计的建筑施工图（平、立、剖面图一套），1/500（范围较大时1/1000）总平面蓝图四份（总平面蓝图加盖预定位章）、成果电子文件一份（含三维电子模型）",@"有效土地权属证明（建设用地批准书或土地证，须提供原件核对），国有土地出让合同（出让项目提供，须提供原件核对）",@"需公示项目的公示材料，包括现场公示图片，社区反馈意见。（较原批方案有调整时提交再次公示的材料原件，较原批方案没调整时提交方案审批时提供材料的复印件）"];
             statusLabelArray=@[@"必要性",@"必要（市政类）",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要"];
         }
@@ -763,6 +775,12 @@
 
 -(void)map:(UIButton*)sender{
     HZMapServiceViewController *illustrate=[[HZMapServiceViewController alloc]init];
+     if (self.uuid==NULL||self.uuid==nil) {
+        
+     }else{
+           illustrate.linerange=[self.reCommitData objectForKey:@"linerange"];
+     }
+  
     [self.navigationController pushViewController:illustrate animated:YES];
 }
 //MARK:提交
@@ -842,19 +860,29 @@
     MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.label.text=@"数据加载中，请稍候...";
     NSString *qlsxcode=[self.qlsxcodeDic objectForKey:@"qlsxcode"];
-    if (self.uuid==NULL||self.uuid==nil) {
-        qlsxcode=[self.qlsxcodeDic objectForKey:@"qlsxcode"];
-    }else{
-        qlsxcode=[self.reCommitData objectForKey:@"qlsxcode"];
-    }
+    
     NSString *businessId=[self.qlsxcodeDic objectForKey:@"businessId"];
     NSMutableDictionary *totalDic=[[NSMutableDictionary alloc]init];
+
+    if (self.uuid==NULL||self.uuid==nil) {
+        businessId=[self.qlsxcodeDic objectForKey:@"businessId"];
+        if ([self.type isEqualToString:@"建筑类"]) {
+            businessId=@"107";
+        }else if ([self.type isEqualToString:@"市政类"]) {
+            businessId=@"115";
+        }
+        [totalDic setObject:self.orgId forKey:@"orgId"];
+
+    }else{
+        qlsxcode=[self.reCommitData objectForKey:@"qlsxcode"];
+        businessId=[self.reCommitData objectForKey:@"businessId"];
+         [totalDic setObject:[self.reCommitData objectForKey:@"orgId"] forKey:@"orgId"];
+    }
     [totalDic setObject:qlsxcode forKey:@"qlsxcode"];
     [totalDic setObject:companyid forKey:@"companyid"];
      [totalDic setObject:userid forKey:@"userid"];
      [totalDic setObject:uuid forKey:@"resuuid"];
      [totalDic setObject:businessId forKey:@"businessId"];
-    [totalDic setObject:self.orgId forKey:@"orgId"];
     
      [totalDic setObject:linerange forKey:@"linerange"];
     

@@ -10,5 +10,6 @@
 #import <MapKit/MapKit.h>
 
 @interface HZMapServiceViewController : UIViewController
-
+@property(nonatomic,strong)NSMutableArray *posArray;
+@property(nonatomic,strong)NSString *linerange;
 @end

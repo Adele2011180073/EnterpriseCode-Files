@@ -300,9 +300,9 @@
                 }
                 if ([_issclx isEqualToString:@""]) {
                     
-                }else  if ([_issclx intValue]==1&&i==0) {
+                }else  if ([_issclx intValue]==1&&j==0) {
                     text.selected=YES;
-                }else  if ([_issclx intValue]==2&&i==1) {
+                }else  if ([_issclx intValue]==2&&j==1) {
                     text.selected=YES;
                 }
                 [text setImage:[UIImage imageNamed:@"checkbox"] forState:UIControlStateNormal];
