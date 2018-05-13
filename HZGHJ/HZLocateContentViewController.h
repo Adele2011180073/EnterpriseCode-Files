@@ -11,7 +11,12 @@
 
 @interface HZLocateContentViewController : UIViewController
 @property(nonatomic,retain)NSString *uuid;//已提交
-@property(nonatomic,strong)NSDictionary *commitData;//已提交
+@property(nonatomic,strong)NSDictionary *reCommitData;//补正提交保存Dic
+
+
+@property(nonatomic,strong)NSDictionary *saveDic;//保存Dic
+@property(nonatomic,strong)NSDictionary *commitData;//已提交保存Dic
+
 
 @property(nonatomic,retain)NSDictionary *qlsxcodeDic;
 @property(nonatomic,retain)NSString* orgId;
@@ -19,5 +24,4 @@
 
 @property(nonatomic,strong)NSArray* posArray;//已返回
 @property(nonatomic,assign)BOOL isBackWarn;//返回提示
-@property(nonatomic,strong)NSDictionary *saveDic;
 @end

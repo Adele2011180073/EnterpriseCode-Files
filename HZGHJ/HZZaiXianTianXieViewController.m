@@ -42,7 +42,7 @@
     titleLabel.font=[UIFont systemFontOfSize:16];
     [self.view addSubview:titleLabel];
     
-    NSString *qlsxcode=[self.qlsxcodeDic objectForKey:@"qlsxcode"];
+    NSString *qlsxcode=self.qlsxcode;
     if ([qlsxcode isEqualToString:@"EAF31D8225045AE8CFA4E04C961F5D86"]) {
          titleLabel.text=@"选址申请表填写";
     }else if ([qlsxcode isEqualToString:@"1FE087B8241745F16C0133ABB4832B8C"]){

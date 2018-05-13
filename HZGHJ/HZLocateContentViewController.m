@@ -116,7 +116,7 @@
                         [array addObject:image];
                      [_imageAllArray setObject:array forKey:[NSString stringWithFormat:@"%d",j+1]];
                         [_imageCommitArray addObject:image];
-                        NSString *imagename=[NSString stringWithFormat:@"%@_%@",[dic objectForKey:@"templateid"],[dic objectForKey:@"purename"]];
+                        NSString *imagename=[_MATERArray objectAtIndex:j];
                         [_imageNameArray addObject:imagename];
                     }
                 }
@@ -143,6 +143,11 @@
      NSArray *array10=[[NSArray alloc]initWithObjects:@"BED7FDEFCB864D1E82229F3FA829B7DC",@"DCCB368A17C145CCA28079596801B1DA_a$",@"DCCB368A17C145CCA28079596801B1DA_b$",@"DCCB368A17C145CCA28079596801B1DA_c$",@"03CBD62659CF463CBCB7AAE4224917A6",@"3B1F8718CB6144E89A73D0EF5F5C6D7A",@"9D755613E96949218E967FE27F4362B8",@"A35D37438AF54A82BFAFED8BA4F80C59",@"15D3F38B40574DA4955548B74753F6D5",@"B543A8053B7A4331B34DA52043D6E5CC",@"3C740017CF3049EF97AC0FDED6F6B28F",@"ED7A94EEB6ED4126B3C20A0D491F43C8", nil];
    
     NSString *qlsxcode=[self.qlsxcodeDic objectForKey:@"qlsxcode"];
+    if (self.uuid==NULL||self.uuid==nil) {
+        qlsxcode=[self.qlsxcodeDic objectForKey:@"qlsxcode"];
+    }else{
+        qlsxcode=[self.reCommitData objectForKey:@"qlsxcode"];
+    }
     if ([qlsxcode isEqualToString:@"EAF31D8225045AE8CFA4E04C961F5D86"]||[qlsxcode isEqualToString:@"1FE087B8241745F16C0133ABB4832B8C"]||[qlsxcode isEqualToString:@"06C6B52BF5142FB69BA0113DFD08C77B"]||[qlsxcode isEqualToString:@"0496B51F3AB9B5135F85F31B8F255857"]) {
          [_MATERArray addObjectsFromArray:array1];
     }else if ([qlsxcode isEqualToString:@"716c0ebb-d774-42f5-84da-54b0b143bc06"]) {
@@ -206,6 +211,11 @@
     nameLabelaArray=[[NSArray alloc]init];
     statusLabelArray=[[NSArray alloc]init];
     NSString * qlsxcode=[self.qlsxcodeDic objectForKey:@"qlsxcode"];
+    if (self.uuid==NULL||self.uuid==nil) {
+        qlsxcode=[self.qlsxcodeDic objectForKey:@"qlsxcode"];
+    }else{
+        qlsxcode=[self.reCommitData objectForKey:@"qlsxcode"];
+    }
     NSString *placeholder;
     if ([qlsxcode isEqualToString:@"EAF31D8225045AE8CFA4E04C961F5D86"]||[qlsxcode isEqualToString:@"1FE087B8241745F16C0133ABB4832B8C"]) {
         nameLabelaArray=@[@"材料名称",@"《建设项目选址意见书申请表》",@"工商营业执照或组织机构代码证复印件（加盖单位公章）",@"授权委托书（须提供原件核对)",@"委托身份证明（须提供原件核对",@"项目建议书批复（启用审批新流程项目可用发改项目收件单及项目建议书文本、电子文件）或项目备案文件（须提供原件核对）",@"拟建位置1/1000带规划控制线地形图1份",@"有效土地权属证明（须提供原件核对",@"选址论证报告批复文件及报告文本（成果稿）、电子光盘"];
@@ -303,9 +313,6 @@
         }
         if (i>1) {
             UIView *lastbgview=[self.view viewWithTag:300+i-1];
-//            if (<#condition#>) {
-//                <#statements#>
-//            }
             nameLabelView1.frame=CGRectMake(0, lastbgview.frame.origin.y+lastbgview.frame.size.height,160, label1.frame.size.height+30);
             statusLabelView2.frame=CGRectMake(160, lastbgview.frame.origin.y+lastbgview.frame.size.height,50, label1.frame.size.height+30);
             contentView3.frame=CGRectMake(210, lastbgview.frame.origin.y+lastbgview.frame.size.height,Width-220, label1.frame.size.height+30);
@@ -474,117 +481,122 @@
 -(void)zaixiantianxie:(UIButton*)sender{
     self.isBackWarn=YES;
      NSString* qlsxcode=[self.qlsxcodeDic objectForKey:@"qlsxcode"];
+    if (self.uuid==NULL||self.uuid==nil) {
+        qlsxcode=[self.qlsxcodeDic objectForKey:@"qlsxcode"];
+    }else{
+        qlsxcode=[self.reCommitData objectForKey:@"qlsxcode"];
+    }
     if ([qlsxcode isEqualToString:@"EAF31D8225045AE8CFA4E04C961F5D86"]||[qlsxcode isEqualToString:@"1FE087B8241745F16C0133ABB4832B8C"]) {
         HZZaiXianTianXieViewController *tianxie=[[HZZaiXianTianXieViewController alloc]init];
-        if (self.uuid==NULL||self.uuid==nil) {
-            tianxie.commitData=self.commitData;
-        }else{
+//        if (self.uuid==NULL||self.uuid==nil) {
+//            tianxie.commitData=self.commitData;
+//        }else{
             tianxie.commitData=self.commitData;
             tianxie.saveDic=saveDic;
-        }
-        tianxie.qlsxcodeDic=self.qlsxcodeDic;
+//        }
+        tianxie.qlsxcode=qlsxcode;
         [self.navigationController pushViewController:tianxie animated:YES];
     }else  if ([qlsxcode isEqualToString:@"06C6B52BF5142FB69BA0113DFD08C77B"]||[qlsxcode isEqualToString:@"0496B51F3AB9B5135F85F31B8F255857"]) {
         HZZaiXianTianXieViewController1 *tianxie=[[HZZaiXianTianXieViewController1 alloc]init];
-        if (self.uuid==NULL||self.uuid==nil) {
+//        if (self.uuid==NULL||self.uuid==nil) {
             tianxie.commitData=self.commitData;
-        }else{
-            tianxie.commitData=self.commitData;
-            tianxie.saveDic=saveDic;
-        }
-        tianxie.qlsxcodeDic=self.qlsxcodeDic;
+//        }else{
+//            tianxie.commitData=self.commitData;
+//            tianxie.saveDic=saveDic;
+//        }
+        tianxie.qlsxcode=qlsxcode;
         [self.navigationController pushViewController:tianxie animated:YES];
     }  else if ([qlsxcode isEqualToString:@"716c0ebb-d774-42f5-84da-54b0b143bc06"]||[qlsxcode isEqualToString:@"c0865333-0cbd-4440-86da-3386defefdba"]){
         HZZaiXianTianXieViewController2 *tianxie=[[HZZaiXianTianXieViewController2 alloc]init];
-        if (self.uuid==NULL||self.uuid==nil) {
-            tianxie.commitData=self.commitData;
-        }else{
+//        if (self.uuid==NULL||self.uuid==nil) {
+//            tianxie.commitData=self.commitData;
+//        }else{
             tianxie.commitData=self.commitData;
             tianxie.saveDic=saveDic;
-        }
-        tianxie.qlsxcodeDic=self.qlsxcodeDic;
+//        }
+        tianxie.qlsxcode=qlsxcode;
         [self.navigationController pushViewController:tianxie animated:YES];
     } else if ([qlsxcode isEqualToString:@"0ef7e0ce-bb77-4979-8cc3-166d08712b96"]||[qlsxcode isEqualToString:@"b8e6c1ea-6f89-4a2d-af17-78183b3e8a9f"]){
         HZZaiXianTianXieViewController3 *tianxie=[[HZZaiXianTianXieViewController3 alloc]init];
-        if (self.uuid==NULL||self.uuid==nil) {
-            tianxie.commitData=self.commitData;
-        }else{
+//        if (self.uuid==NULL||self.uuid==nil) {
+//            tianxie.commitData=self.commitData;
+//        }else{
             tianxie.commitData=self.commitData;
             tianxie.saveDic=saveDic;
-        }
-        tianxie.qlsxcodeDic=self.qlsxcodeDic;
+//        }
+         tianxie.qlsxcode=qlsxcode;
         [self.navigationController pushViewController:tianxie animated:YES];
     }else if ([qlsxcode isEqualToString:@"31104F35575B4CB91AA7D5C014E730B1"]){//风景名胜区建设项目新报、基本变更（选址位置、用地规模、建设规模）
         HZZaiXianTianXieViewController4 *tianxie=[[HZZaiXianTianXieViewController4 alloc]init];
-        if (self.uuid==NULL||self.uuid==nil) {
-            tianxie.commitData=self.commitData;
-        }else{
+//        if (self.uuid==NULL||self.uuid==nil) {
+//            tianxie.commitData=self.commitData;
+//        }else{
             tianxie.commitData=self.commitData;
             tianxie.saveDic=saveDic;
-        }
-        tianxie.qlsxcodeDic=self.qlsxcodeDic;
+//        }
+         tianxie.qlsxcode=qlsxcode;
         [self.navigationController pushViewController:tianxie animated:YES];
     }else if ([qlsxcode isEqualToString:@"F16BFFA466D5374C9D991F026936438F"]||[qlsxcode isEqualToString:@"42CBF39D427712000C357F3E7494007B"]||[qlsxcode isEqualToString:@"51760F1375EB1CF64A180319B743C392"]){//风景名胜区建设项目证书失效重新核发//风景名胜区建设项目简易变更（项目名称、建设单位）//风景名胜区建设项目延期
         HZZaiXianTianXieViewController5 *tianxie=[[HZZaiXianTianXieViewController5 alloc]init];
-        if (self.uuid==NULL||self.uuid==nil) {
-            tianxie.commitData=self.commitData;
-        }else{
+//        if (self.uuid==NULL||self.uuid==nil) {
+//            tianxie.commitData=self.commitData;
+//        }else{
             tianxie.commitData=self.commitData;
             tianxie.saveDic=saveDic;
-        }
-        tianxie.qlsxcodeDic=self.qlsxcodeDic;
+//        }
+         tianxie.qlsxcode=qlsxcode;
         [self.navigationController pushViewController:tianxie animated:YES];
     }else if ([qlsxcode isEqualToString:@"598ea023-d3cc-4168-b3fb-529ffff53d8d"]){//建设工程规划许可证核发
         if ([self.type isEqualToString:@"建筑类"]) {
                     HZZaiXianTianXieViewController6 *tianxie=[[HZZaiXianTianXieViewController6 alloc]init];
-                    if (self.uuid==NULL||self.uuid==nil) {
-                        tianxie.commitData=self.commitData;
-                    }else{
+//                    if (self.uuid==NULL||self.uuid==nil) {
+//                        tianxie.commitData=self.commitData;
+//                    }else{
                         tianxie.commitData=self.commitData;
                         tianxie.saveDic=saveDic;
-                    }
-                    tianxie.qlsxcodeDic=self.qlsxcodeDic;
+//                    }
+                     tianxie.qlsxcode=qlsxcode;
                     [self.navigationController pushViewController:tianxie animated:YES];
         }else  if ([self.type isEqualToString:@"市政类"]) {
                     HZZaiXianTianXieViewController7 *tianxie=[[HZZaiXianTianXieViewController7 alloc]init];
-                    if (self.uuid==NULL||self.uuid==nil) {
-                        tianxie.commitData=self.commitData;
-                    }else{
+//                    if (self.uuid==NULL||self.uuid==nil) {
+//                        tianxie.commitData=self.commitData;
+//                    }else{
                         tianxie.commitData=self.commitData;
                         tianxie.saveDic=saveDic;
-                    }
-                    tianxie.qlsxcodeDic=self.qlsxcodeDic;
+//                    }
+                     tianxie.qlsxcode=qlsxcode;
                     [self.navigationController pushViewController:tianxie animated:YES];
         }
     }else if ([qlsxcode isEqualToString:@"6241e908-79a4-4782-b5de-204178602601"]){//临时建设工程规划许可证核发
         HZZaiXianTianXieViewController7 *tianxie=[[HZZaiXianTianXieViewController7 alloc]init];
-        if (self.uuid==NULL||self.uuid==nil) {
-            tianxie.commitData=self.commitData;
-        }else{
+//        if (self.uuid==NULL||self.uuid==nil) {
+//            tianxie.commitData=self.commitData;
+//        }else{
             tianxie.commitData=self.commitData;
             tianxie.saveDic=saveDic;
-        }
-        tianxie.qlsxcodeDic=self.qlsxcodeDic;
+//        }
+         tianxie.qlsxcode=qlsxcode;
         [self.navigationController pushViewController:tianxie animated:YES];
     }else if ([qlsxcode isEqualToString:@"87ed0a9d-856b-45d3-8e4a-2fa4e32715f5"]){//建设工程竣工规划核实
         HZZaiXianTianXieViewController8 *tianxie=[[HZZaiXianTianXieViewController8 alloc]init];
-        if (self.uuid==NULL||self.uuid==nil) {
-            tianxie.commitData=self.commitData;
-        }else{
+//        if (self.uuid==NULL||self.uuid==nil) {
+//            tianxie.commitData=self.commitData;
+//        }else{
             tianxie.commitData=self.commitData;
             tianxie.saveDic=saveDic;
-        }
-        tianxie.qlsxcodeDic=self.qlsxcodeDic;
+//        }
+        tianxie.qlsxcode=qlsxcode;
         [self.navigationController pushViewController:tianxie animated:YES];
     }else if ([qlsxcode isEqualToString:@"3e9b0641-3a76-4cfe-9666-72350d2385d8"]){//建设工程设计方案（修建性详细规划）审查
         HZZaiXianTianXieViewController9 *tianxie=[[HZZaiXianTianXieViewController9 alloc]init];
-        if (self.uuid==NULL||self.uuid==nil) {
-            tianxie.commitData=self.commitData;
-        }else{
+//        if (self.uuid==NULL||self.uuid==nil) {
+//            tianxie.commitData=self.commitData;
+//        }else{
             tianxie.commitData=self.commitData;
             tianxie.saveDic=saveDic;
-        }
-        tianxie.qlsxcodeDic=self.qlsxcodeDic;
+//        }
+         tianxie.qlsxcode=qlsxcode;
         [self.navigationController pushViewController:tianxie animated:YES];
     }
     
@@ -830,6 +842,11 @@
     MBProgressHUD *hud= [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.label.text=@"数据加载中，请稍候...";
     NSString *qlsxcode=[self.qlsxcodeDic objectForKey:@"qlsxcode"];
+    if (self.uuid==NULL||self.uuid==nil) {
+        qlsxcode=[self.qlsxcodeDic objectForKey:@"qlsxcode"];
+    }else{
+        qlsxcode=[self.reCommitData objectForKey:@"qlsxcode"];
+    }
     NSString *businessId=[self.qlsxcodeDic objectForKey:@"businessId"];
     NSMutableDictionary *totalDic=[[NSMutableDictionary alloc]init];
     [totalDic setObject:qlsxcode forKey:@"qlsxcode"];

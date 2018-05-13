@@ -43,7 +43,7 @@
     titleLabel.textAlignment=NSTextAlignmentCenter;
     titleLabel.font=[UIFont systemFontOfSize:16];
     [self.view addSubview:titleLabel];
-    NSString *qlsxcode=[self.qlsxcodeDic objectForKey:@"qlsxcode"];
+    NSString *qlsxcode=self.qlsxcode;
     if ([qlsxcode isEqualToString:@"716c0ebb-d774-42f5-84da-54b0b143bc06"]) {
         titleLabel.text=@"建设用地规划许可申请表";
     }else if ([qlsxcode isEqualToString:@"c0865333-0cbd-4440-86da-3386defefdba"]){

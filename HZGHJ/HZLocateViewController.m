@@ -226,13 +226,13 @@
         }
         CGFloat height1=[self sizeWithSt:qlsxcodeString font:[UIFont systemFontOfSize:15]];
         CGFloat height2;
-        if ([[dic objectForKey:@"issync"]integerValue]==1) {
-            height2=90;
-        }else if ([[dic objectForKey:@"issync"]integerValue]==2) {
+//        if ([[dic objectForKey:@"issync"]integerValue]==1) {
+//            height2=90;
+//        }else if ([[dic objectForKey:@"issync"]integerValue]==2) {
             height2=130;
-        }else{
-            height2=50;
-        }
+//        }else{
+//            height2=50;
+//        }
         CGFloat height=height1>height2?height1:height2;
         return height;
     
@@ -338,17 +338,17 @@
         label1.font=[UIFont systemFontOfSize:15];
         label1.text=[NSString stringWithFormat:@"%@",issync] ;
         [nameLabelView1  addSubview:label1];
-        if ([[dic objectForKey:@"issync"]integerValue]==1) {
-            UIButton *imageBtn=[[UIButton alloc]initWithFrame:CGRectMake(5,40, (Width-60)/4-10, 30)];
-            imageBtn.titleLabel.font=[UIFont systemFontOfSize:15];
-            imageBtn.tag=20;
-            imageBtn.accessibilityValue=[NSString stringWithFormat:@"%@",[dic objectForKey:@"resuuid"]];
-            [imageBtn addTarget:self action:@selector(commit:) forControlEvents:UIControlEventTouchUpInside];
-            [imageBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            imageBtn.backgroundColor=blueCyan;
-            [imageBtn setTitle:@"查看原因" forState:UIControlStateNormal];
-            [nameLabelView1 addSubview:imageBtn];
-        }else if ([[dic objectForKey:@"issync"]integerValue]==2) {
+//        if ([[dic objectForKey:@"issync"]integerValue]==1) {
+//            UIButton *imageBtn=[[UIButton alloc]initWithFrame:CGRectMake(5,40, (Width-60)/4-10, 30)];
+//            imageBtn.titleLabel.font=[UIFont systemFontOfSize:15];
+//            imageBtn.tag=20;
+//            imageBtn.accessibilityValue=[NSString stringWithFormat:@"%@",[dic objectForKey:@"resuuid"]];
+//            [imageBtn addTarget:self action:@selector(commit:) forControlEvents:UIControlEventTouchUpInside];
+//            [imageBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//            imageBtn.backgroundColor=blueCyan;
+//            [imageBtn setTitle:@"查看原因" forState:UIControlStateNormal];
+//            [nameLabelView1 addSubview:imageBtn];
+//        }else if ([[dic objectForKey:@"issync"]integerValue]==2) {
             UIButton *imageBtn=[[UIButton alloc]initWithFrame:CGRectMake(5,40, (Width-60)/4-10, 30)];
             imageBtn.tag=20;
             imageBtn.titleLabel.font=[UIFont systemFontOfSize:15];
@@ -368,7 +368,7 @@
             [imageBtn1 setTitle:@"再次提交" forState:UIControlStateNormal];
             [nameLabelView1 addSubview:imageBtn1];
 
-        }
+//        }
     }
     return cell;
 }
@@ -418,6 +418,7 @@
                 }
                 content.saveDic=[[NSDictionary alloc]initWithDictionary:dicmutable];
                 content.commitData=content.saveDic;
+                content.reCommitData=content.saveDic;
 //                        NSLog(@"content.saveDic  %@",content.saveDic);
                 content.uuid=sender.accessibilityValue;
                 [self.navigationController pushViewController:content animated:YES];
