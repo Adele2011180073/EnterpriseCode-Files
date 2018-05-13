@@ -58,7 +58,7 @@
     if (self.posArray==nil||self.posArray==NULL) {
         self.posArray=[[NSMutableArray alloc]init];
     }else{
-        self.posArray=[[NSMutableArray alloc]init];//不想写了
+        self.posArray=[[NSMutableArray alloc]init];//不想写了  明天再写
     }
 //    NSMutableArray *array=[[NSMutableArray alloc]init];
 //    for (int i=0; i<self.posArray.count; i++) {
