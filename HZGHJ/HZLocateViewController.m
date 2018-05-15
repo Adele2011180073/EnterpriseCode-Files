@@ -24,7 +24,7 @@
 {
     UITableView *tableview;
     UIScrollView *_searchView;//查询页面
-    UISegmentedControl *segmented;
+    
     int pageIndex;
     NSMutableArray *_dataSearchArray;
 }
@@ -35,6 +35,12 @@
 @implementation HZLocateViewController
 @synthesize dataList;
 
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
+    if (_segmented.selectedSegmentIndex==1) {
+        [tableview reloadData];
+    }
+}
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
@@ -45,12 +51,12 @@
     
      dataList=[[NSMutableArray alloc]init];
     NSArray *titleArray=@[@"在线申请",@"进度查询"];
-    segmented=[[UISegmentedControl alloc]initWithItems:titleArray];
-    segmented.frame=CGRectMake(5, 5, Width-10, 40);
-    segmented.selectedSegmentIndex=0;
-    [segmented setTitleTextAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]} forState:UIControlStateNormal];
-    [segmented addTarget:self action:@selector(choseSeg:) forControlEvents:UIControlEventValueChanged];
-    [self.view addSubview:segmented];
+    _segmented=[[UISegmentedControl alloc]initWithItems:titleArray];
+    _segmented.frame=CGRectMake(5, 5, Width-10, 40);
+    _segmented.selectedSegmentIndex=0;
+    [_segmented setTitleTextAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]} forState:UIControlStateNormal];
+    [_segmented addTarget:self action:@selector(choseSeg:) forControlEvents:UIControlEventValueChanged];
+    [self.view addSubview:_segmented];
     
      pageIndex=1;
     _dataSearchArray=[[NSMutableArray alloc]init];
@@ -70,7 +76,7 @@
             dataList=[[NSMutableArray alloc]init];
             NSArray *array=[returnDic objectForKey:@"list"];
             [dataList addObjectsFromArray:array];
-            if (segmented.selectedSegmentIndex==0) {
+            if (_segmented.selectedSegmentIndex==0) {
                 [tableview reloadData];
             }
         }else if ([[returnDic objectForKey:@"code"]integerValue]==900) {
@@ -113,7 +119,7 @@
           if (_dataSearchArray.count<1||_dataSearchArray==NULL) {
               [self.view makeToast:@"暂时没有数据" duration:2 position:CSToastPositionCenter];
           }
-          if (segmented.selectedSegmentIndex==1) {
+          if (_segmented.selectedSegmentIndex==1) {
               [tableview reloadData];
           }
       }else if ([[returnDic objectForKey:@"code"]integerValue]==900) {

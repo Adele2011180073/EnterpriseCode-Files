@@ -90,7 +90,7 @@
     NSString *str4=[self.commitData objectForKey:@"sjh"];
     NSString *str5=[self.commitData objectForKey:@"sjdw"];
     NSString *str6=[self.commitData objectForKey:@"sjr"];
-    NSString *str7=[self.commitData objectForKey:@"shrsj"];
+    NSString *str7=[self.commitData objectForKey:@"sjrsj"];
     NSString *str8=[self.commitData objectForKey:@"xmmc"];
     
     NSString *str9=[self.commitData objectForKey:@"jsdzq"];
@@ -836,7 +836,7 @@
     [dic setObject:textfield4.text forKey:@"sjh"];
     [dic setObject:textfield5.text forKey:@"sjdw"];
     [dic setObject:textfield6.text forKey:@"sjr"];
-    [dic setObject:textfield7.text forKey:@"shrsj"];
+    [dic setObject:textfield7.text forKey:@"sjrsj"];
     [dic setObject:textfield8.text forKey:@"xmmc"];
     
     [dic setObject:textfield21.text forKey:@"jsdzq"];
@@ -1172,7 +1172,7 @@
     [dic setObject:[self getString:textfield4.text] forKey:@"sjh"];
     [dic setObject:[self getString:textfield5.text] forKey:@"sjdw"];
     [dic setObject:[self getString:textfield6.text] forKey:@"sjr"];
-    [dic setObject:[self getString:textfield7.text] forKey:@"shrsj"];
+    [dic setObject:[self getString:textfield7.text] forKey:@"sjrsj"];
       [dic setObject:[self getString:textfield8.text] forKey:@"xmmc"];
     
      [dic setObject:[self getString:_detailText1.text] forKey:@"jsnrjgm"];

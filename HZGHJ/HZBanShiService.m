@@ -194,7 +194,7 @@
     [parameters setObject:[totalDic objectForKey:@"xghyqjnr"] forKey:@"xghyqjnr"];
     [parameters setObject:[totalDic objectForKey:@"sjdw"] forKey:@"sjdw"];
     [parameters setObject:[totalDic objectForKey:@"sjr"] forKey:@"sjr"];
-    [parameters setObject:[totalDic objectForKey:@"shrsj"] forKey:@"shrsj"];
+    [parameters setObject:[totalDic objectForKey:@"sjrsj"] forKey:@"sjrsj"];
     [parameters setObject:[totalDic objectForKey:@"gcmcsx"] forKey:@"gcmcsx"];
     [parameters setObject:[totalDic objectForKey:@"qd"] forKey:@"qd"];
     [parameters setObject:[totalDic objectForKey:@"zd"] forKey:@"zd"];

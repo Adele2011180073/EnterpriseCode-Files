@@ -23,7 +23,6 @@
     UITextView *_detailText2;
     
     NSString* _isBlxs;//办理形式
-    NSString* _isXiuGai;//修改（或延期）事项名称
 }
 
 
@@ -45,15 +44,9 @@
     titleLabel.text=@"建设项目批后修改(延期)事项申请表";
 
     NSLog(@" %@   %@",titleLabel.text,self.commitData);
-    if ([[self.commitData objectForKey:@"blxs"]intValue]==0) {
+    
         _isBlxs=[NSString stringWithFormat:@"%@",[self.commitData objectForKey:@"blxs"]];
-    }else if ([[self.commitData objectForKey:@"lzbg"]intValue]==1) {
-        _isBlxs=[NSString stringWithFormat:@"%@",[self.commitData objectForKey:@"blxs"]];
-    }else{
-        _isBlxs=@"";
-    }
-    _isXiuGai=@"";
-   
+    
     _rightBarBtn = [[UIButton alloc] initWithFrame:CGRectMake(15, 5, 80, 20)];
     [_rightBarBtn setTitleColor: [UIColor whiteColor] forState:UIControlStateNormal];
     [_rightBarBtn addTarget:self action:@selector(illustrate) forControlEvents:UIControlEventTouchUpInside];
@@ -149,7 +142,7 @@
         [nameLabelView1 addSubview:text];
     }
     NSArray *labelArray2=@[@"建设内容及规模：",@"修改（或延期）原因及内容："];
-    NSString *str21=[self.commitData objectForKey:@"jsnrjgm"];
+    NSString *str21=[self.commitData objectForKey:@"jsnrjgmyq"];
     NSString *str22=[self.commitData objectForKey:@"xghyqjnr"];
     if ([str21 isEqual:[NSNull null]]||str21==nil||str21==NULL||[str21 isEqualToString:@""]) {
         str21=@"";
@@ -182,8 +175,6 @@
             _detailText1.delegate=self;
             NSString *content=[contentArray2 objectAtIndex:i];
             _detailText1.text=[NSString stringWithFormat:@"%@",content];
-            _detailText1.clearsOnInsertion=YES;
-            [_detailText1 resignFirstResponder];
             _detailText1.font=[UIFont systemFontOfSize:15];
             [textBgView addSubview:_detailText1];
             self.placehoderLabel1 = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, _detailText1.frame.size.width-40, 30)];
@@ -227,8 +218,8 @@
     }
     
     NSArray *labelArray3=@[@"办理形式：",@"建设地址："];
-    NSString *str41=[self.commitData objectForKey:@"jsdzq"];
-    NSString *str42=[self.commitData objectForKey:@"jsdzq"];
+    NSString *str41=[self.commitData objectForKey:@"quyq"];
+    NSString *str42=[self.commitData objectForKey:@"luyq"];
     if ([str41 isEqual:[NSNull null]]||str41==nil||str41==NULL||[str41 isEqualToString:@""]) {
         str41=@"";
     }
@@ -335,6 +326,7 @@
             text.selected=NO;
         }else  if ([str61 isEqualToString:label2.text]) {
             text.selected=YES;
+            text.accessibilityValue=[labelArray6 objectAtIndex:i];
         }else {
             text.selected=NO;
         }
@@ -358,14 +350,17 @@
 }
 //修改延期
 -(void)checkxiugaiBox:(UIButton *)sender{
+    NSArray *labelArray6=@[@"选址意见书",@"规划条件",@"用地规划许可证",@"方案设计审查",@"工程规划许可证",@"其他"];
     for (int i=0; i<6; i++) {
         UIButton *button=(UIButton*)[self.view viewWithTag:40+i];
         if (sender==button) {
             button.selected=YES;
+            button.accessibilityValue=[labelArray6 objectAtIndex:i];
         }else{
             button.selected=NO;
         }
     }
+   
 }
 -(void)illustrate{
     HZIllustrateViewController1 *illustrate=[[HZIllustrateViewController1 alloc]init];
@@ -453,19 +448,25 @@
     [dic setObject:textfield5.text forKey:@"xmmcyq"];
     [dic setObject:textfield6.text forKey:@"dhyq"];
     
-    [dic setObject:textfield31.text forKey:@"jsdzq"];
-    [dic setObject:textfield32.text forKey:@"jsdzl"];
+    [dic setObject:textfield31.text forKey:@"quyq"];
+    [dic setObject:textfield32.text forKey:@"luyq"];
     [dic setObject:_isBlxs forKey:@"blxs"];
     [dic setObject:_detailText2.text forKey:@"xghyqjnr"];
    
    
     if (_detailText1.text==NULL) {
-        [dic setObject:@"" forKey:@"jsnrjgm"];
+        [dic setObject:@"" forKey:@"jsnrjgmyq"];
     }else{
-        [dic setObject:_detailText1.text forKey:@"jsnrjgm"];
+        [dic setObject:_detailText1.text forKey:@"jsnrjgmyq"];
     }
-  
-    
+    NSString *xghyqsxmc=@"";
+    for (int i=0; i<6; i++) {
+        UIButton *button=(UIButton*)[self.view viewWithTag:40+i];
+        if (button.selected==YES) {
+            xghyqsxmc=button.accessibilityValue;
+        }
+    }
+     [dic setObject:xghyqsxmc forKey:@"xghyqsxmc"];
     UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"保存成功" message:nil preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *cancelAlert=[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         NSArray *vcArray = self.navigationController.viewControllers;
@@ -523,7 +524,14 @@
     [dic setObject:[self getString:_detailText1.text] forKey:@"jsnrjgmyq"];
     [dic setObject:[self getString:_detailText2.text] forKey:@"xghyqjnr"];
 
-    
+    NSString *xghyqsxmc=@"";
+    for (int i=0; i<6; i++) {
+        UIButton *button=(UIButton*)[self.view viewWithTag:40+i];
+        if (button.selected==YES) {
+            xghyqsxmc=button.accessibilityValue;
+        }
+    }
+    [dic setObject:xghyqsxmc forKey:@"xghyqsxmc"];
     NSArray *vcArray = self.navigationController.viewControllers;
     for(UIViewController *vc in vcArray)
     {

@@ -22,6 +22,7 @@
 @property(nonatomic,retain)NSString* orgId;
 @property(nonatomic,retain)NSString *type;//判断是否是建筑类 市政类
 
-@property(nonatomic,strong)NSArray* posArray;//已返回
+@property(nonatomic,strong)NSString *linerange;
+
 @property(nonatomic,assign)BOOL isBackWarn;//返回提示
 @end

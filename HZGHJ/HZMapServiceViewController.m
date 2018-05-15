@@ -55,18 +55,8 @@
     self.navigationItem.backBarButtonItem=[[UIBarButtonItem alloc] initWithTitle:@"返回"style:UIBarButtonItemStylePlain target:nil action:nil];
     self.title=@"地图选址";
 
-    if (self.posArray==nil||self.posArray==NULL) {
-        self.posArray=[[NSMutableArray alloc]init];
-    }else{
-        self.posArray=[[NSMutableArray alloc]init];//不想写了  明天再写
-    }
-//    NSMutableArray *array=[[NSMutableArray alloc]init];
-//    for (int i=0; i<self.posArray.count; i++) {
-//        BMKPointAnnotation* annotation=[self.posArray objectAtIndex:i];
-//        NSString *str=[NSString stringWithFormat:@"{\"x\":%f,\"y\":%f}",annotation.coordinate.latitude,annotation.coordinate.longitude];
-//        [array addObject:str];
-//    }
-//    linerange=[NSString stringWithFormat:@"[%@]",[array componentsJoinedByString:@","]];
+   
+    
     
      _mapView = [[BMKMapView alloc]initWithFrame:CGRectMake(0, 0, Width, Height-44)];
     _mapView.delegate =self;
@@ -97,12 +87,34 @@
     [_mapView updateLocationViewWithParam:displayParam];
     [self.view addSubview:_mapView];
    
+    self.posArray=[[NSMutableArray alloc]init];//不想写了  明天再写
+    if (self.linerange==nil||self.linerange==NULL||[self.linerange isEqual:[NSNull null]]||[self.linerange isEqualToString:@""]) {
+        
+    }else{
+        NSData *data=[self.linerange dataUsingEncoding:NSUTF8StringEncoding];
+        NSArray *array=[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+        for (int i=0; i<array.count; i++) {
+            NSDictionary *dic=[array objectAtIndex:i];
+            NSLog(@"dic   %@",dic);
+            CLLocationCoordinate2D coord;
+            CGFloat x=[[dic objectForKey:@"x"]floatValue];
+            CGFloat y=[[dic objectForKey:@"y"]floatValue];
+            coord.latitude=x;
+            coord.longitude=y;
+            BMKPointAnnotation* annotation = [[BMKPointAnnotation alloc]init];
+            annotation.coordinate=coord;
+            [self.posArray addObject:annotation];
+        }
+        [_mapView addAnnotations:self.posArray];
+        [self drawAnnotation];
+    }
+    
     UIButton *commit=[[UIButton alloc]initWithFrame:CGRectMake(20,Height-64-60, Width-40, 45)];
     [commit addTarget:self action:@selector(commit) forControlEvents:UIControlEventTouchUpInside];
     commit.backgroundColor=[UIColor colorWithRed:23/255.0 green:177/255.0 blue:242/255.0 alpha:1];
     commit.clipsToBounds=YES;
     commit.layer.cornerRadius=10;
-    [commit setTitle:@"确认选址" forState:UIControlStateNormal];
+    [commit setTitle:@"长按地图确认选址" forState:UIControlStateNormal];
     [self.view addSubview:commit];
 }
 //MARK:确认选址
@@ -114,7 +126,19 @@
             if ([vc isKindOfClass:[HZLocateContentViewController class]])
             {
                 HZLocateContentViewController *content=(HZLocateContentViewController *)vc;
-                content.posArray=_posArray;
+                self.linerange=@"";
+                if (self.posArray.count>0) {
+                    NSMutableArray *array=[[NSMutableArray alloc]init];
+                    for (int i=0; i<self.posArray.count; i++) {
+                        BMKPointAnnotation* annotation=[self.posArray objectAtIndex:i];
+                        NSString *str=[NSString stringWithFormat:@"{\"x\":%f,\"y\":%f}",annotation.coordinate.latitude,annotation.coordinate.longitude];
+                        [array addObject:str];
+                    }
+                       self.linerange=[NSString stringWithFormat:@"[%@]",[array componentsJoinedByString:@","]];
+                }
+             
+                content.linerange=self.linerange;
+                NSLog(@"linerange  %@",self.linerange);
                 [self.navigationController popToViewController:vc animated:YES];
             }
         }

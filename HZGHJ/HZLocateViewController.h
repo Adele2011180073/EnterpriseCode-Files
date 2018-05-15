@@ -10,5 +10,5 @@
 
 @interface HZLocateViewController : UIViewController
 @property(nonatomic,strong)NSMutableArray *dataList;
-
+@property(nonatomic,strong)UISegmentedControl *segmented;
 @end

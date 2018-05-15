@@ -69,6 +69,8 @@
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc] initWithCustomView:_rightBarBtn];
     self.navigationItem.rightBarButtonItem = leftItem;
     
+    self.linerange=[self.reCommitData objectForKey:@"linerange"];
+    
     _mainBgView=[[UIScrollView alloc]init];
     _mainBgView.frame=CGRectMake(0, 0, Width, Height-44);
     _mainBgView.contentSize=CGSizeMake(Width, 1280);
@@ -106,18 +108,39 @@
         if ([[returnDic objectForKey:@"code"]integerValue]==0) {
             NSArray *array=[returnDic objectForKey:@"obj"];
             NSLog(@"returnDic  %@",returnDic);
+            
+//            for (int i=0; i<array.count; i++) {
+//                NSDictionary *dic1=[array objectAtIndex:i];
+//                  NSString *templateidpurename1=[NSString stringWithFormat:@"%@_%@",[dic1 objectForKey:@"templateid"],[dic1 objectForKey:@"purename"]];
+//                NSMutableArray *itemArray=[[NSMutableArray alloc]init];
+//                for (int j=i+1; j<array.count; j++) {
+//                    <#statements#>
+//                }
+//                if (<#condition#>) {
+//                    <#statements#>
+//                }
+//            }
+            
+                
             for (int i=0; i<array.count; i++) {
                 NSDictionary *dic=[array objectAtIndex:i];
+                NSString *templateidpurename=[NSString stringWithFormat:@"%@_%@",[dic objectForKey:@"templateid"],[dic objectForKey:@"purename"]];
+                UIImage *image=[UIImage sd_imageWithData:[[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@?fileId=%@",kDemoBaseURL,kGetFileURL,[dic objectForKey:@"id"]]]]];
+                [_imageCommitArray addObject:image];
+                [_imageNameArray addObject:templateidpurename];
                 for (int j=0; j<_MATERArray.count; j++) {
-                    NSString *templateidpurename=[NSString stringWithFormat:@"%@_%@",[dic objectForKey:@"templateid"],[dic objectForKey:@"purename"]];
                  if([templateidpurename rangeOfString:[_MATERArray objectAtIndex:j]].location !=NSNotFound) {
-                        NSMutableArray *array=[[NSMutableArray alloc]init];
-                        UIImage *image=[UIImage sd_imageWithData:[[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@?fileId=%@",kDemoBaseURL,kGetFileURL,[dic objectForKey:@"id"]]]]];
-                        [array addObject:image];
-                     [_imageAllArray setObject:array forKey:[NSString stringWithFormat:@"%d",j+1]];
-                        [_imageCommitArray addObject:image];
-                        NSString *imagename=[_MATERArray objectAtIndex:j];
-                        [_imageNameArray addObject:imagename];
+                      id imageArray=[_imageAllArray objectForKey:[NSString stringWithFormat:@"%d",j+1]];
+                      if ([imageArray isKindOfClass:[NSString class]]) {
+                          imageArray=[[NSMutableArray alloc]init];
+                          [imageArray addObject:image];
+                          [_imageAllArray setObject:imageArray forKey:[NSString stringWithFormat:@"%d",j+1]];
+                      }else{
+                          imageArray=(NSMutableArray *) [_imageAllArray objectForKey:[NSString stringWithFormat:@"%d",j+1]];
+                          [imageArray addObject:image];
+                          [_imageAllArray setObject:imageArray forKey:[NSString stringWithFormat:@"%d",j+1]];
+                      }
+                     
                     }
                 }
             }
@@ -180,8 +203,6 @@
     for (int i=0; i<_MATERArray.count; i++) {
         [_imageAllArray setObject:@"张" forKey:[NSString stringWithFormat:@"%d",i+1]];
     }
-     NSLog(@"_imageAllArray    %@",_MATERArray);
-    NSLog(@"_imageAllArray    %@",_imageAllArray);
 }
 
 -(void)longPress:(UILongPressGestureRecognizer*)longPressGesture{
@@ -247,20 +268,26 @@
         nameLabelaArray=@[@"材料名称",@"书面申请书（《建设项目选址申请书》（一般建设项目新报））",@"工商营业执照或组织机构代码证复印件（加盖单位公章）",@"授权委托书（须提供原件核对）",@"委托身份证明（须提供原件核对）",@"项目建议书批复（启用审批新流程项目可用发改项目收件单及项目建议书文本、电子文件）或行政许可申请材料补正告知书（须提供原件核对）",@"标明拟选址位置的地形图（拟建位置1/1000带规划控制线地形图1份用铅笔标明拟用地位置）",@"有效土地权属证明（自有用地项目提供）（须提供原件核对）",@"选址论证报告批复文件及报告文本(成果稿)、电子光盘（要求编制选址论证报告的项目提供）",@"西湖风景名胜区项目需提供立项回复单、选址申报书、项目相关的会议纪要和政府研究批文（如涉及该项目本阶段事宜的需提供）"];
         statusLabelArray=@[@"必要性",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"非必要",@"非必要(要求编制选址论证报告的项目提供)",@"非必要(西湖风景区项目提供)"];
     }else if ([qlsxcode isEqualToString:@"598ea023-d3cc-4168-b3fb-529ffff53d8d"]){//建设工程规划许可证核发
-        if ([self.type isEqualToString:@"建筑类"]) {
-            nameLabelaArray=@[@"材料名称",@"《建设工程规划许可证申请表》（建筑类）",@"工商营业执照或组织机构代码证复印件（加盖单位公章）",@"授权委托书（须提供原件核对）",@"委托身份证明（须提供原件核对）",@"方案、扩初联合审查意见及批复意见（含有初步设计项目提供），经复核同意的方案总平面图",@"相应资质的设计单位设计的建筑施工图（平、立、剖面图一套），1/500（范围较大时1/1000）总平面蓝图四份（总平面蓝图加盖预定位章）、成果电子文件一份（含三维电子模型）",@"有效土地权属证明（建设用地批准书或土地证，须提供原件核对），国有土地出让合同（出让项目提供，须提供原件核对）",@"建设行政主管部门出具的民用建筑节能意见（须提供原件核对）",@"需公示项目的公示材料，包括现场公示图片，社区反馈意见。（较原批方案有调整时提交再次公示的材料原件，较原批方案没调整时提交方案审批时提供材料的复印件）",@"经复核的日照分析报告（按照《杭州市建筑工程日照分析技术管理规则》要求需进行日照分析的项目提供）",@"景观分析报告（拟批建设项目处于城市规划确定的景观控制区时提供，较原批方案有调整时提交修改的景观分析报告原件，较原批方案没调整时提交方案审批时提供材料的复印件）",@"国家、省、市重点建设项目以及其他公共设施建设项目，其建筑间距达不到国家和地方规定的日照标准要求的，提供取得受影响建筑所有权人同意达成的日照补偿协议",@"变更规划条件涉及补缴土地出让金的，应提供补缴证明",@"违法补办项目提供处罚决定书"];
-            statusLabelArray=@[@"必要性",@"必要（建筑类）",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"非必要",@"非必要",@"非必要",@"非必要",@"非必要"];
-        }else if ([self.type isEqualToString:@"市政类"]) {
-            nameLabelaArray=@[@"材料名称",@"《建设工程规划许可证申请表》（市政类）",@"工商营业执照或组织机构代码证复印件（加盖单位公章）",@"授权委托书（须提供原件核对）",@"委托身份证明（须提供原件核对）",@"建设项目选址意见书或规划条件（包括附图）复印件（须提供原件核对）",@"方案、扩初联合审查意见及批复意见（含有初步设计项目提供），经复核同意的方案总平面图",@"相应资质的设计单位设计的建筑施工图（平、立、剖面图一套），1/500（范围较大时1/1000）总平面蓝图四份（总平面蓝图加盖预定位章）、成果电子文件一份（含三维电子模型）",@"有效土地权属证明（建设用地批准书或土地证，须提供原件核对），国有土地出让合同（出让项目提供，须提供原件核对）",@"需公示项目的公示材料，包括现场公示图片，社区反馈意见。（较原批方案有调整时提交再次公示的材料原件，较原批方案没调整时提交方案审批时提供材料的复印件）"];
-            statusLabelArray=@[@"必要性",@"必要（市政类）",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要"];
+        if (self.uuid==NULL||self.uuid==nil) {
+            if ([self.type isEqualToString:@"建筑类"]) {
+                nameLabelaArray=@[@"材料名称",@"《建设工程规划许可证申请表》（建筑类）",@"工商营业执照或组织机构代码证复印件（加盖单位公章）",@"授权委托书（须提供原件核对）",@"委托身份证明（须提供原件核对）",@"方案、扩初联合审查意见及批复意见（含有初步设计项目提供），经复核同意的方案总平面图",@"相应资质的设计单位设计的建筑施工图（平、立、剖面图一套），1/500（范围较大时1/1000）总平面蓝图四份（总平面蓝图加盖预定位章）、成果电子文件一份（含三维电子模型）",@"有效土地权属证明（建设用地批准书或土地证，须提供原件核对），国有土地出让合同（出让项目提供，须提供原件核对）",@"建设行政主管部门出具的民用建筑节能意见（须提供原件核对）",@"需公示项目的公示材料，包括现场公示图片，社区反馈意见。（较原批方案有调整时提交再次公示的材料原件，较原批方案没调整时提交方案审批时提供材料的复印件）",@"经复核的日照分析报告（按照《杭州市建筑工程日照分析技术管理规则》要求需进行日照分析的项目提供）",@"景观分析报告（拟批建设项目处于城市规划确定的景观控制区时提供，较原批方案有调整时提交修改的景观分析报告原件，较原批方案没调整时提交方案审批时提供材料的复印件）",@"国家、省、市重点建设项目以及其他公共设施建设项目，其建筑间距达不到国家和地方规定的日照标准要求的，提供取得受影响建筑所有权人同意达成的日照补偿协议",@"变更规划条件涉及补缴土地出让金的，应提供补缴证明",@"违法补办项目提供处罚决定书"];
+                statusLabelArray=@[@"必要性",@"必要（建筑类）",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"非必要",@"非必要",@"非必要",@"非必要",@"非必要"];
+            }else if ([self.type isEqualToString:@"市政类"]) {
+                nameLabelaArray=@[@"材料名称",@"《建设工程规划许可证申请表》（市政类）",@"工商营业执照或组织机构代码证复印件（加盖单位公章）",@"授权委托书（须提供原件核对）",@"委托身份证明（须提供原件核对）",@"建设项目选址意见书或规划条件（包括附图）复印件（须提供原件核对）",@"方案、扩初联合审查意见及批复意见（含有初步设计项目提供），经复核同意的方案总平面图",@"相应资质的设计单位设计的建筑施工图（平、立、剖面图一套），1/500（范围较大时1/1000）总平面蓝图四份（总平面蓝图加盖预定位章）、成果电子文件一份（含三维电子模型）",@"有效土地权属证明（建设用地批准书或土地证，须提供原件核对），国有土地出让合同（出让项目提供，须提供原件核对）",@"需公示项目的公示材料，包括现场公示图片，社区反馈意见。（较原批方案有调整时提交再次公示的材料原件，较原批方案没调整时提交方案审批时提供材料的复印件）"];
+                statusLabelArray=@[@"必要性",@"必要（市政类）",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要"];
+            }
+        }else{ //******************************************补正提交
+            if ([[self.commitData objectForKey:@"businessId"]intValue]==107) {
+                nameLabelaArray=@[@"材料名称",@"《建设工程规划许可证申请表》（建筑类）",@"工商营业执照或组织机构代码证复印件（加盖单位公章）",@"授权委托书（须提供原件核对）",@"委托身份证明（须提供原件核对）",@"方案、扩初联合审查意见及批复意见（含有初步设计项目提供），经复核同意的方案总平面图",@"相应资质的设计单位设计的建筑施工图（平、立、剖面图一套），1/500（范围较大时1/1000）总平面蓝图四份（总平面蓝图加盖预定位章）、成果电子文件一份（含三维电子模型）",@"有效土地权属证明（建设用地批准书或土地证，须提供原件核对），国有土地出让合同（出让项目提供，须提供原件核对）",@"建设行政主管部门出具的民用建筑节能意见（须提供原件核对）",@"需公示项目的公示材料，包括现场公示图片，社区反馈意见。（较原批方案有调整时提交再次公示的材料原件，较原批方案没调整时提交方案审批时提供材料的复印件）",@"经复核的日照分析报告（按照《杭州市建筑工程日照分析技术管理规则》要求需进行日照分析的项目提供）",@"景观分析报告（拟批建设项目处于城市规划确定的景观控制区时提供，较原批方案有调整时提交修改的景观分析报告原件，较原批方案没调整时提交方案审批时提供材料的复印件）",@"国家、省、市重点建设项目以及其他公共设施建设项目，其建筑间距达不到国家和地方规定的日照标准要求的，提供取得受影响建筑所有权人同意达成的日照补偿协议",@"变更规划条件涉及补缴土地出让金的，应提供补缴证明",@"违法补办项目提供处罚决定书"];
+                statusLabelArray=@[@"必要性",@"必要（建筑类）",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"非必要",@"非必要",@"非必要",@"非必要",@"非必要"];
+            }else if ([[self.commitData objectForKey:@"businessId"]intValue]==115){
+                nameLabelaArray=@[@"材料名称",@"《建设工程规划许可证申请表》（市政类）",@"工商营业执照或组织机构代码证复印件（加盖单位公章）",@"授权委托书（须提供原件核对）",@"委托身份证明（须提供原件核对）",@"建设项目选址意见书或规划条件（包括附图）复印件（须提供原件核对）",@"方案、扩初联合审查意见及批复意见（含有初步设计项目提供），经复核同意的方案总平面图",@"相应资质的设计单位设计的建筑施工图（平、立、剖面图一套），1/500（范围较大时1/1000）总平面蓝图四份（总平面蓝图加盖预定位章）、成果电子文件一份（含三维电子模型）",@"有效土地权属证明（建设用地批准书或土地证，须提供原件核对），国有土地出让合同（出让项目提供，须提供原件核对）",@"需公示项目的公示材料，包括现场公示图片，社区反馈意见。（较原批方案有调整时提交再次公示的材料原件，较原批方案没调整时提交方案审批时提供材料的复印件）"];
+                statusLabelArray=@[@"必要性",@"必要（市政类）",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要"];
+            }
+            
         }
-        if ([[self.commitData objectForKey:@"businessId"]intValue]==107) {
-            nameLabelaArray=@[@"材料名称",@"《建设工程规划许可证申请表》（建筑类）",@"工商营业执照或组织机构代码证复印件（加盖单位公章）",@"授权委托书（须提供原件核对）",@"委托身份证明（须提供原件核对）",@"方案、扩初联合审查意见及批复意见（含有初步设计项目提供），经复核同意的方案总平面图",@"相应资质的设计单位设计的建筑施工图（平、立、剖面图一套），1/500（范围较大时1/1000）总平面蓝图四份（总平面蓝图加盖预定位章）、成果电子文件一份（含三维电子模型）",@"有效土地权属证明（建设用地批准书或土地证，须提供原件核对），国有土地出让合同（出让项目提供，须提供原件核对）",@"建设行政主管部门出具的民用建筑节能意见（须提供原件核对）",@"需公示项目的公示材料，包括现场公示图片，社区反馈意见。（较原批方案有调整时提交再次公示的材料原件，较原批方案没调整时提交方案审批时提供材料的复印件）",@"经复核的日照分析报告（按照《杭州市建筑工程日照分析技术管理规则》要求需进行日照分析的项目提供）",@"景观分析报告（拟批建设项目处于城市规划确定的景观控制区时提供，较原批方案有调整时提交修改的景观分析报告原件，较原批方案没调整时提交方案审批时提供材料的复印件）",@"国家、省、市重点建设项目以及其他公共设施建设项目，其建筑间距达不到国家和地方规定的日照标准要求的，提供取得受影响建筑所有权人同意达成的日照补偿协议",@"变更规划条件涉及补缴土地出让金的，应提供补缴证明",@"违法补办项目提供处罚决定书"];
-            statusLabelArray=@[@"必要性",@"必要（建筑类）",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"非必要",@"非必要",@"非必要",@"非必要",@"非必要"];
-        }else if ([[self.commitData objectForKey:@"businessId"]intValue]==115){
-            nameLabelaArray=@[@"材料名称",@"《建设工程规划许可证申请表》（市政类）",@"工商营业执照或组织机构代码证复印件（加盖单位公章）",@"授权委托书（须提供原件核对）",@"委托身份证明（须提供原件核对）",@"建设项目选址意见书或规划条件（包括附图）复印件（须提供原件核对）",@"方案、扩初联合审查意见及批复意见（含有初步设计项目提供），经复核同意的方案总平面图",@"相应资质的设计单位设计的建筑施工图（平、立、剖面图一套），1/500（范围较大时1/1000）总平面蓝图四份（总平面蓝图加盖预定位章）、成果电子文件一份（含三维电子模型）",@"有效土地权属证明（建设用地批准书或土地证，须提供原件核对），国有土地出让合同（出让项目提供，须提供原件核对）",@"需公示项目的公示材料，包括现场公示图片，社区反馈意见。（较原批方案有调整时提交再次公示的材料原件，较原批方案没调整时提交方案审批时提供材料的复印件）"];
-            statusLabelArray=@[@"必要性",@"必要（市政类）",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要",@"必要"];
-        }
+       
+      
         
     }else if ([qlsxcode isEqualToString:@"6241e908-79a4-4782-b5de-204178602601"]){//临时建设工程规划许可证核发
         nameLabelaArray=@[@"材料名称",@"建设工程规划许可证申请表",@"工商营业执照或组织机构代码证复印件（加盖单位公章）",@"授权委托书（须提供原件核对）",@"委托身份证明（须提供原件核对）",@"方案、扩初联合审查意见及批复意见（含有初步设计项目提供），经复核同意的方案总平面图",@"相应资质的设计单位设计的建筑施工图（平、立、剖面图一套），1/500（范围较大时1/1000）总平面蓝图四份（总平面蓝图加盖预定位章）、成果电子文件一份（含三维电子模型）",@"有效土地权属证明（建设用地批准书或土地证，须提供原件核对），国有土地出让合同（出让项目提供，须提供原件核对）",@"建设行政主管部门出具的民用建筑节能意见（须提供原件核对）",@"需公示项目的公示材料，包括现场公示图片，社区反馈意见。（较原批方案有调整时提交再次公示的材料原件，较原批方案没调整时提交方案审批时提供材料的复印件）",@"经复核的日照分析报告（按照《杭州市建筑工程日照分析技术管理规则》要求需进行日照分析的项目提供）",@"景观分析报告（拟批建设项目处于城市规划确定的景观控制区时提供，较原批方案有调整时提交修改的景观分析报告原件，较原批方案没调整时提交方案审批时提供材料的复印件）",@"国家、省、市重点建设项目以及其他公共设施建设项目，其建筑间距达不到国家和地方规定的日照标准要求的，提供取得受影响建筑所有权人同意达成的日照补偿协议",@"变更规划条件涉及补缴土地出让金的，应提供补缴证明",@"临时建设影响交通、市容、安全等的，提供相应行政主管部门意见",@"违法补办项目提供处罚决定书"];
@@ -405,8 +432,7 @@
             //限制只能拍三张
             NSMutableArray *newImageArray=[[NSMutableArray alloc]init];
             id imageArray=[_imageAllArray objectForKey:[NSString stringWithFormat:@"%d",i]];
-            NSLog(@"imageArray    %@",imageArray);
-            NSLog(@"_imageAllArray    %@",_imageAllArray);
+
             if ([imageArray isKindOfClass:[NSString class]]) {
 
             }else{
@@ -436,8 +462,7 @@
         else {
             NSMutableArray *newImageArray=[[NSMutableArray alloc]init];
             id imageArray=[_imageAllArray objectForKey:[NSString stringWithFormat:@"%d",i]];
-            NSLog(@"imageArray    %@",imageArray);
-            NSLog(@"_imageAllArray    %@",_imageAllArray);
+
             if ([imageArray isKindOfClass:[NSString class]]) {
                 
             }else{
@@ -550,64 +575,59 @@
         [self.navigationController pushViewController:tianxie animated:YES];
     }else if ([qlsxcode isEqualToString:@"F16BFFA466D5374C9D991F026936438F"]||[qlsxcode isEqualToString:@"42CBF39D427712000C357F3E7494007B"]||[qlsxcode isEqualToString:@"51760F1375EB1CF64A180319B743C392"]){//风景名胜区建设项目证书失效重新核发//风景名胜区建设项目简易变更（项目名称、建设单位）//风景名胜区建设项目延期
         HZZaiXianTianXieViewController5 *tianxie=[[HZZaiXianTianXieViewController5 alloc]init];
-//        if (self.uuid==NULL||self.uuid==nil) {
-//            tianxie.commitData=self.commitData;
-//        }else{
             tianxie.commitData=self.commitData;
             tianxie.saveDic=saveDic;
-//        }
          tianxie.qlsxcode=qlsxcode;
         [self.navigationController pushViewController:tianxie animated:YES];
     }else if ([qlsxcode isEqualToString:@"598ea023-d3cc-4168-b3fb-529ffff53d8d"]){//建设工程规划许可证核发
-        if ([self.type isEqualToString:@"建筑类"]) {
-                    HZZaiXianTianXieViewController6 *tianxie=[[HZZaiXianTianXieViewController6 alloc]init];
-//                    if (self.uuid==NULL||self.uuid==nil) {
-//                        tianxie.commitData=self.commitData;
-//                    }else{
-                        tianxie.commitData=self.commitData;
-                        tianxie.saveDic=saveDic;
-//                    }
-                     tianxie.qlsxcode=qlsxcode;
-                    [self.navigationController pushViewController:tianxie animated:YES];
-        }else  if ([self.type isEqualToString:@"市政类"]) {
-                    HZZaiXianTianXieViewController7 *tianxie=[[HZZaiXianTianXieViewController7 alloc]init];
-//                    if (self.uuid==NULL||self.uuid==nil) {
-//                        tianxie.commitData=self.commitData;
-//                    }else{
-                        tianxie.commitData=self.commitData;
-                        tianxie.saveDic=saveDic;
-//                    }
-                     tianxie.qlsxcode=qlsxcode;
-                    [self.navigationController pushViewController:tianxie animated:YES];
+        if (self.uuid==NULL||self.uuid==nil) {
+            if ([self.type isEqualToString:@"建筑类"]) {
+                HZZaiXianTianXieViewController6 *tianxie=[[HZZaiXianTianXieViewController6 alloc]init];
+                tianxie.commitData=self.commitData;
+                tianxie.saveDic=saveDic;
+                tianxie.qlsxcode=qlsxcode;
+                [self.navigationController pushViewController:tianxie animated:YES];
+            }else  if ([self.type isEqualToString:@"市政类"]) {
+                HZZaiXianTianXieViewController7 *tianxie=[[HZZaiXianTianXieViewController7 alloc]init];
+                tianxie.commitData=self.commitData;
+                tianxie.saveDic=saveDic;
+                tianxie.qlsxcode=qlsxcode;
+                [self.navigationController pushViewController:tianxie animated:YES];
+            }
+        }else{
+            NSString* businessId=[self.reCommitData objectForKey:@"businessId"];
+            if ([businessId intValue]==107) {//建筑类
+                HZZaiXianTianXieViewController6 *tianxie=[[HZZaiXianTianXieViewController6 alloc]init];
+                tianxie.commitData=self.commitData;
+                tianxie.saveDic=saveDic;
+                tianxie.qlsxcode=qlsxcode;
+                [self.navigationController pushViewController:tianxie animated:YES];
+            }else  if ([businessId intValue]==115) {//市政类
+                HZZaiXianTianXieViewController7 *tianxie=[[HZZaiXianTianXieViewController7 alloc]init];
+                tianxie.commitData=self.commitData;
+                tianxie.saveDic=saveDic;
+                tianxie.qlsxcode=qlsxcode;
+                [self.navigationController pushViewController:tianxie animated:YES];
+            }
         }
+     
+        
     }else if ([qlsxcode isEqualToString:@"6241e908-79a4-4782-b5de-204178602601"]){//临时建设工程规划许可证核发
         HZZaiXianTianXieViewController7 *tianxie=[[HZZaiXianTianXieViewController7 alloc]init];
-//        if (self.uuid==NULL||self.uuid==nil) {
-//            tianxie.commitData=self.commitData;
-//        }else{
             tianxie.commitData=self.commitData;
             tianxie.saveDic=saveDic;
-//        }
          tianxie.qlsxcode=qlsxcode;
         [self.navigationController pushViewController:tianxie animated:YES];
     }else if ([qlsxcode isEqualToString:@"87ed0a9d-856b-45d3-8e4a-2fa4e32715f5"]){//建设工程竣工规划核实
         HZZaiXianTianXieViewController8 *tianxie=[[HZZaiXianTianXieViewController8 alloc]init];
-//        if (self.uuid==NULL||self.uuid==nil) {
-//            tianxie.commitData=self.commitData;
-//        }else{
             tianxie.commitData=self.commitData;
             tianxie.saveDic=saveDic;
-//        }
         tianxie.qlsxcode=qlsxcode;
         [self.navigationController pushViewController:tianxie animated:YES];
     }else if ([qlsxcode isEqualToString:@"3e9b0641-3a76-4cfe-9666-72350d2385d8"]){//建设工程设计方案（修建性详细规划）审查
         HZZaiXianTianXieViewController9 *tianxie=[[HZZaiXianTianXieViewController9 alloc]init];
-//        if (self.uuid==NULL||self.uuid==nil) {
-//            tianxie.commitData=self.commitData;
-//        }else{
             tianxie.commitData=self.commitData;
             tianxie.saveDic=saveDic;
-//        }
          tianxie.qlsxcode=qlsxcode;
         [self.navigationController pushViewController:tianxie animated:YES];
     }
@@ -663,17 +683,19 @@
     int imageBtnNum=[picker.accessibilityValue intValue];
     UIImage *scaleImage = [self imageWithImage:originImage scaledToSize:CGSizeMake(320*1.5, 480*1.5)];
     
-    NSTimeInterval interval = [[NSDate date] timeIntervalSince1970] * 1000;
-    NSString *imagename=[NSString stringWithFormat:@"%@_%1.0f.png",[_MATERArray objectAtIndex:imageBtnNum-201],interval];
+    int a = arc4random() % 100000;
+    
+    NSString *interval = [NSString stringWithFormat:@"%06d", a];
+    
+    NSString *imagename=[NSString stringWithFormat:@"%@_%@.png",[_MATERArray objectAtIndex:imageBtnNum-201],interval];
+//    NSLog(@"imagename  %@",imagename);
     [_imageCommitArray addObject:scaleImage];
     [_imageNameArray addObject:imagename];
-//        NSLog(@"图片   %@ ",imagename);
 
     //限制只能拍三张
     if (imageBtnNum==201) {
         NSMutableArray *newImageArray=[[NSMutableArray alloc]init];
         id imageArray=[_imageAllArray objectForKey:[NSString stringWithFormat:@"%d",imageBtnNum-201+1]];
-        NSLog(@"imageArray    %@",imageArray);
         NSLog(@"_imageAllArray    %@",_imageAllArray);
         if ([imageArray isKindOfClass:[NSString class]]) {
             imageArray=[[NSMutableArray alloc]init];
@@ -764,8 +786,6 @@
     HZPictureViewController *picture=[[HZPictureViewController alloc]init];
     picture.isWeb=YES;
     NSMutableArray *imageArray=[_imageAllArray objectForKey:[NSString stringWithFormat:@"%d",(int)(bigImage.tag/100-10+1)]];
-    NSLog(@"imageArray    %@",imageArray);
-    NSLog(@"_imageAllArray    %@",_imageAllArray);
     picture.imageArray=imageArray;
     picture.image=bigImage.currentBackgroundImage;
     NSInteger index=[imageArray indexOfObject:picture.image];
@@ -775,24 +795,23 @@
 
 -(void)map:(UIButton*)sender{
     HZMapServiceViewController *illustrate=[[HZMapServiceViewController alloc]init];
-     if (self.uuid==NULL||self.uuid==nil) {
-        
-     }else{
-           illustrate.linerange=[self.reCommitData objectForKey:@"linerange"];
-     }
-  
+         if (self.linerange==nil||self.linerange==NULL||[self.linerange isEqual:[NSNull null]]||[self.linerange isEqualToString:@""]) {
+             self.linerange=@"";
+         }
+    illustrate.linerange=self.linerange;
     [self.navigationController pushViewController:illustrate animated:YES];
 }
 //MARK:提交
 -(void)commit{
+    NSLog(@"_imageAllArray   %@   _imageNameArray  %@   _imageCommitArray   %@",_imageAllArray,_imageNameArray,_imageCommitArray);
     NSUserDefaults *def=[NSUserDefaults standardUserDefaults];
     NSString *companyid=[def objectForKey:@"companyid"];
     NSString *userid=[def objectForKey:@"userid"];
-    NSString *uuid;
+    NSString *uuid=@"";
        if (self.uuid==NULL||self.uuid==nil) {
            uuid=@"";
        }else{
-           uuid=self.uuid;
+           uuid=self.uuid;     //补正提交
        }
     if (self.saveDic==NULL||self.saveDic==nil) {
         UIAlertController *alert=[UIAlertController alertControllerWithTitle:@"提示" message:[NSString stringWithFormat:@"请进入在线填写页面，把表格填写完整"] preferredStyle:UIAlertControllerStyleAlert];
@@ -841,19 +860,13 @@
             }
         }
     }
-    
-    NSString *linerange=nil;
-    if (self.posArray.count>0) {
-        NSMutableArray *array=[[NSMutableArray alloc]init];
-        for (int i=0; i<self.posArray.count; i++) {
-            BMKPointAnnotation* annotation=[self.posArray objectAtIndex:i];
-            NSString *str=[NSString stringWithFormat:@"{\"x\":%f,\"y\":%f}",annotation.coordinate.latitude,annotation.coordinate.longitude];
-            [array addObject:str];
-        }
-        linerange=[NSString stringWithFormat:@"[%@]",[array componentsJoinedByString:@","]];
-    }else{
+    NSString *linerange=@"";
+    if (self.linerange==nil||self.linerange==NULL||[self.linerange isEqual:[NSNull null]]) {
         linerange=@"";
+    }else{
+        linerange=self.linerange;
     }
+   
     if ([self.saveDic objectForKey:@"linerange"]) {
         linerange=[self.saveDic objectForKey:@"linerange"];
     }
@@ -1090,11 +1103,11 @@
         sjr=[self.saveDic objectForKey:@"sjr"];
     }
       [totalDic setObject:sjr forKey:@"sjr"];
-    NSString *shrsj=@"";
-    if ([self.saveDic objectForKey:@"shrsj"]) {
-        shrsj=[self.saveDic objectForKey:@"shrsj"];
+    NSString *sjrsj=@"";
+    if ([self.saveDic objectForKey:@"sjrsj"]) {
+        sjrsj=[self.saveDic objectForKey:@"sjrsj"];
     }
-     [totalDic setObject:shrsj forKey:@"shrsj"];
+     [totalDic setObject:sjrsj forKey:@"sjrsj"];
     NSString *gcmcsx=@"";
     if ([self.saveDic objectForKey:@"gcmcsx"]) {
         gcmcsx=[self.saveDic objectForKey:@"gcmcsx"];
